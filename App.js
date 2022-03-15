@@ -70,7 +70,7 @@ const App = () => {
             headerTintColor:'white',
             headerTitleStyle:{
               fontSize:27,
-              fontFamily:'mrsmonster',
+              fontFamily:'Bullpen3D',
               letterSpacing: 5,
               color:'white'
             },

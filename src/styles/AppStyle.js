@@ -12,7 +12,10 @@ export default StyleSheet.create({
         color: '#2C4770'
     },
     statusBar: {
-        color: '#323232'
+        color: '#2C4770'
+    },
+    AppBG: {
+        backgroundColor: '#2C4770'
     },
     ButtonBoxBeta: {
         backgroundColor: 'rgba(0,0,0,0.5)',

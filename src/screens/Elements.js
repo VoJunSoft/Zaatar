@@ -1,108 +1,43 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React, {useState} from 'react'
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import AppStyles from '../styles/AppStyle'
-import Buttons from '../elements/Button'
+import NavTabs from '../elements/NavTabs'
+import ButtonsWindow from '../elements/ButtonsWindow'
 
-export default function Elements() {
+const Elements = () => {
+    const [screenName, setScreenName] = useState('Buttons')
+
+    const RenderElementsWindow = (screenName) => {
+        switch(screenName){
+            case 'Buttons':
+                return <ButtonsWindow />
+        }
+    }
     return (
         <View style={styles.container}>
-              <Buttons.ButtonDefault 
-                iconName="speakers"
-                iconSize={50}
-                horizontal={false}
-                containerStyle={[
-                    AppStyles.ButtonBoxBeta, { borderRadius: 70}
-                    ]}
-                textStyle={
-                    AppStyles.ButtonTextBeta
-                }
-            />
-
-            <Buttons.ButtonDefault 
-                titleRight="Button"
-                iconName="fire"
-                iconSize={70}
-                horizontal={true}
-                containerStyle={[
-                    AppStyles.ButtonBoxAlpha, { borderRadius: 10}
-                    ]}
-                textStyle={[
-                    AppStyles.ButtonTextAlpha, {fontFamily: 'Blazed'}
-                ]}
-                iconContainer={{backgroundColor:'rgba(255,255,255,0.4)', borderRadius:50}}
-            />
-
-             <Buttons.ButtonDefault 
-                titleRight="Button"
-                horizontal={false}
-                containerStyle={[
-                    AppStyles.ButtonBoxBeta, { borderRadius: 10, width: 200}
-                    ]}
-                textStyle={[
-                    AppStyles.ButtonTextBeta, {fontFamily: 'Blazed'}
-                ]}
-            />
-
-            <Buttons.ButtonDefault 
-                titleLeft="Button"
-                iconName="home"
-                iconSize={45}
-                horizontal={false}
-                containerStyle={[
-                    AppStyles.ButtonBoxBeta, { borderRadius: 5}
-                    ]}
-                textStyle={[
-                    AppStyles.ButtonTextBeta, {fontFamily: 'CollegiateBlackFLF'}
-                ]}
-                iconContainer={{backgroundColor:'rgba(255,255,255,0.5)', borderRadius:50}}
-            />
-
-            <Buttons.ButtonWithShadow 
-                titleRight="Button"
-                iconName="card"
-                iconSize={50}
-                horizontal={false}
-                containerStyle={[
-                    AppStyles.ButtonBoxDelta, { borderRadius: 5}
-                    ]}
-                textStyle={[
-                    AppStyles.ButtonTextDelta, {fontFamily: 'CollegiateBlackFLF'}
-                ]}
-                iconContainer={{backgroundColor:'rgba(0,0,0,0.25)', borderRadius:50, padding: 5}}
-            />
-
-            <Buttons.ButtonWithShadow 
-                titleRight="Button"
-                iconName="bell"
-                iconSize={45}
-                horizontal={false}
-                containerStyle={[
-                    AppStyles.ButtonBoxBeta, { borderRadius: 5}
-                    ]}
-                textStyle={[
-                    AppStyles.ButtonTextBeta, {fontFamily: 'Bullpen3D'}
-                ]}
-            />
-
-            <Buttons.PressableButton 
-                titleLeft="Pressable"
-                iconName="share"
-                iconSize={45}
-                horizontal={false}
-                containerStyle={[
-                    AppStyles.ButtonBoxBeta, { borderRadius: 5}
-                    ]}
-                textStyle={[
-                    AppStyles.ButtonTextBeta, {fontFamily: 'Bullpen3D'}
-                ]}
-            />
+            <ScrollView style={styles.ElementsBox}>
+                {RenderElementsWindow(screenName)}
+            </ScrollView>
+            <NavTabs tabView={screenName} switchTabs={setScreenName}/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
+        flex:1,
+        width:'100%',
         alignSelf:'center',
-        marginTop:20,
-    }
+        backgroundColor: '#2C4770',
+        //AppStyles.AppBG,
+    },
+    ElementsBox: {
+        width: Dimensions.get('window').width - 35,
+        alignSelf:'center',
+        backgroundColor:'white',
+        borderRadius: 20,
+        margin:20,
+    },
 })
+
+export default Elements

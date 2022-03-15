@@ -48,15 +48,15 @@ const ButtonWithShadow = (props) => {
 const PressableButton = (props) => {
     return (
         <Pressable 
-                style={[
-                        props.containerStyle, 
-                        props.horizontal ? CSS.container : CSS.containerVertical
-                    ]} 
-                android_ripple={{color:'#2C4770'}}
-                onPress={props.onPress}>
+            style={[
+                    props.containerStyle, 
+                    props.horizontal ? CSS.container : CSS.containerVertical
+                ]} 
+            android_ripple={{color:'#2C4770'}}
+            onPress={props.onPress}>
             {props.titleLeft ?
                 <Text style={[props.textStyle]}>{props.titleLeft}</Text>
-                :
+            :
                 null
             }
             {props.iconName ?
@@ -68,7 +68,7 @@ const PressableButton = (props) => {
             }
             {props.titleRight ?
                 <Text style={[props.textStyle]}>{props.titleRight}</Text>
-                :
+            :
                 null
             }
         </Pressable>
@@ -83,7 +83,7 @@ const CSS = StyleSheet.create({
     },
     containerVertical:{
         flexDirection: 'row',
-        justifyContent:'space-evenly',
+        justifyContent:'center',
         alignItems:'center'
     },
     dropShadow: {

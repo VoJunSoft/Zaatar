@@ -1,16 +1,26 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { 
     View, 
     Text, 
     StyleSheet,
     Dimensions,
-    ScrollView
+    ScrollView,
+    Alert
 } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import DropShadow from "react-native-drop-shadow"
-import { Avatar } from 'react-native-elements';
+import { Avatar, Input } from 'react-native-elements';
+import Buttons from '../elements/Button'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Profile() {
+
+    // user information state
+    const [userInfo, setUserInfo] = useState({})
+    const SaveUserInfo = () => {
+        Alert.alert('Save use info')
+        console.log(userInfo)
+    }
     return (
         <View style={styles.container}>
             <DropShadow style={styles.dropShadow}>
@@ -19,15 +29,56 @@ export default function Profile() {
                         <Avatar
                             size={220}
                             rounded
-                            //source={{uri: 'https://randomuser.me/api/portraits/men/36.jpg'}}
+                            source={{uri: 'https://randomuser.me/api/portraits/men/36.jpg'}}
                             icon={{ name: 'user', type: 'font-awesome' }}
                             containerStyle={{ backgroundColor: '#323232' }}
                             key={1}
                         />
                     </DropShadow>
-                    <ScrollView style={styles.userInfo}>
-
-                    </ScrollView>
+                    <SafeAreaView style={styles.userInfo}>
+                        <Input
+                            placeholder="khaled e.g."
+                            value={userInfo.Name}
+                            label="Name"
+                            leftIcon={{ type: 'font-awesome', name: 'user' }}
+                            inputContainerStyle={{ paddingLeft: 5}}
+                            containerStyle={{borderWidth:0}}
+                            labelStyle={{color:'#171717'}}
+                            onChangeText={value => setUserInfo({...userInfo, Name: value })}
+                        />
+                        <Input
+                            placeholder="khaled@junglesoft.com"
+                            label="Email"
+                            value={userInfo.Email}
+                            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+                            inputContainerStyle={{ paddingLeft: 5}}
+                            containerStyle={{borderWidth:0}}
+                            labelStyle={{color:'#171717'}}
+                            onChangeText={value => setUserInfo({...userInfo, Email: value })}
+                        />
+                        <Input
+                            placeholder="0527999321"
+                            label="Mobile"
+                            value={userInfo.Mobile}
+                            leftIcon={{ type: 'font-awesome', name: 'mobile' }}
+                            maxLength={10}
+                            keyboardType='numeric'
+                            inputContainerStyle={{ paddingLeft: 5}}
+                            containerStyle={{borderWidth:0}}
+                            labelStyle={{color:'#171717'}}
+                            onChangeText={value => setUserInfo({...userInfo, Mobile: value })}
+                        />
+                        <Buttons.PressableButton
+                            titleLeft="Save"
+                            iconName="add"
+                            iconSize={40}
+                            horizontal={false}
+                            containerStyle={{ borderRadius: 5, width:'90%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5, marginBottom: 10}}
+                            textStyle={{fontFamily: 'Bullpen3D' ,fontSize: 25, color: '#fff', width:'30%'}}
+                            iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50, padding: 5, width:'20%'}}
+                            onPress={SaveUserInfo}
+                        />
+                    </SafeAreaView>
                 </View>
             </DropShadow>
         </View>
@@ -37,7 +88,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: '#2C4770',
+        backgroundColor: AppStyles.AppBG,
         justifyContent:'flex-end'
     },
     dropShadow:{
@@ -63,5 +114,11 @@ const styles = StyleSheet.create({
     image:{
         alignSelf:'center',
         marginTop:-90
+    },
+    userInfo:{
+        flex:1,
+        width: '90%',
+        alignSelf: 'center',
+        justifyContent:'center'
     }
 })
