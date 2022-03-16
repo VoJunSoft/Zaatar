@@ -5,8 +5,9 @@
  * @format
  * @flow strict-local
  */
-import 'react-native-gesture-handler';
-import React, {useEffect} from 'react'
+
+import 'react-native-gesture-handler'
+import React, {useEffect, useState} from 'react'
 import {
   View,
   Text,
@@ -24,12 +25,15 @@ I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
 import AppStyles from './src/styles/AppStyle'
 import Buttons from './src/elements/Button'
-import { DrawerLayout } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Drawer = createDrawerNavigator()
 const App = () => {
- 
+  // user information state
+  const [userInfo, setUserInfo] = useState({})
+
   useEffect(()=>{
+    getData() 
     const nav = [
           NavigationBar.setStatusBarColor("#2C4770",true), 
           NavigationBar.setStatusBarTheme('light',true), 
@@ -38,16 +42,28 @@ const App = () => {
     return () => {nav}
   }, [])
 
+  const getData = () => {
+    try {
+           AsyncStorage.getItem('userInfoZaatar')
+           .then((value) => {
+                if(value !== null)
+                    setUserInfo(JSON.parse(value))
+           })
+    } catch(e) {
+      // error reading value
+    }
+  }
+
   const ProfileElement = () =>{
     return(
       <Buttons.ButtonDefault 
-          titleRight="User"
-          iconName="fire"
+          titleRight={userInfo.Name ? userInfo.Name : 'user'}
+          iconName="photo"
           iconSize={70}
           horizontal={true}
           containerStyle={{borderBottomWidth:0}}
           textStyle={[
-              AppStyles.ButtonTextAlpha, {fontFamily: 'docktrin'}
+              AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}
           ]}
           iconContainer={{backgroundColor:'rgba(0,0,0,0.4)', borderRadius:50, padding: 10}}
           disabled

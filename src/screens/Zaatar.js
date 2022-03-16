@@ -2,22 +2,33 @@ import React from 'react'
 import { 
     View, 
     Text,
-    StyleSheet
+    StyleSheet,
+    Image
  } from 'react-native'
-import AppStyles from '../styles/AppStyle'
-import Button from '../elements/Button'
 
 const Zaatar = () => {
     return (
     <View style={styles.container}>
-        <Text style={AppStyles.header}> ZAAAAAATAR </Text>
-     </View>
+        <Image style={{width:300, height:400, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar1.png')} />
+        <Text style={styles.title}> Zaatar </Text>
+    </View>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
-        alignSelf:'center'
+        flex:1,
+        width:'100%',
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor: '#2C4770',
+    },
+    title:{
+        marginTop:-50,
+        fontSize:30,
+        textAlign:'center',
+        color:'#fff',
+        fontFamily:'Blazed'
     }
 })
 export default Zaatar;

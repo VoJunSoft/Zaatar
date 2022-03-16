@@ -41,7 +41,7 @@ export default StyleSheet.create({
     ButtonTextAlpha: {
         fontSize: 25,
         color: '#171717',
-        padding: 4,
+        padding: 5,
         color: '#2C4770'
     },
     ButtonBoxDelta: {

@@ -1,16 +1,33 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import NavTabs from '../elements/NavTabs'
-import ButtonsWindow from '../elements/ButtonsWindow'
+import ButtonsWindow from '../components/ButtonsWindow'
+import IconsWindow from '../components/IconsWindow'
+import FetchWindow from '../components/FetchWindow'
 
 const Elements = () => {
-    const [screenName, setScreenName] = useState('Buttons')
+    // robots state
+    const [robots, setRobots] = useState([])
+    useEffect(  () => {
+            getRobots()
+    },[])
 
+    const getRobots = () => {
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(resp => resp.json())
+            .then (data => setRobots(data))
+    }
+
+    const [screenName, setScreenName] = useState('Buttons')
     const RenderElementsWindow = (screenName) => {
         switch(screenName){
             case 'Buttons':
                 return <ButtonsWindow />
+            case 'Icons':
+                return <IconsWindow />
+            case 'Fetch':
+                return <FetchWindow robots={robots}/>
         }
     }
     return (

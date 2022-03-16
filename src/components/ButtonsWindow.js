@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import AppStyles from '../styles/AppStyle'
-import Buttons from './Button'
+import Buttons from '../elements/Button'
 
 export default function ButtonsWindow() {
     return (

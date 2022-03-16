@@ -1,26 +1,66 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { 
     View, 
     Text, 
     StyleSheet,
     Dimensions,
     ScrollView,
-    Alert
+    Alert,
+    Keyboard
 } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import DropShadow from "react-native-drop-shadow"
 import { Avatar, Input } from 'react-native-elements';
 import Buttons from '../elements/Button'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Profile() {
 
     // user information state
     const [userInfo, setUserInfo] = useState({})
-    const SaveUserInfo = () => {
-        Alert.alert('Save use info')
-        console.log(userInfo)
+    useEffect( () => {
+        //get Data from asyncstorage on page load and store it to userInfo
+        getData() 
+    },[])
+
+    const getData = () => {
+        try {
+               AsyncStorage.getItem('userInfoZaatar')
+               .then((value) => {
+                    if(value !== null)
+                        setUserInfo(JSON.parse(value))
+               })
+        } catch(e) {
+          // error reading value
+        }
     }
+
+    const storeData = (value) => {
+        try {
+            AsyncStorage.setItem('userInfoZaatar', JSON.stringify(value))
+            .then(()=>{
+                Alert.alert('Saved') 
+                Keyboard.dismiss()
+            })
+        } catch (e) {
+            //err storing data
+        }
+    }
+
+    const SaveUserInfo = () => {
+        if(userInfo.Name.length >=4 && userInfo.Email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) && userInfo.Mobile.match(/\d/g).length === 10){
+            storeData(userInfo)
+            console.log(userInfo)
+        }else{
+            Alert.alert('Some fields are invalid')
+        }   
+    }
+
+    // const InputLengthField = () => {
+   
+    // }
+
     return (
         <View style={styles.container}>
             <DropShadow style={styles.dropShadow}>
@@ -29,7 +69,7 @@ export default function Profile() {
                         <Avatar
                             size={220}
                             rounded
-                            source={{uri: 'https://randomuser.me/api/portraits/men/36.jpg'}}
+                            source={{uri: 'https://robohash.org/honey?set=set2'}}
                             icon={{ name: 'user', type: 'font-awesome' }}
                             containerStyle={{ backgroundColor: '#323232' }}
                             key={1}
@@ -45,6 +85,7 @@ export default function Profile() {
                             containerStyle={{borderWidth:0}}
                             labelStyle={{color:'#171717'}}
                             onChangeText={value => setUserInfo({...userInfo, Name: value })}
+                            //errorMessage={InputLengthField()}
                         />
                         <Input
                             placeholder="khaled@junglesoft.com"
@@ -88,7 +129,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: AppStyles.AppBG,
+        backgroundColor: '#2C4770',
         justifyContent:'flex-end'
     },
     dropShadow:{
