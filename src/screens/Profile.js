@@ -135,8 +135,8 @@ const styles = StyleSheet.create({
     dropShadow:{
         shadowColor: '#323232',
         shadowOffset: {width: -9, height: 8},
-        shadowOpacity: 0.9,
-        shadowRadius: 2,
+        shadowOpacity: 0.7,
+        shadowRadius: 1,
     },
     dropShadowImg:{
         shadowColor: '#2C4770',

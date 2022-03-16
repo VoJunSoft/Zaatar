@@ -9,7 +9,7 @@ import {
 const Zaatar = () => {
     return (
     <View style={styles.container}>
-        <Image style={{width:300, height:400, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar1.png')} />
+        {/* <Image style={{width:300, height:400, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar1.png')} /> */}
         <Text style={styles.title}> Zaatar </Text>
     </View>
     )

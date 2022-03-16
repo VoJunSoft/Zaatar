@@ -20,12 +20,14 @@ import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
 import Zaatar from './src/screens/Zaatar'
 import Profile from './src/screens/Profile'
 import Settings from './src/screens/Settings'
+import Entry from './src/screens/Entry'
 import Elements from './src/screens/Elements'
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
 import AppStyles from './src/styles/AppStyle'
 import Buttons from './src/elements/Button'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Avatar } from 'react-native-elements';
 
 const Drawer = createDrawerNavigator()
 const App = () => {
@@ -56,24 +58,34 @@ const App = () => {
 
   const ProfileElement = () =>{
     return(
-      <Buttons.ButtonDefault 
-          titleRight={userInfo.Name ? userInfo.Name : 'user'}
-          iconName="photo"
-          iconSize={70}
-          horizontal={true}
-          containerStyle={{borderBottomWidth:0}}
-          textStyle={[
-              AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}
-          ]}
-          iconContainer={{backgroundColor:'rgba(0,0,0,0.4)', borderRadius:50, padding: 10}}
-          disabled
-      />
+      <View style={{alignSelf:'center', borderBottomWidth: 2, borderColor: '#2C4770'}}>
+        <Avatar
+            size={120}
+            rounded
+            source={{uri: 'https://robohash.org/honey?set=set2'}}
+            containerStyle={{ backgroundColor: '#2C4770' }}
+            key={1}
+        />
+        <Text style={[AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}]}>{userInfo.Name ? userInfo.Name : 'user'}</Text>
+      </View>
+      // <Buttons.ButtonDefault 
+      //     titleRight={userInfo.Name ? userInfo.Name : 'user'}
+      //     iconName="photo"
+      //     iconSize={70}
+      //     horizontal={true}
+      //     containerStyle={{borderBottomWidth:0}}
+      //     textStyle={[
+      //         AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}
+      //     ]}
+      //     iconContainer={{backgroundColor:'rgba(0,0,0,0.4)', borderRadius:50, padding: 10}}
+      //     disabled
+      // />
     )
   }
   return (
     <NavigationContainer>
       <Drawer.Navigator 
-          initialRouteName="Zaatar"
+          initialRouteName="Entry"
           screenOptions={{
             headerShown: true,
             drawerType:"front",
@@ -104,6 +116,14 @@ const App = () => {
               fontSize:20            
             }
           }}>
+          <Drawer.Screen
+            name="Entry"
+            component={Entry}
+            options={{
+              headerShown: false,
+              drawerLabel: () => null
+          }}
+        />
         <Drawer.Screen
           name="Profile"
           component={Profile}

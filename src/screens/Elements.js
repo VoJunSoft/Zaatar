@@ -49,11 +49,11 @@ const styles = StyleSheet.create({
         //AppStyles.AppBG,
     },
     ElementsBox: {
-        width: Dimensions.get('window').width - 35,
+        width: Dimensions.get('window').width - 30,
         alignSelf:'center',
         backgroundColor:'white',
-        borderRadius: 20,
-        margin:20,
+        borderRadius: 5,
+        margin:3,
     },
 })
 
