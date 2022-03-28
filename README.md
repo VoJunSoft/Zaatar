@@ -1,2 +1,3 @@
 # Zaatar
-React Native Components - Basic app structure
+## App for sellers
+### Create your profile and list your items or products for sale
