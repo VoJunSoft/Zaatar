@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "309828849149",
+    "project_id": "zaater-e1c56",
+    "storage_bucket": "zaater-e1c56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309828849149:android:f6b9ce95a88db6051fdd94",
+        "android_client_info": {
+          "package_name": "com.junglesoft.zaater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309828849149-ut1uomvtm8o3c20kihkh2bi9p9e14t7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKIRdtoU0C-hupE22qXtxNYDlQ12NKFWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309828849149-ut1uomvtm8o3c20kihkh2bi9p9e14t7s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

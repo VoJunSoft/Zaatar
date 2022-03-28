@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import NavTabs from '../elements/NavTabs'
 import ButtonsWindow from '../components/ButtonsWindow'
-import IconsWindow from '../components/IconsWindow'
-import FetchWindow from '../components/FetchWindow'
+import Events from '../components/Events'
+import Workshops from '../components/Workshops'
 
 const Elements = () => {
     // robots state
@@ -19,15 +19,15 @@ const Elements = () => {
             .then (data => setRobots(data))
     }
 
-    const [screenName, setScreenName] = useState('Buttons')
+    const [screenName, setScreenName] = useState('Events')
     const RenderElementsWindow = (screenName) => {
         switch(screenName){
             case 'Buttons':
                 return <ButtonsWindow />
-            case 'Icons':
-                return <IconsWindow />
-            case 'Fetch':
-                return <FetchWindow robots={robots}/>
+            case 'Events':
+                return <Events />
+            case 'Workshops':
+                return <Workshops robots={robots}/>
         }
     }
     return (
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     ElementsBox: {
         width: Dimensions.get('window').width - 30,
         alignSelf:'center',
-        backgroundColor:'white',
         borderRadius: 5,
         margin:3,
     },

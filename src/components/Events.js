@@ -2,14 +2,13 @@ import React from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import Icon from '../elements/Icon'
 
-export default function IconWindow() {
+export default function Events() {
     //TODO: move assets/icons into JSON A. call it from Icon.js B. use it for MiIcons List
     const MiIcons = ['home', 'edit', 'settings', 'add', 'delete', 'photo', 'upload', 'card', 'cart', 
                      'bell', 'camera', 'menu', 'typing', 'video', 'load', 'search', 'profile', 'contacts',
                     'location', 'mic', 'exit', 'envelope', 'share', 'speakers']
     return (
         <>
-        <Text style={styles.title}>Icons</Text>
         <View style={styles.IconsWindowBox}>
             {
                 MiIcons.map((item, index) =>{

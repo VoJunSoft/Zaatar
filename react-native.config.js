@@ -3,5 +3,12 @@ module.exports = {
       ios: {},
       android: {}, // grouped into "project"
     },
+    dependencies:{
+      'react-native-fbsdk':{
+        platforms:{
+          ios: null,
+        },
+      },
+    },
     assets: ["./src/assets/fonts/"], // stays the same 
   };

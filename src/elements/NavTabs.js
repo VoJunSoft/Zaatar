@@ -16,16 +16,12 @@ export default function NavTab(props) {
                         overflow:'hidden',
                         justifyContent:'space-between'}}>
 
-                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Buttons' ? 'rgba(255,255,255,0.2)' : null, borderTopLeftRadius:10}]} onPress={()=>props.switchTabs('Buttons')}>
-                    <Text style={CSS.tabText}> Buttons </Text>
+                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Events' ? 'rgba(255,255,255,0.2)' : null}]} onPress={()=>props.switchTabs('Events')}>
+                    <Text style={CSS.tabText}> الأحداث </Text>
                 </Pressable>
 
-                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Icons' ? 'rgba(255,255,255,0.2)' : null}]} onPress={()=>props.switchTabs('Icons')}>
-                    <Text style={CSS.tabText}> Icons </Text>
-                </Pressable>
-
-                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Fetch' ? 'rgba(255,255,255,0.2)' : null, borderTopRightRadius:10}]} onPress={()=>props.switchTabs('Fetch')}>
-                    <Text style={CSS.tabText}> Fetch </Text>
+                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Workshops' ? 'rgba(255,255,255,0.2)' : null, borderTopRightRadius:10}]} onPress={()=>props.switchTabs('Workshops')}>
+                    <Text style={CSS.tabText}> ورشات عمل </Text>
                 </Pressable>
 
             </View>
@@ -42,13 +38,13 @@ const CSS = StyleSheet.create({
         shadowRadius: 2,
     },
     tabView:{
-        width:"33%",
+        width:"48%",
         padding:7,
     },
     tabText:{
         color:'white',
-        fontFamily:'Marlboro',
+        fontFamily:'Cairo-Bold',
         textAlign:'center',
-        fontSize:22
+        fontSize:15
     }
 })

@@ -75,6 +75,9 @@
 		FD5B540537D84F58A1EB9FA9 /* OzradCLM-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0B1247470D354B1FA5EACBC4 /* OzradCLM-Bold.otf */; };
 		E35FB8D1689A474D90E142BB /* YAF.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5E907FA0926B4C00B7920438 /* YAF.otf */; };
 		9F6266070E07419E894E899C /* YiddishkeitAlefAlefAlef-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE3273B07B6F4B8585E3E6EB /* YiddishkeitAlefAlefAlef-Bold.otf */; };
+		718E54ECE5E6480296D34023 /* Lalezar-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3C7A96F18F94D7E8F21AEBF /* Lalezar-Regular.ttf */; };
+		E934A8EA7F8346D58704E96B /* NotoNastaliqUrdu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC44732AFD924FDA97510711 /* NotoNastaliqUrdu-Bold.ttf */; };
+		04240004EDC54B17829A2608 /* NotoNastaliqUrdu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25987FDF6710428BB1B7F7E1 /* NotoNastaliqUrdu-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,6 +165,9 @@
 		0B1247470D354B1FA5EACBC4 /* OzradCLM-Bold.otf */ = {isa = PBXFileReference; name = "OzradCLM-Bold.otf"; path = "../src/assets/fonts/OzradCLM-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5E907FA0926B4C00B7920438 /* YAF.otf */ = {isa = PBXFileReference; name = "YAF.otf"; path = "../src/assets/fonts/YAF.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		CE3273B07B6F4B8585E3E6EB /* YiddishkeitAlefAlefAlef-Bold.otf */ = {isa = PBXFileReference; name = "YiddishkeitAlefAlefAlef-Bold.otf"; path = "../src/assets/fonts/YiddishkeitAlefAlefAlef-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E3C7A96F18F94D7E8F21AEBF /* Lalezar-Regular.ttf */ = {isa = PBXFileReference; name = "Lalezar-Regular.ttf"; path = "../src/assets/fonts/Lalezar-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AC44732AFD924FDA97510711 /* NotoNastaliqUrdu-Bold.ttf */ = {isa = PBXFileReference; name = "NotoNastaliqUrdu-Bold.ttf"; path = "../src/assets/fonts/NotoNastaliqUrdu-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		25987FDF6710428BB1B7F7E1 /* NotoNastaliqUrdu-Regular.ttf */ = {isa = PBXFileReference; name = "NotoNastaliqUrdu-Regular.ttf"; path = "../src/assets/fonts/NotoNastaliqUrdu-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,6 +323,9 @@
 				0B1247470D354B1FA5EACBC4 /* OzradCLM-Bold.otf */,
 				5E907FA0926B4C00B7920438 /* YAF.otf */,
 				CE3273B07B6F4B8585E3E6EB /* YiddishkeitAlefAlefAlef-Bold.otf */,
+				E3C7A96F18F94D7E8F21AEBF /* Lalezar-Regular.ttf */,
+				AC44732AFD924FDA97510711 /* NotoNastaliqUrdu-Bold.ttf */,
+				25987FDF6710428BB1B7F7E1 /* NotoNastaliqUrdu-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -475,6 +484,9 @@
 				FD5B540537D84F58A1EB9FA9 /* OzradCLM-Bold.otf in Resources */,
 				E35FB8D1689A474D90E142BB /* YAF.otf in Resources */,
 				9F6266070E07419E894E899C /* YiddishkeitAlefAlefAlef-Bold.otf in Resources */,
+				718E54ECE5E6480296D34023 /* Lalezar-Regular.ttf in Resources */,
+				E934A8EA7F8346D58704E96B /* NotoNastaliqUrdu-Bold.ttf in Resources */,
+				04240004EDC54B17829A2608 /* NotoNastaliqUrdu-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

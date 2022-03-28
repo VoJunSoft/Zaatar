@@ -6,123 +6,255 @@ import {
     Dimensions,
     ScrollView,
     Alert,
-    Keyboard
+    Keyboard,
+    FlatList,
+    Image
 } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import DropShadow from "react-native-drop-shadow"
-import { Avatar, Input } from 'react-native-elements';
+import { Avatar, Input, Divider, Overlay } from 'react-native-elements';
 import Buttons from '../elements/Button'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import firestore from '@react-native-firebase/firestore';
+import ProductCard from '../components/ProductCard'
+import ProfileForm from '../components/ProfileForm'
+import AddProductForm from '../components/AddProductForm';
 
-export default function Profile() {
+const Profile = ( { route, navigation, ...props } ) => {
+    // const {id, name, first_name, picture, email, location, phone} = route.params
+    // user information state: {id, name, first_name, picture, email, location, phone}
+    const [userInfo, setUserInfo] = useState(props.seller ? props.params : route.params)
+    
+    //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
+    const [productsBySellerId, setProductsBySellerId] = useState([])
 
-    // user information state
-    const [userInfo, setUserInfo] = useState({})
+    //if profile is seller the userInfo = props.productInfo.seller else userinfo = getData
+    // if profile is seller (not owner) then hide some data
+
     useEffect( () => {
-        //get Data from asyncstorage on page load and store it to userInfo
-        getData() 
+        fillProductsDataById()
+        return () =>{
+            fillProductsDataById()
+        }
     },[])
 
-    const getData = () => {
-        try {
-               AsyncStorage.getItem('userInfoZaatar')
-               .then((value) => {
-                    if(value !== null)
-                        setUserInfo(JSON.parse(value))
-               })
-        } catch(e) {
-          // error reading value
-        }
-    }
-
-    const storeData = (value) => {
-        try {
-            AsyncStorage.setItem('userInfoZaatar', JSON.stringify(value))
-            .then(()=>{
-                Alert.alert('Saved') 
-                Keyboard.dismiss()
+    const fillProductsDataById = () => {
+        const subscriber = firestore()
+            .collection('products')
+            .where('seller.id', "==", userInfo.id)
+            .onSnapshot(querySnapshot => {
+                setProductsBySellerId([]);
+                querySnapshot.forEach(documentSnapshot => {
+                    setProductsBySellerId((prevState) => {
+                        return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+                    })
+                })
             })
-        } catch (e) {
-            //err storing data
-        }
+
+            return () => subscriber();
     }
 
-    const SaveUserInfo = () => {
-        if(userInfo.Name.length >=4 && userInfo.Email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) && userInfo.Mobile.match(/\d/g).length === 10){
-            storeData(userInfo)
-            console.log(userInfo)
-        }else{
-            Alert.alert('Some fields are invalid')
-        }   
+    const AddNewProduct = ()=>{
+        if(userInfo.phone ==='' || userInfo.location ==='')
+            Alert.alert('أكمل معلوماتك الشخصية أولاً من فضلك')
+        else
+            setProductFormVisibility(true)
     }
 
-    // const InputLengthField = () => {
-   
-    // }
-
-    return (
-        <View style={styles.container}>
-            <DropShadow style={styles.dropShadow}>
-                <View style={styles.profileBox}>
-                    <DropShadow style={[styles.image, styles.dropShadowImg]}>
-                        <Avatar
-                            size={220}
-                            rounded
-                            source={{uri: 'https://robohash.org/honey?set=set2'}}
-                            icon={{ name: 'user', type: 'font-awesome' }}
-                            containerStyle={{ backgroundColor: '#323232' }}
-                            key={1}
-                        />
-                    </DropShadow>
-                    <SafeAreaView style={styles.userInfo}>
-                        <Input
-                            placeholder="khaled e.g."
-                            value={userInfo.Name}
-                            label="Name"
-                            leftIcon={{ type: 'font-awesome', name: 'user' }}
-                            inputContainerStyle={{ paddingLeft: 5}}
-                            containerStyle={{borderWidth:0}}
-                            labelStyle={{color:'#171717'}}
-                            onChangeText={value => setUserInfo({...userInfo, Name: value })}
-                            //errorMessage={InputLengthField()}
-                        />
-                        <Input
-                            placeholder="khaled@junglesoft.com"
-                            label="Email"
-                            value={userInfo.Email}
-                            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-                            inputContainerStyle={{ paddingLeft: 5}}
-                            containerStyle={{borderWidth:0}}
-                            labelStyle={{color:'#171717'}}
-                            onChangeText={value => setUserInfo({...userInfo, Email: value })}
-                        />
-                        <Input
-                            placeholder="0527999321"
-                            label="Mobile"
-                            value={userInfo.Mobile}
-                            leftIcon={{ type: 'font-awesome', name: 'mobile' }}
-                            maxLength={10}
-                            keyboardType='numeric'
-                            inputContainerStyle={{ paddingLeft: 5}}
-                            containerStyle={{borderWidth:0}}
-                            labelStyle={{color:'#171717'}}
-                            onChangeText={value => setUserInfo({...userInfo, Mobile: value })}
-                        />
-                        <Buttons.PressableButton
-                            titleLeft="Save"
-                            iconName="add"
-                            iconSize={40}
-                            horizontal={false}
-                            containerStyle={{ borderRadius: 5, width:'90%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5, marginBottom: 10}}
-                            textStyle={{fontFamily: 'Bullpen3D' ,fontSize: 25, color: '#fff', width:'30%'}}
-                            iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50, padding: 5, width:'20%'}}
-                            onPress={SaveUserInfo}
-                        />
-                    </SafeAreaView>
+    const [deleteButtonVisibility, setDeleteButtonVisibility] = useState(false)
+    const ProfileHeaderComponent = () =>{
+        return(
+            <>
+            <View style={{flexDirection:'row', padding: 5, paddingTop:15, paddingBottom:15, backgroundColor: '#2C4770'}}>
+                <View style={{width:'35%', justifyContent:'center', alignItems:'center'}}>
+                    <Avatar
+                        size={120}
+                        rounded
+                        source={{uri: userInfo.picture.data.url }}
+                        icon={{ name: 'user', type: 'font-awesome' }}
+                        containerStyle={{ backgroundColor: '#323232' }}
+                        key={1}
+                    />
                 </View>
-            </DropShadow>
-        </View>
+                <View style={{width:'65%', justifyContent:'center', paddingLeft: 5}}>
+                    <Buttons.ButtonDefault 
+                        titleLeft={userInfo.name ? userInfo.name : 'مستخدم'}
+                        iconName="profile"
+                        iconSize={25}
+                        containerStyle={{
+                            justifyContent:'flex-end',
+                            letterSpacing:3,
+                        }}
+                        textStyle={{
+                            fontFamily: 'Cairo-Bold',
+                            color:'#fff',
+                            fontSize:18,
+                            marginRight:5,
+                            textAlign:'center',
+                        }}
+                        disabled/>
+
+                     <Buttons.ButtonDefault 
+                        titleLeft={userInfo.location ? userInfo.location : 'موقعك'}
+                        iconName="location"
+                        iconSize={25}
+                        containerStyle={{
+                            justifyContent:'flex-end',
+                        }}
+                        textStyle={{
+                            fontFamily: 'Cairo-Regular',
+                            color:'#fff',
+                            fontSize:18,
+                            letterSpacing:3,
+                            marginRight:10,
+
+                            textAlign:'center'
+                        }}
+                        disabled/>
+
+                    <Buttons.ButtonDefault 
+                        titleLeft={userInfo.phone ? userInfo.phone: 'رقم التليفون'}
+                        iconName="mic"
+                        iconSize={25}
+                        containerStyle={{
+                            justifyContent:'flex-end',
+                            marginTop:5
+                        }}
+                        textStyle={{
+                            fontFamily: 'Cairo-Regular',
+                            color:'#fff',
+                            fontSize:18,
+                            letterSpacing:2,
+                            marginRight:10
+                        }}
+                        disabled/>
+                </View>
+            </View>
+            {!props.seller ?
+                <View style={{flexDirection:'row', justifyContent:'space-around', backgroundColor: '#2C4770'}}>
+                    <Buttons.ButtonDefault 
+                        iconName="delete"
+                        iconSize={25}
+                        containerStyle={{
+                            width:'14%',
+                            justifyContent:'center',
+                            marginTop:5,
+                            backgroundColor:deleteButtonVisibility ? '#fac300' : 'rgba(255,255,255,0.3)'
+                        }}
+                        textStyle={{
+                            fontFamily: 'Cairo-Regular',
+                            color:'#fff',
+                            fontSize:15,
+                            letterSpacing:2,
+                            marginLeft:10
+                        }}
+                        onPress={()=> setDeleteButtonVisibility(!deleteButtonVisibility)}
+                        />
+
+                    <Buttons.ButtonDefault 
+                        titleLeft='منتج جديد'
+                        iconName="add"
+                        iconSize={25}
+                        containerStyle={{
+                            width:'35%',
+                            justifyContent:'center',
+                            marginTop:5,
+                            backgroundColor:'rgba(255,255,255,0.3)'
+                        }}
+                        textStyle={{
+                            fontFamily: 'Cairo-Regular',
+                            color:'#fff',
+                            fontSize:15,
+                            letterSpacing:2,
+                            marginLeft:10
+                    }}
+                    onPress={()=> AddNewProduct()}
+                    />
+                    
+                    <Buttons.ButtonDefault 
+                        titleLeft='تفاصيل المستخدم'
+                        iconName="edit"
+                        iconSize={25}
+                        containerStyle={{
+                            width:'49%',
+                            justifyContent:'center',
+                            marginTop:5,
+                            backgroundColor:'rgba(255,255,255,0.3)'
+                        }}
+                        textStyle={{
+                            fontFamily: 'Cairo-Regular',
+                            color:'#fff',
+                            fontSize:15,
+                            letterSpacing:2,
+                            marginLeft:10
+                        }}
+                        onPress={()=>setProfileFormVisibility(true)}
+                        />
+                </View> : null
+            }
+            <Divider style={{marginTop:1, opacity:0.4, marginBottom:10}}/>
+            </>
+        )
+    }
+
+    const $renderEmptyOrdersState = () => {
+        return(
+            <Text style={{
+                        color:'#fff', 
+                        fontFamily:'Cairo-Bold', 
+                        fontSize: 15,
+                        alignSelf:'center',
+                        marginTop:30
+                    }}>لا توجد منتجات في قائمتك</Text>
+        )
+    }
+    //ProfileForm.js visibility
+    const [profileFormVisibility, setProfileFormVisibility] = useState(false)
+    //AddProductForm.js visibility
+    const [productFormVisibility, setProductFormVisibility] = useState(false)
+    
+    return (
+        <>
+        <FlatList 
+            data={productsBySellerId}
+            ListHeaderComponent={<ProfileHeaderComponent />}
+            ListFooterComponent={productsBySellerId.length === 0 ? $renderEmptyOrdersState : null}
+            stickyHeaderIndices={[0]}
+            showsHorizontalScrollIndicator={false}
+            numColumns={2}
+            keyExtractor={item => item.productId}
+            style={styles.ProductsList}
+            renderItem={ ({item}) => (
+                // ownerId={route.params.id}
+                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} />
+            )}
+        />
+
+        <Overlay isVisible={profileFormVisibility} 
+                onBackdropPress={()=>setProfileFormVisibility(!profileFormVisibility)} 
+                fullScreen={true}
+                overlayStyle={{
+                    padding:0, 
+                    width:'96%',
+                    height:'96%', 
+                    borderRadius:15,
+                    backgroundColor:'rgba(255,255,255,0.95)',
+                }}>
+            <ProfileForm userInfo={userInfo} setUserInfo={setUserInfo} setProfileFormVisibility={setProfileFormVisibility} />
+        </Overlay>
+
+        <Overlay isVisible={productFormVisibility} 
+                onBackdropPress={()=>setProductFormVisibility(false)} 
+                fullScreen={true}
+                overlayStyle={{
+                    padding:0, 
+                    width:'96%',
+                    height:'96%', 
+                    borderRadius:15,
+                    backgroundColor:'rgba(255,255,255,0.95)',
+                }}>
+            <AddProductForm userInfo={userInfo} setProductFormVisibility={setProductFormVisibility} />
+        </Overlay>
+        </>
     )
 }
 
@@ -130,36 +262,26 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         backgroundColor: '#2C4770',
-        justifyContent:'flex-end'
     },
     dropShadow:{
         shadowColor: '#323232',
-        shadowOffset: {width: -9, height: 8},
+        shadowOffset: {width: -0, height: 0},
         shadowOpacity: 0.7,
         shadowRadius: 1,
     },
-    dropShadowImg:{
-        shadowColor: '#2C4770',
-        shadowOffset: {width: -2, height: 3},
-        shadowOpacity: 0.7,
-        shadowRadius: 3,
+    ProductsList:{
+        backgroundColor: '#2C4770',
     },
-    profileBox: {
-        width: Dimensions.get('window').width - 35,
-        height: Dimensions.get('window').height - 180,
-        alignSelf:'center',
-        backgroundColor:'white',
-        borderRadius: 10,
-        marginBottom:20,
-    },
-    image:{
-        alignSelf:'center',
-        marginTop:-90
-    },
-    userInfo:{
-        flex:1,
-        width: '90%',
-        alignSelf: 'center',
-        justifyContent:'center'
+    ProductCard:{
+        width:'45%',
+        alignItems:'center',
+        backgroundColor:'#fff',
+        marginTop: 15,
+        margin: 10,
+        borderRadius:10,
+        overflow:'hidden',
+        padding: 5
     }
 })
+
+export default Profile;

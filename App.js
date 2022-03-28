@@ -5,51 +5,59 @@
  * @format
  * @flow strict-local
  */
-
-import 'react-native-gesture-handler'
 import React, {useEffect, useState} from 'react'
 import {
   View,
   Text,
-  I18nManager
+  I18nManager,
+  StatusBar,
+  Image
 } from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
 import {createDrawerNavigator} from '@react-navigation/drawer'
-import NavigationBar from 'react-native-navbar-color'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
 import Zaatar from './src/screens/Zaatar'
 import Profile from './src/screens/Profile'
+import SellerProfile from './src/screens/SellerProfile'
 import Settings from './src/screens/Settings'
 import Entry from './src/screens/Entry'
 import Elements from './src/screens/Elements'
+import AppStyles from './src/styles/AppStyle'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Avatar } from 'react-native-elements'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+//import NavigationBar from 'react-native-navbar-color'
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
-import AppStyles from './src/styles/AppStyle'
-import Buttons from './src/elements/Button'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Avatar } from 'react-native-elements';
+
 
 const Drawer = createDrawerNavigator()
 const App = () => {
   // user information state
   const [userInfo, setUserInfo] = useState({})
-
-  useEffect(()=>{
+  const [userImage, setUserImage] = useState('')
+  useEffect( ()=>{
     getData() 
-    const nav = [
-          NavigationBar.setStatusBarColor("#2C4770",true), 
-          NavigationBar.setStatusBarTheme('light',true), 
-          NavigationBar.setColor("#2C4770")
-    ]
-    return () => {nav}
+    // const nav = [
+    //       NavigationBar.setStatusBarColor("#2C4770",true), 
+    //       NavigationBar.setStatusBarTheme('light',true), 
+    //       NavigationBar.setColor("#2C4770")
+    // ]
+    return () => {  
+                  //nav
+                   getData()
+                  }
   }, [])
 
-  const getData = () => {
+  const getData =  () => {
     try {
            AsyncStorage.getItem('userInfoZaatar')
            .then((value) => {
-                if(value !== null)
+                if(value !== null){
                     setUserInfo(JSON.parse(value))
+                    setUserImage(JSON.parse(value).picture.data.url)
+                } 
            })
     } catch(e) {
       // error reading value
@@ -58,47 +66,53 @@ const App = () => {
 
   const ProfileElement = () =>{
     return(
-      <View style={{alignSelf:'center', borderBottomWidth: 2, borderColor: '#2C4770'}}>
+      <View style={{alignSelf:'center', borderBottomWidth:3, paddingLeft:20, borderColor:'#2C4770',  alignItems:'center'}}>
+        <Text style={[AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}]}>{userInfo.name ? userInfo.name.split(' ')[0] : 'زعتور'}</Text>
         <Avatar
             size={120}
             rounded
-            source={{uri: 'https://robohash.org/honey?set=set2'}}
+            source={{uri: userImage ? userImage : null}}
+            icon={{ name: 'user', type: 'font-awesome' }}
             containerStyle={{ backgroundColor: '#2C4770' }}
-            key={1}
         />
-        <Text style={[AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}]}>{userInfo.Name ? userInfo.Name : 'user'}</Text>
+        <View 
+          style={{
+            width:500,
+            backgroundColor:'#2C4770',
+            height:0,
+            marginTop: 20,
+          }}
+        ></View>
       </View>
-      // <Buttons.ButtonDefault 
-      //     titleRight={userInfo.Name ? userInfo.Name : 'user'}
-      //     iconName="photo"
-      //     iconSize={70}
-      //     horizontal={true}
-      //     containerStyle={{borderBottomWidth:0}}
-      //     textStyle={[
-      //         AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}
-      //     ]}
-      //     iconContainer={{backgroundColor:'rgba(0,0,0,0.4)', borderRadius:50, padding: 10}}
-      //     disabled
-      // />
+    )
+  }
+
+  const HeaderRightIcon = () => {
+    return(
+      <TouchableOpacity activeOpacity={0.6} onPress={()=>{}}>
+        <Image style={{width:40, height:40, resizeMode:'contain', marginRight:7}} source={require('./src/assets/gallary/Zaatar3.png')} />
+      </TouchableOpacity>
     )
   }
   return (
     <NavigationContainer>
+      <StatusBar barStyle="light-content" hidden={false} backgroundColor='#2C4770'/>
       <Drawer.Navigator 
-          initialRouteName="Entry"
+          initialRouteName="Zaatar"
           screenOptions={{
             headerShown: true,
             drawerType:"front",
             drawerPosition:"left",
             overlayColor:'#00000055',
             headerTitleAlign:'center',
+            headerRight:(()=> <HeaderRightIcon/>),
             headerStyle:{
               backgroundColor: '#2C4770'
             },
             headerTintColor:'white',
             headerTitleStyle:{
-              fontSize:27,
-              fontFamily:'Bullpen3D',
+              fontSize:22,
+              fontFamily:'Cairo-Bold',
               letterSpacing: 5,
               color:'white'
             },
@@ -111,9 +125,9 @@ const App = () => {
               padding:5
             },
             drawerLabelStyle:{
-              fontFamily:'Marlboro',
+              fontFamily:'Cairo-Bold',
               color: '#2C4770',
-              fontSize:20            
+              fontSize:15           
             }
           }}>
           <Drawer.Screen
@@ -121,14 +135,17 @@ const App = () => {
             component={Entry}
             options={{
               headerShown: false,
-              drawerLabel: () => null
+              drawerItemStyle: {
+                display: "none",
+              }
           }}
         />
         <Drawer.Screen
           name="Profile"
           component={Profile}
+          initialParams={userInfo}
           options={{
-            title: 'profile',
+            title: 'الصفحه الشخصيه',
             drawerLabel: ()=><ProfileElement />
           }}
         />
@@ -136,7 +153,7 @@ const App = () => {
           name="Zaatar"
           component={Zaatar}
           options={{
-            title:'Zaatar',
+            title:'زعتر',
             drawerIcon:({focused})=>(
               <FontAwesomeIcons 
                   name='play'
@@ -150,7 +167,7 @@ const App = () => {
           name="Elements"
           component={Elements}
           options={{
-            title:'Elements',
+            title:'ورشات',
             drawerIcon:({focused})=>(
               <FontAwesomeIcons 
                   name='anchor'
@@ -164,7 +181,7 @@ const App = () => {
           name="Settings"
           component={Settings}
           options={{
-            title:'Settings',
+            title:'اعدادات',
             drawerIcon:({focused})=>(
               <FontAwesomeIcons 
                   name='tools'
@@ -173,6 +190,16 @@ const App = () => {
               />
             )
           }}
+        />
+        <Drawer.Screen
+          name="SellerProfile"
+          component={SellerProfile}
+          options={{
+            title:'متجر',
+            drawerItemStyle: {
+              display: "none",
+            }
+        }}
         />
       </Drawer.Navigator>
     </NavigationContainer>

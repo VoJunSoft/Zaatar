@@ -83,7 +83,7 @@ const CSS = StyleSheet.create({
     },
     containerVertical:{
         flexDirection: 'row',
-        justifyContent:'center',
+        //justifyContent:'flex-start',
         alignItems:'center'
     },
     dropShadow: {

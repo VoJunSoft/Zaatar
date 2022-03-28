@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 
-export default function FetchWindow(props) {
+export default function Workshops(props) {
 
     return (
         <>
-        <Text style={styles.title}>Angry Robots</Text>
         <View style={styles.fetchWindowBox}>
             {
                 props.robots.map((item, index) =>{

@@ -36,7 +36,7 @@ export default StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         padding: 5,
-        alignSelf:'center'
+        alignSelf:'center',
     },
     ButtonTextAlpha: {
         fontSize: 25,

@@ -1,67 +1,123 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { 
     View, 
     Text,
     StyleSheet,
     Image,
-    Dimensions
+    Dimensions,
+    Button
  } from 'react-native'
 import * as Animatable from 'react-native-animatable';
 import Buttons from '../elements/Button'
+import auth from '@react-native-firebase/auth';
+import { LoginManager, AccessToken, LoginButton, GraphRequest, GraphRequestManager } from 'react-native-fbsdk-next';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import firestore from '@react-native-firebase/firestore';
 
 const Entry = ({navigation}) => {
+    // user information state: {id, name, first_name, picture, email, location, phone}
+
+    useEffect( () => {
+        //get Data from asyncstorage on page load and store it to userInfo
+       getData()
+       return() => {
+           getData()
+       } 
+    },[])
+
+    async function onFacebookButtonPress() {
+        // Attempt login with permissions
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+        if (result.isCancelled) {
+            throw 'User cancelled the login process';
+        }
+        // Once signed in, get the users AccesToken
+        const data = await AccessToken.getCurrentAccessToken();
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+        // Create a Firebase credential with the AccessToken
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+        //get user info from accessToken 
+        getUserInfo(data.accessToken)
+        // Sign-in the user with the credential
+        return auth().signInWithCredential(facebookCredential)
+    }
+
+    const getUserInfo = (data) =>{
+          const infoRequest = new GraphRequest(
+            '/me',
+            {
+              accessToken: data,
+              parameters: {
+                fields: {
+                  string: 'id,email,name,picture,first_name'
+                }
+              }
+            },(error, result) => {
+                if (error) {
+                    //TODO error fetching data
+                    console.log(error)
+                } else {
+                    //Save results to async 
+                    storeData({...result, phone:'', location:''})
+                    console.log(result)
+                }
+            })
+          // Start the graph request.
+          new GraphRequestManager().addRequest(infoRequest).start()
+    }
+
+    const storeData = (res) => {
+        try {
+            AsyncStorage.getItem('userInfoZaatar')
+               .then((value) => {
+                    if(value === null){
+                        AsyncStorage.setItem('userInfoZaatar', JSON.stringify(res))
+                        navigation.navigate('Zaatar')
+                    }
+               })
+            // Add a new document in collection "users" with ID if it does not exist
+            firestore().collection('users').doc(res.id).set(res ,{merge: true})
+        } catch (e) {
+            //err storing data
+        }
+    }
+
+    const getData = () => {
+        try {
+               AsyncStorage.getItem('userInfoZaatar')
+               .then((value) => {
+                    if(value !== null){
+                        console.log(value)
+                        navigation.navigate('Zaatar')
+                    }
+               })
+        } catch(e) {
+          // error reading value
+        }
+    }
+            
     return (
     <View style={styles.container}>
-    <Animatable.View    onAnimationEnd={()=>navigation.navigate('Zaatar')}
-                        easing="ease-out-circ"
-                        animation="zoomIn"
-                        iterationCount={1}
-                        duration={3000}
-                        direction="normal">
-        <Image style={{width:250, height:350, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar1.png')} />
-        <Text style={styles.title}> Zaatar </Text>
-    </Animatable.View>
+        <Animatable.View    
+                easing="ease-out-circ"
+                animation="zoomIn"
+                iterationCount={1}
+                duration={3000}
+                direction="normal">
+                <Image style={{width:300, height:300, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar3.png')} />
+        </Animatable.View>
         <View style={styles.EntryBox}>
-                <Buttons.ButtonDefault 
-                    titleRight="ENTER"
-                    //iconName="home"
-                    iconSize={25}
-                    horizontal={false}
-                    containerStyle={{
-                         backgroundColor:'#2C4770',
-                         borderRadius: 3, 
-                         width: 200,
-                         padding: 7,
-                         margin:5
-                    }}
-                    textStyle={{
-                        fontFamily: 'Marlboro',
-                        color:'#fff',
-                        fontSize:25,
-                        letterSpacing:2
-                    }}
-                    onPress={()=>navigation.navigate('Zaatar')}
+            <Text style={styles.title}> زعترنا بدخولك يا ريس </Text>
+            <Button
+                title="Facebook Sign-In"
+                onPress={() => onFacebookButtonPress().then(() => console.log('Signed in with Facebook!'))}
                 />
-                {/* <Buttons.ButtonDefault 
-                    titleRight="SIGN-UP"
-                    //iconName="home"
-                    iconSize={25}
-                    horizontal={false}
-                    containerStyle={{
-                         backgroundColor:'#2C4770',
-                         borderRadius: 3, 
-                         width: 200,
-                         padding: 7,
-                         margin:5
-                    }}
-                    textStyle={{
-                        fontFamily: 'Marlboro',
-                        color:'#fff',
-                        fontSize:25,
-                        letterSpacing:2
-                    }}
-                    onPress={{}}
-                /> */}
+
+             <LoginButton
+                onLoginFinished={()=>onFacebookButtonPress().then(() => console.log('Signed in with Facebook!'))}
+                onLogoutFinished={() => AsyncStorage.removeItem('userInfoZaatar')}/>
         </View>
     </View>
     )
@@ -76,17 +132,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#2C4770',
     },
     title:{
-        marginTop:-50,
-        fontSize:30,
+        fontSize:20,
         textAlign:'center',
         color:'#fff',
-        fontFamily:'Blazed'
+        fontFamily:'Cairo-Bold',
+        marginBottom: 10
     },
     EntryBox:{
-        marginTop:-7,
-        backgroundColor: '#fff',
-        width:Dimensions.get('window').width/1.6,
-        //height:170,
+        marginTop:10,
+        //backgroundColor: '#fff',
+        width:Dimensions.get('window').width/1.4,
         justifyContent:'center',
         alignItems:'center',
         borderRadius:5,

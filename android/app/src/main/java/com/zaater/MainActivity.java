@@ -1,4 +1,4 @@
-package com.zaater;
+package com.junglesoft.zaater;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 
