@@ -198,8 +198,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.2.0')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation 'com.android.support:multidex:1.0.3'
+    //compile project(':react-native-navbar-color')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }

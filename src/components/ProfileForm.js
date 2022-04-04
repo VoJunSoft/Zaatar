@@ -18,7 +18,7 @@ export default function ProfileForm(props) {
 
     // user information state
     //TODO const [userInfo, setUserInfo] = useState(props.userInfo) HINT bug was fixed
-    const [userInfo, setUserInfo] = useState({...props.userInfo, phone:props.userInfo.phone ? props.userInfo.phone : '', location: props.userInfo.location ? props.userInfo.location : ''})
+    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {})
  
     const storeData = (value) => {
         try {
@@ -36,27 +36,61 @@ export default function ProfileForm(props) {
         }
     }
 
+    const [pass, setPass] = useState('')
+    const registerUser = (data) =>{
+        //TODO create authenticated user
+        const unsub=  auth()
+                        .signInWithEmailAndPassword(logInInfo.email, password)
+                        .then((userCreditentials) => {
+                            //get uid and pass it to store data
+                            const user = userCreditentials.user
+                            //get user id, retrieve data from data base then store by id 
+                            firestore().collection('users').doc(user.id).set(data)
+                            .then(()=>{
+                                AsyncStorage.setItem('userInfoZaatar', JSON.stringify(data))
+                                props.navigation.navigate('Zaatar')
+                            })
+                            .catch((e)=>{
+                                //error firestore()
+                            })
+                        })
+                        .catch((e)=>{
+                            //err auth()
+                        })           
+        return()=> sub
+    }
+
     const SaveUserInfo = () => {
-        if(userInfo.name.length >=4 
-            && userInfo.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) 
-            && userInfo.phone.match(/\d/g)
-            && userInfo.location.length >=4 ){
+        try{    
+            if(userInfo.name.length >=4 && userInfo.password.length >=7
+                && userInfo.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) 
+                && userInfo.phone.match(/\d/g)
+                && userInfo.location.length >=4 ){
 
-            //store data into async & database
-            storeData(userInfo)
+                if(props.Registration === true){
+                    //create authenticated user && save to data base && save to async
+                    registerUser(userInfo)
+                }else{
+                    //store data into async & database
+                    storeData(userInfo)
+                    //immediate update to profile info
+                    props.setUserInfo(userInfo)
+                    //Hide form
+                    props.setProfileFormVisibility(false)
+                }
 
-            //immediate update to profile info
-            props.setUserInfo(userInfo)
-            //Hide form
-            props.setProfileFormVisibility(false)
-        }else{
-            Alert.alert('يوجد نقص في التفاصيل')
-        }   
+            }else{
+                Alert.alert('يوجد نقص في التفاصيل')
+            }  
+        }catch(e){
+                Alert.alert('يوجد نقص في التفاصيل')
+        } 
     }
     return (
         <View style={styles.container}>
+            {!props.Registration? 
              <TouchableOpacity onPress={()=>props.setProfileFormVisibility(false)} 
-                          style={{backgroundColor: '#2C4770', borderTopLeftRadius:10, borderTopRightRadius:10}}
+                          style={{backgroundColor: '#2C4770', borderTopLeftRadius:10, borderTopRightRadius:10, width:'100%'}}
                           activeOpacity={0.7}>
                 <Text style={{
                     color:'#fff',
@@ -66,14 +100,14 @@ export default function ProfileForm(props) {
                 ⓧ
                 </Text>
             </TouchableOpacity>
-            <ScrollView style={styles.userInfo}>
-            <Avatar
+            : null}
+            <ScrollView style={styles.userInfo} showsVerticalScrollIndicator={false}>
+                <Avatar
                     size={150}
                     rounded
-                    source={{uri: userInfo.picture.data.url}}
+                    source={{uri: userInfo.picture}}
                     icon={{ name: 'user', type: 'font-awesome' }}
-                    containerStyle={{ backgroundColor: '#323232' , alignSelf:'center', margin:15}}
-                    key={1}
+                    containerStyle={{ backgroundColor: '#2C4770' , alignSelf:'center', margin:15}}
                 />
                 <Input
                     placeholder="khaled e.g."
@@ -85,7 +119,6 @@ export default function ProfileForm(props) {
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right', fontFamily:'Cairo-Regular'}}
                     onChangeText={value => setUserInfo({...userInfo, name: value })}
-                    //errorMessage={InputLengthField()}
                 />
                 <Input
                     placeholder="khaled@junglesoft.com"
@@ -98,6 +131,19 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, email: value })}
                 />
+                {props.Registration? 
+                <Input
+                    placeholder="*******"
+                    placeholderTextColor="red"
+                    label="كلمة المرور"
+                    value={pass}
+                    secureTextEntry={true}
+                    rightIcon={{ type: 'font-awesome', name: 'key' }}
+                    inputContainerStyle={{ paddingLeft: 5}}
+                    containerStyle={{borderWidth:0}}
+                    labelStyle={{color:'#171717', textAlign:'right'}}
+                    onChangeText={value => setPass(value)}
+                /> : null}
                 <Input
                     placeholder="0123456789"
                     placeholderTextColor="red"
@@ -124,7 +170,7 @@ export default function ProfileForm(props) {
                     onChangeText={value => setUserInfo({...userInfo, location: value })}
                 />
                 <Buttons.ButtonDefault
-                    titleLeft="حفظ التفاصيل"
+                    titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
                     iconName="add"
                     iconSize={40}
                     horizontal={false}
@@ -143,7 +189,7 @@ const styles = StyleSheet.create({
         flex:1,
         //backgroundColor: '#2C4770',
         backgroundColor: '#fff',
-
+        alignItems:'center',
         borderRadius: 10,
     },
     dropShadow:{
@@ -173,6 +219,5 @@ const styles = StyleSheet.create({
         flex:1,
         width: '90%',
         alignSelf: 'center',
-        //justifyContent:'center'
     }
 })

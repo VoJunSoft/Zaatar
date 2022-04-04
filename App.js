@@ -20,23 +20,21 @@ import Zaatar from './src/screens/Zaatar'
 import Profile from './src/screens/Profile'
 import SellerProfile from './src/screens/SellerProfile'
 import Settings from './src/screens/Settings'
+import Registration from './src/screens/Registration'
 import Entry from './src/screens/Entry'
 import Elements from './src/screens/Elements'
 import AppStyles from './src/styles/AppStyle'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-
 //import NavigationBar from 'react-native-navbar-color'
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
 
-
+//TODO add auth to routes/screens
 const Drawer = createDrawerNavigator()
 const App = () => {
   // user information state
   const [userInfo, setUserInfo] = useState({})
-  const [userImage, setUserImage] = useState('')
   useEffect( ()=>{
     getData() 
     // const nav = [
@@ -54,10 +52,8 @@ const App = () => {
     try {
            AsyncStorage.getItem('userInfoZaatar')
            .then((value) => {
-                if(value !== null){
+                if(value !== null)
                     setUserInfo(JSON.parse(value))
-                    setUserImage(JSON.parse(value).picture.data.url)
-                } 
            })
     } catch(e) {
       // error reading value
@@ -66,39 +62,30 @@ const App = () => {
 
   const ProfileElement = () =>{
     return(
-      <View style={{alignSelf:'center', borderBottomWidth:3, paddingLeft:20, borderColor:'#2C4770',  alignItems:'center'}}>
-        <Text style={[AppStyles.ButtonTextAlpha, {fontFamily:'Cairo-Bold'}]}>{userInfo.name ? userInfo.name.split(' ')[0] : 'زعتور'}</Text>
+      <View style={{alignSelf:'center', borderBottomWidth:0, paddingLeft:20, borderColor:'#2C4770',  alignItems:'center'}}>
+        <Text style={AppStyles.textTitle}>الصفحه الشخصيه</Text>
         <Avatar
             size={120}
             rounded
-            source={{uri: userImage ? userImage : null}}
+            source={{uri: userInfo.picture}}
             icon={{ name: 'user', type: 'font-awesome' }}
             containerStyle={{ backgroundColor: '#2C4770' }}
         />
-        <View 
-          style={{
-            width:500,
-            backgroundColor:'#2C4770',
-            height:0,
-            marginTop: 20,
-          }}
-        ></View>
+        <Text style={AppStyles.textTitle}>{userInfo.name ? userInfo.name.split(' ')[0] : 'زعتور'}</Text>
       </View>
     )
   }
 
   const HeaderRightIcon = () => {
     return(
-      <TouchableOpacity activeOpacity={0.6} onPress={()=>{}}>
         <Image style={{width:40, height:40, resizeMode:'contain', marginRight:7}} source={require('./src/assets/gallary/Zaatar3.png')} />
-      </TouchableOpacity>
     )
   }
   return (
     <NavigationContainer>
       <StatusBar barStyle="light-content" hidden={false} backgroundColor='#2C4770'/>
       <Drawer.Navigator 
-          initialRouteName="Zaatar"
+          initialRouteName="Entry"
           screenOptions={{
             headerShown: true,
             drawerType:"front",
@@ -130,9 +117,19 @@ const App = () => {
               fontSize:15           
             }
           }}>
-          <Drawer.Screen
+        <Drawer.Screen
             name="Entry"
             component={Entry}
+            options={{
+              headerShown: false,
+              drawerItemStyle: {
+                display: "none",
+              }
+          }}
+        />
+         <Drawer.Screen
+            name="Registration"
+            component={Registration}
             options={{
               headerShown: false,
               drawerItemStyle: {

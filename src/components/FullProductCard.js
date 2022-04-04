@@ -11,21 +11,25 @@ import {
     Pressable
 } from 'react-native'
 import Icon from '../elements/Icon'
-import {Picker} from '@react-native-picker/picker'
 import Buttons from '../elements/Button'
 import { Avatar } from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Animatable from 'react-native-animatable';
 
 const FullProductCard = (props) => {
     const navigation = useNavigation()
+    //props.productInfo  & props.setFullProductVisibility from productCard.js
+    ////productInfo fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
+    const [productInfo, setProductInfo] = useState(props.productInfo)
+    //large image display index
+    const [imgIndex, setImageIndex] = useState(0)
 
     useEffect( ()=>{
       getData() 
-
-      return () => getData()
     }, [])
   
+    //get userId to compare with other sellers ids
     const [ownerId, setOwnerId] = useState('')
     const getData =  () => {
       try {
@@ -40,18 +44,16 @@ const FullProductCard = (props) => {
       }
     }
 
-    //props.productInfo  & props.setFullProductVisibility from productCard.js
-    ////productInfo fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
-    const [productInfo, setProductInfo] = useState(props.productInfo)
-    //large image display index
-    const [imgIndex, setImageIndex] = useState(0)
-
+    //TODO retrieve data from firebase based on id and pass it instead of productInfo.seller (which is stored with product info)
     const GoToSellerProfile = () => {
      // if user is owner then go to his/her page
-      if(productInfo.seller.id === ownerId)
-         navigation.navigate('Profile')
-       else
+      if(productInfo.seller.id === ownerId){
+           navigation.navigate('Profile')
+      }else{
+          // navigation.setParams('SellerProfile' , productInfo.seller)
+          // console.log('----->', productInfo.seller.id)
           navigation.navigate('SellerProfile' , productInfo.seller)
+      }
 
       props.setFullProductVisibility(false)
     }
@@ -65,14 +67,21 @@ const FullProductCard = (props) => {
         <Avatar
               size={50}
               rounded
-              source={{uri: productInfo.seller.picture.data.url}}
+              source={{uri: productInfo.seller.picture }}
               icon={{ name: 'user', type: 'font-awesome' }}
               containerStyle={{ backgroundColor: '#2C4770', marginLeft:10}}
               key={1}
           />
-    </TouchableOpacity>   
+    </TouchableOpacity>  
+   
     <ScrollView style={[styles.block]}>
-         <Image style={styles.imgLarge} source={{uri: productInfo.photos[imgIndex]}} /> 
+      <Animatable.View    
+          animation="bounceInDown"
+          easing="ease"
+          iterationCount={1}
+          duration={1000}
+          direction="normal">
+          <Image style={styles.imgLarge} source={{uri: productInfo.photos[imgIndex]}} /> 
           <ScrollView style={styles.imgBlock} horizontal={true}>
             {
                 productInfo.photos.map( (item, index) => (
@@ -111,6 +120,8 @@ const FullProductCard = (props) => {
                 iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
                 onPress={()=>{productInfo.seller.id === props.ownerId ? Alert.alert('لا يمكنك الشراء من متجرك الخاص') : null}}
           /> 
+
+    </Animatable.View>
     </ScrollView>
   </>
 )
@@ -119,7 +130,7 @@ const FullProductCard = (props) => {
 const styles = StyleSheet.create({
     block:{
       width:'100%',
-      //backgroundColor:'rgba(0,0,0,0.3)'
+      backgroundColor:'rgba(255,255,255,1)'
     },
     cardBlock: {
       backgroundColor:'rgba(0,0,0,0.2)',
@@ -131,7 +142,7 @@ const styles = StyleSheet.create({
       padding:5
     },
     ProfileHeader:{
-        backgroundColor:'rgba(0,0,0,0.2)',
+        backgroundColor:'rgba(255,255,255,1)',
         width:'100%',
         flexDirection:'row',
         justifyContent:'flex-end',

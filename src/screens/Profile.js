@@ -19,10 +19,10 @@ import ProductCard from '../components/ProductCard'
 import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm';
 
-const Profile = ( { route, navigation, ...props } ) => {
+const Profile = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
     // user information state: {id, name, first_name, picture, email, location, phone}
-    const [userInfo, setUserInfo] = useState(props.seller ? props.params : route.params)
+    const [userInfo, setUserInfo] = useState(props.seller ? props.params : props.route.params)
     
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
     const [productsBySellerId, setProductsBySellerId] = useState([])
@@ -32,9 +32,6 @@ const Profile = ( { route, navigation, ...props } ) => {
 
     useEffect( () => {
         fillProductsDataById()
-        return () =>{
-            fillProductsDataById()
-        }
     },[])
 
     const fillProductsDataById = () => {
@@ -69,7 +66,7 @@ const Profile = ( { route, navigation, ...props } ) => {
                     <Avatar
                         size={120}
                         rounded
-                        source={{uri: userInfo.picture.data.url }}
+                        source={{uri: userInfo.picture}}
                         icon={{ name: 'user', type: 'font-awesome' }}
                         containerStyle={{ backgroundColor: '#323232' }}
                         key={1}
@@ -224,7 +221,6 @@ const Profile = ( { route, navigation, ...props } ) => {
             keyExtractor={item => item.productId}
             style={styles.ProductsList}
             renderItem={ ({item}) => (
-                // ownerId={route.params.id}
                 <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} />
             )}
         />

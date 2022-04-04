@@ -39,7 +39,6 @@ export default function Zaatar({route, navigation}) {
             .collection('products')
             .orderBy('date_listed', 'asc')
             .onSnapshot(querySnapshot => {
-                setProducts([]);
                 querySnapshot.forEach(documentSnapshot => {
                     setProducts((prevState) => {
                         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]

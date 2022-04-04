@@ -36,12 +36,12 @@ export default function ProductCard(props) {
         )
     }
 
-    const DefaultView = () => {
+    const DefaultView = (props) => {
         return(
             <TouchableOpacity   style={styles.ProductCard} 
                                 activeOpacity={0.7} 
                                 onPress={()=>setFullProductVisibility(true)}
-                                disabled={props.deleteButtonVisibility} >
+                                disabled={props.deleteButtonVisibility}>
                 <Text style={styles.title}> {productInfo.product_name}</Text>
                 <Image style={{width: "100%", height: 170, borderRadius:0, marginTop: 5, marginBottom: 0}} source={{uri : productInfo.photos[0]}} /> 
                 <View style={{width: "100%",flexDirection:'row', 
@@ -56,10 +56,6 @@ export default function ProductCard(props) {
                                     width:'30%',
                                     justifyContent:'center',
                                     backgroundColor: '#fac300'
-                                }}
-                                textStyle={{
-                                    fontFamily: 'Cairo-Regular',
-                                    color:'#fff',
                                 }}
                                 iconContainer={{
                                     backgroundColor:'#fac300'
@@ -124,18 +120,16 @@ export default function ProductCard(props) {
 
     return (
         <>
-        <DefaultView />
+        {DefaultView(props)}
         <Overlay isVisible={fullProductVisibility} 
                 onBackdropPress={()=>setFullProductVisibility(false)} 
                 fullScreen={true}
                 overlayStyle={{
                     padding:0, 
                     width:'94%',
-                    height:'98%', 
-                    borderRadius:10,
-                    backgroundColor:'rgba(255,255,255,0.95)',
+                    height:'100%', 
+                    borderRadius:0,
                 }}>
-                  {/* ownerId={props.ownerId} */}
                 <FullProductCard productInfo={productInfo} setFullProductVisibility={setFullProductVisibility} />
         </Overlay>
         </>
@@ -156,10 +150,10 @@ const styles = StyleSheet.create({
         width:'45%',
         backgroundColor:'#fff',
         margin: 10,
-        borderRadius:10,
+        borderTopLeftRadius:20,
+        borderBottomRightRadius:20,
         overflow:'hidden',
         alignItems:'center'
-        //padding: 5
     },
     title:{
         fontFamily:'Cairo-Bold',

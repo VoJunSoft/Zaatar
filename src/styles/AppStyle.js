@@ -40,7 +40,6 @@ export default StyleSheet.create({
     },
     ButtonTextAlpha: {
         fontSize: 25,
-        color: '#171717',
         padding: 5,
         color: '#2C4770'
     },
@@ -59,4 +58,12 @@ export default StyleSheet.create({
         borderRadius:10,
         marginLeft: -4,
     },
+    textTitle:{
+        width:'100%',
+        height:40,
+        fontFamily:'Cairo-Regular',
+        fontSize: 19,
+        padding: 3,
+        color: '#2C4770',
+    }
 })
