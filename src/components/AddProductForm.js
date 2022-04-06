@@ -22,8 +22,6 @@ import {Picker} from '@react-native-picker/picker'
 
 export default function AddProductForm(props) {
 
-    useEffect(()=>{
-    },[])
   //props.userInfo
   //HINT for edit purposes call AddProductForm from productCard and pass to it productInfo/Item
   const [productInfo, setProductInfo] = useState({
@@ -44,7 +42,6 @@ export default function AddProductForm(props) {
     ImagePicker.openPicker({
       width: undefined,
       height: 350,
-      //cropping: true,
       multiple: true
     }).then((image) => {
       image.forEach(item => {
@@ -65,17 +62,8 @@ export default function AddProductForm(props) {
         const extension = filename.split('.').pop(); 
         const name = filename.split('.').slice(0, -1).join('.');
         filename = name + Date.now() + '.' + extension;
-        setTransferred(0);
         const storageRef = storage().ref(`products/${filename}`);
         const task = storageRef.putFile(uploadUri);
-        // Set transferred state
-        task.on('state_changed', (taskSnapshot) => {
-        setTransferred(
-            Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-            100,
-        );
-        });
-
         try {
             await task;
             const url = await storageRef.getDownloadURL()

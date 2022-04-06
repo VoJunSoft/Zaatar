@@ -21,35 +21,13 @@ const Entry = ({navigation}) => {
 
     useEffect( () => { 
        const unsubscribe = navigation.addListener('focus', () => {
-            //  auth().onAuthStateChanged((user) => {
-            //    if(user)
+             // auth().onAuthStateChanged((user) => {
+               // if(user)
                   isLoggedIn()
-            //  })
+             // })
         })
         return () => unsubscribe()
       },[navigation])
-
-    const [userInfo, setUserInfo] = useState({})
-    const getUserInfo = (irec) => {
-        const subscriber = firestore()
-        .collection('users')
-        .doc(irec)
-        .get()
-        .then(documentSnapshot => {
-            console.log(documentSnapshot.data())
-            setUserInfo({...documentSnapshot.data(), id: irec})
-            AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...documentSnapshot.data(), id: irec}))
-            console.log(userInfo)
-            //if user is authenticated then go to main page
-            navigation.navigate('Zaatar')
-            
-        })
-        .catch((e) => {
-            setIsloading(false)
-            setErrMsg('احدى المعلومات غير صحيحه')
-        })
-        return () => subscriber
-    }
 
     const isLoggedIn = () => {
         try {
@@ -57,7 +35,7 @@ const Entry = ({navigation}) => {
                .then((value) => {
                     if(value !== null){
                         console.log(value)
-                        //navigation.navigate('Zaatar')
+                        navigation.navigate('Zaatar')
                     }
                })
         } catch(e) {
@@ -79,6 +57,7 @@ const Entry = ({navigation}) => {
                 //User account signed in
                 //get uid and pass it to store data
                 const user = userCreditentials.user
+                console.log(user)
                 //get user id, retrieve data from data base then store by id 
                 getUserInfo(user.uid) 
             })
@@ -86,8 +65,32 @@ const Entry = ({navigation}) => {
               setIsloading(false)
               setErrMsg('احدى المعلومات غير صحيحه')
           })
-            setIsloading(false)
             return () => unsub
+      }
+
+      const [userInfo, setUserInfo] = useState({})
+      const getUserInfo = (irec) => {
+          const subscriber = firestore()
+          .collection('users')
+          .doc(irec)
+          .get()
+          .then(documentSnapshot => {
+              console.log(documentSnapshot.data())
+              setUserInfo({...documentSnapshot.data(), id: irec})
+              AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...documentSnapshot.data(), id: irec})) 
+          })
+          .then(()=>{
+                console.log(userInfo)
+                //if user is authenticated then go to main page
+                navigation.navigate('Zaatar')
+                //hide indicator
+                setIsloading(false)  
+          })
+          .catch((e) => {
+              setIsloading(false)
+              setErrMsg('احدى المعلومات غير صحيحه')
+          })
+          return () => subscriber
       }
 
     return (
@@ -106,6 +109,7 @@ const Entry = ({navigation}) => {
             <View style={styles.InEntryBox}>
                 <Input
                     placeholder="khaled@junglesoft.com"
+                    autoCompleteType={true}
                     //placeholderTextColor="red"
                     label="البريد الالكتروني"
                     value={logInInfo.email}
@@ -117,6 +121,7 @@ const Entry = ({navigation}) => {
                     />
                 <Input
                     placeholder="*******"
+                    autoCompleteType={true}
                     //placeholderTextColor="red"
                     label="كلمة المرور"
                     value={logInInfo.password}
@@ -127,12 +132,8 @@ const Entry = ({navigation}) => {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setLogInInfo({...logInInfo, password: value })}
                 />
+                { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
                 <Text style={{color:'red'}}>{errMsg}</Text>
-                { isLoading ? 
-                    <ActivityIndicator color='#2C4770' size={40}/>
-                    :
-                    null
-                }
                 <Buttons.ButtonDefault
                     titleLeft="دخول"
                     //iconName="profile"
@@ -146,10 +147,10 @@ const Entry = ({navigation}) => {
                 <Text style={{margin:5}}>- او -</Text>
                  <Buttons.ButtonDefault
                     titleLeft="مستخدم جديد"
-                    iconName="new"
-                    iconSize={39}
+                    //iconName="new"
+                    //iconSize={39}
                     horizontal={false}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center'}}
+                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7}}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 16, color: '#fff'}}
                     iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
                     onPress={()=>navigation.navigate('Registration')}

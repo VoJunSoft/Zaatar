@@ -17,7 +17,8 @@ import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard'
 import ProfileForm from '../components/ProfileForm'
-import AddProductForm from '../components/AddProductForm';
+import AddProductForm from '../components/AddProductForm'
+import RNRestart from 'react-native-restart'
 
 const Profile = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
@@ -28,26 +29,29 @@ const Profile = (props) => {
     const [productsBySellerId, setProductsBySellerId] = useState([])
 
     //if profile is seller the userInfo = props.productInfo.seller else userinfo = getData
-    // if profile is seller (not owner) then hide some data
-
     useEffect( () => {
-        fillProductsDataById()
+            fillProductsDataById()
     },[])
 
     const fillProductsDataById = () => {
-        const subscriber = firestore()
-            .collection('products')
-            .where('seller.id', "==", userInfo.id)
-            .onSnapshot(querySnapshot => {
-                setProductsBySellerId([]);
-                querySnapshot.forEach(documentSnapshot => {
-                    setProductsBySellerId((prevState) => {
-                        return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+        try{
+            const subscriber = firestore()
+                .collection('products')
+                .where('seller.id', "==", userInfo.id)
+                .onSnapshot(querySnapshot => {
+                    setProductsBySellerId([]);
+                    querySnapshot.forEach(documentSnapshot => {
+                        setProductsBySellerId((prevState) => {
+                            return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+                        })
                     })
                 })
-            })
 
-            return () => subscriber();
+                return () => subscriber();
+        }catch(err){
+            //TODO getZaatarUserInfo from async and reload fillProductsDataById()
+            RNRestart.Restart()
+        }
     }
 
     const AddNewProduct = ()=>{
@@ -66,10 +70,9 @@ const Profile = (props) => {
                     <Avatar
                         size={120}
                         rounded
-                        source={{uri: userInfo.picture}}
+                        source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/profile.png') }
                         icon={{ name: 'user', type: 'font-awesome' }}
-                        containerStyle={{ backgroundColor: '#323232' }}
-                        key={1}
+                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', margin:5}}
                     />
                 </View>
                 <View style={{width:'65%', justifyContent:'center', paddingLeft: 5}}>
@@ -235,7 +238,7 @@ const Profile = (props) => {
                     borderRadius:15,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
-            <ProfileForm userInfo={userInfo} setUserInfo={setUserInfo} setProfileFormVisibility={setProfileFormVisibility} />
+            <ProfileForm userInfo={userInfo} setUserInfo={setUserInfo} setProfileFormVisibility={setProfileFormVisibility} disabled/>
         </Overlay>
 
         <Overlay isVisible={productFormVisibility} 

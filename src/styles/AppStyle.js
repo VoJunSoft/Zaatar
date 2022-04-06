@@ -62,7 +62,7 @@ export default StyleSheet.create({
         width:'100%',
         height:40,
         fontFamily:'Cairo-Regular',
-        fontSize: 19,
+        fontSize: 17,
         padding: 3,
         color: '#2C4770',
     }

@@ -42,10 +42,6 @@ const App = () => {
     //       NavigationBar.setStatusBarTheme('light',true), 
     //       NavigationBar.setColor("#2C4770")
     // ]
-    return () => {  
-                  //nav
-                   getData()
-                  }
   }, [])
 
   const getData =  () => {
@@ -62,16 +58,16 @@ const App = () => {
 
   const ProfileElement = () =>{
     return(
-      <View style={{alignSelf:'center', borderBottomWidth:0, paddingLeft:20, borderColor:'#2C4770',  alignItems:'center'}}>
-        <Text style={AppStyles.textTitle}>الصفحه الشخصيه</Text>
+      <View style={{alignSelf:'center', borderBottomWidth:2, paddingLeft:20, borderColor:'#2C4770',  alignItems:'center'}}>
+        <Text style={AppStyles.textTitle}>{userInfo.name ? userInfo.name : 'زعتور'}</Text>
         <Avatar
             size={120}
             rounded
-            source={{uri: userInfo.picture}}
+            source={userInfo.picture ? {uri: userInfo.picture} : require('./src/assets/gallary/profile.png') }
             icon={{ name: 'user', type: 'font-awesome' }}
-            containerStyle={{ backgroundColor: '#2C4770' }}
+            containerStyle={{ backgroundColor: '#2C4770', margin: 5}}
         />
-        <Text style={AppStyles.textTitle}>{userInfo.name ? userInfo.name.split(' ')[0] : 'زعتور'}</Text>
+        <Text style={AppStyles.textTitle}>الصفحه الشخصيه</Text>
       </View>
     )
   }
@@ -151,9 +147,10 @@ const App = () => {
           component={Zaatar}
           options={{
             title:'زعتر',
+            //title:'الصفحة الرئيسية',
             drawerIcon:({focused})=>(
               <FontAwesomeIcons 
-                  name='play'
+                  name='home'
                   color={focused ? '#2C4770' : '#2C4770'}
                   size={20}
               />

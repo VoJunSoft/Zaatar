@@ -27,11 +27,6 @@ export default function Zaatar({route, navigation}) {
     useEffect( () => {
         //get Data from asyncstorage on page load and store it to userInfo
         fillProducts()
-
-        return() =>{
-            fillProducts()
-        }
-        
     },[])
 
     const fillProducts = () => {

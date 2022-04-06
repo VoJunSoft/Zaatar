@@ -8,7 +8,8 @@ import {
     ScrollView,
     TouchableOpacity,
     Alert,
-    Pressable
+    Pressable,
+    Linking
 } from 'react-native'
 import Icon from '../elements/Icon'
 import Buttons from '../elements/Button'
@@ -21,6 +22,8 @@ const FullProductCard = (props) => {
     const navigation = useNavigation()
     //props.productInfo  & props.setFullProductVisibility from productCard.js
     ////productInfo fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
+
+    // TODO get productInfo.seller from database based on productInfo.seller.id
     const [productInfo, setProductInfo] = useState(props.productInfo)
     //large image display index
     const [imgIndex, setImageIndex] = useState(0)
@@ -29,7 +32,7 @@ const FullProductCard = (props) => {
       getData() 
     }, [])
   
-    //get userId to compare with other sellers ids
+    //get owner (logged in user) to compare with other sellers ids
     const [ownerId, setOwnerId] = useState('')
     const getData =  () => {
       try {
@@ -45,29 +48,35 @@ const FullProductCard = (props) => {
     }
 
     //TODO retrieve data from firebase based on id and pass it instead of productInfo.seller (which is stored with product info)
-    const GoToSellerProfile = () => {
+    const GoToSellerProfile = (data) => {
      // if user is owner then go to his/her page
       if(productInfo.seller.id === ownerId){
            navigation.navigate('Profile')
       }else{
           // navigation.setParams('SellerProfile' , productInfo.seller)
           // console.log('----->', productInfo.seller.id)
-          navigation.navigate('SellerProfile' , productInfo.seller)
+          navigation.navigate('SellerProfile' , data)
       }
 
       props.setFullProductVisibility(false)
     }
+
+    const shareToWhatsApp = (phoneNumber) => {
+      let data = 'زعتر - ' + productInfo.product_name + ' (' + productInfo.description + ') ' + 'السعر :' + productInfo.price + '₪'
+      Linking.openURL(`whatsapp://send?text=${data}&phone=${phoneNumber}`);
+    }
+
     return (
     <>
     <TouchableOpacity 
         style={styles.ProfileHeader} 
         activeOpacity={0.7} 
-        onPress={()=>GoToSellerProfile()}>
+        onPress={()=>GoToSellerProfile(productInfo.seller)}>
         <Text style={styles.title}>{productInfo.seller.name}</Text> 
         <Avatar
               size={50}
               rounded
-              source={{uri: productInfo.seller.picture }}
+              source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/profile.png') }
               icon={{ name: 'user', type: 'font-awesome' }}
               containerStyle={{ backgroundColor: '#2C4770', marginLeft:10}}
               key={1}
@@ -118,7 +127,7 @@ const FullProductCard = (props) => {
                 containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', alignSelf:'center', margin: 15, padding: 5}}
                 textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 18, color: '#fff'}}
                 iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
-                onPress={()=>{productInfo.seller.id === props.ownerId ? Alert.alert('لا يمكنك الشراء من متجرك الخاص') : null}}
+                onPress={()=>{productInfo.seller.id === props.ownerId ? Alert.alert('لا يمكنك الشراء من متجرك الخاص') : shareToWhatsApp(productInfo.seller.phone)}}
           /> 
 
     </Animatable.View>
