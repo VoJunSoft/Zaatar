@@ -8,12 +8,10 @@ export default function SellerProfile(props) {
     const [sellerInfo, setSellerInfo] = useState(props.route.params)
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', () => {
-             // The screen is focused
              setSellerInfo(props.route.params)
              console.log('params-------->', sellerInfo.id)
          })
-       // Return the function to unsubscribe from the event so it gets removed on    unmount
-       return unsubscribe
+       return() => unsubscribe
      }, [props.navigation])
     
   

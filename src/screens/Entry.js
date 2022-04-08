@@ -15,7 +15,7 @@ import Buttons from '../elements/Button'
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import firestore from '@react-native-firebase/firestore';
-
+import {useNavigation} from '@react-navigation/native'
 const Entry = ({navigation}) => {
     // user information state: {id, name, first_name, picture, email, location, phone}
 
@@ -27,7 +27,7 @@ const Entry = ({navigation}) => {
              // })
         })
         return () => unsubscribe()
-      },[navigation])
+      },[])
 
     const isLoggedIn = () => {
         try {

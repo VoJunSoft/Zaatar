@@ -191,6 +191,7 @@ export default function AddProductForm(props) {
                 <Picker.Item label="مستلزمات" value="مستلزمات" />
                 <Picker.Item label="اكسسوارات" value="اكسسوارات" />
                 <Picker.Item label="الات" value="الات" />
+                <Picker.Item label="خدمات" value="خدمات" />
                 <Picker.Item label="فن" value="فن" />
                 <Picker.Item label="غذاء" value="غذاء" />
                 <Picker.Item label="دروس خصوصية" value="دروس خصوصية" />

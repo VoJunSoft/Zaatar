@@ -59,6 +59,7 @@ export default function Zaatar({route, navigation}) {
     const [searchInput, setSearchInput] = useState("")
     const [category, setCategory] = useState('الكل')
     const filterDataByCategory = (category) =>{
+        //TODO add search by location
         if(searchInput===''){
             if(category === 'الكل')
                 return products

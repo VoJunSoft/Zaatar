@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, Alert } from 'react-native'
 import { Overlay } from 'react-native-elements';
 import FullProductCard from './FullProductCard'
@@ -10,6 +10,23 @@ export default function ProductCard(props) {
     const [productInfo, setProductInfo] = useState(props.item)
     //ProfileForm.js visibility
     const [fullProductVisibility, setFullProductVisibility] = useState(false)
+
+    useEffect(()=>{
+        //get seller info based on productInfo.seller.id and store it to {...productInfo, seller: {...documentSnapshot.data(), id: documentSnapshot.id}}
+        UpdateSellerInfo(productInfo.seller.id)
+    },[])
+
+    const UpdateSellerInfo = (SellerId) => {
+        const subscriber = firestore()
+                .collection('users')
+                .doc(SellerId)
+                .get()
+                .then(documentSnapshot => setProductInfo({...productInfo, seller: {...documentSnapshot.data(), id: documentSnapshot.id}}))
+                .catch((e) => {
+                    //error
+                })
+        return() => subscriber
+    }
 
     const DeleteProduct = (id) => {
         //delete item based on productId 

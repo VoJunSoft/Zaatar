@@ -5,13 +5,15 @@
  * @format
  * @flow strict-local
  */
+import 'react-native-gesture-handler'
 import React, {useEffect, useState} from 'react'
 import {
   View,
   Text,
   I18nManager,
   StatusBar,
-  Image
+  Image,
+  LogBox
 } from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
 import {createDrawerNavigator} from '@react-navigation/drawer'
@@ -30,11 +32,16 @@ import { Avatar } from 'react-native-elements'
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
 
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+]);
+
 //TODO add auth to routes/screens
 const Drawer = createDrawerNavigator()
 const App = () => {
   // user information state
   const [userInfo, setUserInfo] = useState({})
+  const [isUser, setIsUser] = useState(false)
   useEffect( ()=>{
     getData() 
     // const nav = [
@@ -48,8 +55,10 @@ const App = () => {
     try {
            AsyncStorage.getItem('userInfoZaatar')
            .then((value) => {
-                if(value !== null)
+                if(value !== null){
                     setUserInfo(JSON.parse(value))
+                    setIsUser(true)
+                }
            })
     } catch(e) {
       // error reading value
@@ -113,88 +122,93 @@ const App = () => {
               fontSize:15           
             }
           }}>
-        <Drawer.Screen
-            name="Entry"
-            component={Entry}
+        {/* {!isUser ? 
+        <> */}
+          <Drawer.Screen
+              name="Entry"
+              component={Entry}
+              options={{
+                headerShown: false,
+                drawerItemStyle: {
+                  display: "none",
+                }
+            }}
+          />
+          <Drawer.Screen
+              name="Registration"
+              component={Registration}
+              options={{
+                headerShown: false,
+                drawerItemStyle: {
+                  display: "none",
+                }
+            }}
+          />
+        {/* </>
+        :
+        <> */}
+          <Drawer.Screen
+            name="Profile"
+            component={Profile}
+            initialParams={userInfo}
             options={{
-              headerShown: false,
+              title: 'الصفحه الشخصيه',
+              drawerLabel: ()=><ProfileElement />
+            }}
+          />
+          <Drawer.Screen
+            name="Zaatar"
+            component={Zaatar}
+            options={{
+              title:'زعتر',
+              //title:'الصفحة الرئيسية',
+              drawerIcon:({focused})=>(
+                <FontAwesomeIcons 
+                    name='home'
+                    color={focused ? '#2C4770' : '#2C4770'}
+                    size={20}
+                />
+              )
+            }}
+          />
+          <Drawer.Screen
+            name="Elements"
+            component={Elements}
+            options={{
+              title:'ورشات',
+              drawerIcon:({focused})=>(
+                <FontAwesomeIcons 
+                    name='anchor'
+                    color={focused ? '#2C4770' : '#2C4770'}
+                    size={20}
+                />
+              )
+            }}
+          />
+          <Drawer.Screen
+            name="Settings"
+            component={Settings}
+            options={{
+              title:'اعدادات',
+              drawerIcon:({focused})=>(
+                <FontAwesomeIcons 
+                    name='tools'
+                    color={focused ? '#2C4770' : '#2C4770'}
+                    size={20}
+                />
+              )
+            }}/>
+          <Drawer.Screen
+            name="SellerProfile"
+            component={SellerProfile}
+            options={{
+              title:'متجر',
               drawerItemStyle: {
                 display: "none",
               }
-          }}
-        />
-         <Drawer.Screen
-            name="Registration"
-            component={Registration}
-            options={{
-              headerShown: false,
-              drawerItemStyle: {
-                display: "none",
-              }
-          }}
-        />
-        <Drawer.Screen
-          name="Profile"
-          component={Profile}
-          initialParams={userInfo}
-          options={{
-            title: 'الصفحه الشخصيه',
-            drawerLabel: ()=><ProfileElement />
-          }}
-        />
-        <Drawer.Screen
-          name="Zaatar"
-          component={Zaatar}
-          options={{
-            title:'زعتر',
-            //title:'الصفحة الرئيسية',
-            drawerIcon:({focused})=>(
-              <FontAwesomeIcons 
-                  name='home'
-                  color={focused ? '#2C4770' : '#2C4770'}
-                  size={20}
-              />
-            )
-          }}
-        />
-        <Drawer.Screen
-          name="Elements"
-          component={Elements}
-          options={{
-            title:'ورشات',
-            drawerIcon:({focused})=>(
-              <FontAwesomeIcons 
-                  name='anchor'
-                  color={focused ? '#2C4770' : '#2C4770'}
-                  size={20}
-              />
-            )
-          }}
-        />
-        <Drawer.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            title:'اعدادات',
-            drawerIcon:({focused})=>(
-              <FontAwesomeIcons 
-                  name='tools'
-                  color={focused ? '#2C4770' : '#2C4770'}
-                  size={20}
-              />
-            )
-          }}
-        />
-        <Drawer.Screen
-          name="SellerProfile"
-          component={SellerProfile}
-          options={{
-            title:'متجر',
-            drawerItemStyle: {
-              display: "none",
-            }
-        }}
-        />
+          }}/>
+        {/* </>
+        } */}
       </Drawer.Navigator>
     </NavigationContainer>
   )

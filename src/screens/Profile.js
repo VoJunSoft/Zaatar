@@ -61,6 +61,22 @@ const Profile = (props) => {
             setProductFormVisibility(true)
     }
 
+    const StoreShopSymbol = () => {
+        const sluts=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        return (
+            sluts.map((item, index)=>(
+                <View style={[styles.storeSymbol, 
+                            {
+                                backgroundColor:index%2===0 ? '#337096' : '#fff',
+                                height:index%2===0 ? 35 : 32 ,
+                            }]} key={index}>
+    
+                </View> 
+            ))
+        )
+    }
+    
+
     const [deleteButtonVisibility, setDeleteButtonVisibility] = useState(false)
     const ProfileHeaderComponent = () =>{
         return(
@@ -189,9 +205,13 @@ const Profile = (props) => {
                         }}
                         onPress={()=>setProfileFormVisibility(true)}
                         />
-                </View> : null
+                </View> 
+                : 
+                <View style={{flexDirection:'row', justifyContent:'space-around'}}>
+                    <StoreShopSymbol />
+                </View>
             }
-            <Divider style={{marginTop:1, opacity:0.4, marginBottom:10}}/>
+            <Divider style={{marginTop:1, opacity:0, marginBottom:10}}/>
             </>
         )
     }
@@ -280,6 +300,11 @@ const styles = StyleSheet.create({
         borderRadius:10,
         overflow:'hidden',
         padding: 5
+    },
+    storeSymbol: {
+        width:'7%', 
+        borderBottomLeftRadius:11,
+        borderBottomRightRadius:11
     }
 })
 
