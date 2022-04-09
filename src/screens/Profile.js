@@ -23,7 +23,7 @@ import RNRestart from 'react-native-restart'
 const Profile = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
     // user information state: {id, name, first_name, picture, email, location, phone}
-    const [userInfo, setUserInfo] = useState(props.seller ? props.params : props.route.params)
+    const [userInfo, setUserInfo] = useState(props.seller ? props.param : props.route.params)
     
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
     const [productsBySellerId, setProductsBySellerId] = useState([])
@@ -39,7 +39,7 @@ const Profile = (props) => {
                 .collection('products')
                 .where('seller.id', "==", userInfo.id)
                 .onSnapshot(querySnapshot => {
-                    setProductsBySellerId([]);
+                    setProductsBySellerId([])
                     querySnapshot.forEach(documentSnapshot => {
                         setProductsBySellerId((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
@@ -68,7 +68,7 @@ const Profile = (props) => {
                 <View style={[styles.storeSymbol, 
                             {
                                 backgroundColor:index%2===0 ? '#337096' : '#fff',
-                                height:index%2===0 ? 35 : 32 ,
+                                height:34,
                             }]} key={index}>
     
                 </View> 
@@ -82,16 +82,16 @@ const Profile = (props) => {
         return(
             <>
             <View style={{flexDirection:'row', padding: 5, paddingTop:15, paddingBottom:15, backgroundColor: '#2C4770'}}>
-                <View style={{width:'35%', justifyContent:'center', alignItems:'center'}}>
+                <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
                     <Avatar
-                        size={120}
+                        size={140}
                         rounded
                         source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/profile.png') }
                         icon={{ name: 'user', type: 'font-awesome' }}
                         containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', margin:5}}
                     />
                 </View>
-                <View style={{width:'65%', justifyContent:'center', paddingLeft: 5}}>
+                <View style={{width:'60%', justifyContent:'center', paddingLeft: 5}}>
                     <Buttons.ButtonDefault 
                         titleLeft={userInfo.name ? userInfo.name : 'مستخدم'}
                         iconName="profile"
@@ -148,7 +148,7 @@ const Profile = (props) => {
             {!props.seller ?
                 <View style={{flexDirection:'row', justifyContent:'space-around', backgroundColor: '#2C4770'}}>
                     <Buttons.ButtonDefault 
-                        iconName="delete"
+                        iconName="edit"
                         iconSize={25}
                         containerStyle={{
                             width:'14%',
@@ -188,7 +188,7 @@ const Profile = (props) => {
                     
                     <Buttons.ButtonDefault 
                         titleLeft='تفاصيل المستخدم'
-                        iconName="edit"
+                        iconName="profile"
                         iconSize={25}
                         containerStyle={{
                             width:'49%',
@@ -243,8 +243,8 @@ const Profile = (props) => {
             numColumns={2}
             keyExtractor={item => item.productId}
             style={styles.ProductsList}
-            renderItem={ ({item}) => (
-                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} />
+            renderItem={ ({item, index}) => (
+                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} key={index} />
             )}
         />
 

@@ -25,11 +25,12 @@ const Settings = ({navigation}) => {
               { 
                 text: "نعم", 
                 onPress: () =>{
+                    navigation.navigate('Entry')
                     AsyncStorage.removeItem('userInfoZaatar')
                     //auth().signOut()
                     //close app
                     //BackHandler.exitApp()
-                    navigation.navigate('Entry')
+                    //navigation.navigate('Entry')
                 }
               }
             ])

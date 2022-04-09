@@ -24,7 +24,10 @@ export default function AddProductForm(props) {
 
   //props.userInfo
   //HINT for edit purposes call AddProductForm from productCard and pass to it productInfo/Item
-  const [productInfo, setProductInfo] = useState({
+  const [productInfo, setProductInfo] = useState(props.EditProduct ? 
+    props.productInfo
+    :  
+    {
       seller: props.userInfo,
       product_name:'', 
       photos: [], 
@@ -33,10 +36,8 @@ export default function AddProductForm(props) {
       price: '', 
       date_listed: {seconds: Math.floor(Date.now() / 1000)}
   })
-
   //Handle image upload: the path from phone to show the chosen picture on screen (before upload)
   const [images, setImages] = useState(productInfo.photos)
-  const [transferred, setTransferred] = useState(0)
   const [loadingImg, setLoadingImg] = useState(false)
   const choosePhotoFromLibrary = () => {
     ImagePicker.openPicker({
@@ -147,13 +148,13 @@ export default function AddProductForm(props) {
 
   return(
         <>
-        { props.cancelButton ?
+        { props.EditProduct ?
             <Text style={CSS.title}>تعديل المنتج</Text> 
             : 
             <Text style={CSS.title}>إضافة منتج</Text> 
         }
         <ScrollView style={CSS.container} showsVerticalScrollIndicator={false}>
-        <View style={[CSS.dateBlock, {marginTop:30}]}>
+        <View style={[CSS.dateBlock, {marginTop:0}]}>
             <TextInput
                 value={productInfo.product_name}
                 style={[CSS.postInput,{width: '100%'}]}
@@ -214,54 +215,33 @@ export default function AddProductForm(props) {
          />
          <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? 'red': 'green'}}>{productInfo.description.length}/125</Text>
         
-         <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.imgBlock}>
-                    <Icon 
-                        iconName='photo'
-                        size={70}
-                        style={{marginTop:-5}}
-                    />
+        <View style={CSS.imagesContainer}>
+            <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.imgBlock}>
+                    <Text style={{color:'#fff', fontFamily:'Cairo-Regular'}}>تحميل الصور</Text>
+                    <Icon iconName='photo' size={70} />
                     {loadingImg ? <ActivityIndicator size={50}/> : null}
-        </TouchableOpacity>
-{/*       
-        <View style={[CSS.dateBlock, {marginTop:10}]}>
-            {props.cancelButton ?
-                // TODO make this block a reusable component
-                props.productInfo.photos.map( (item, index) => (
-                    <View style={{flexDirection:'column',borderWidth:0, borderBottomColor:'#E39B02', alignItems:'center', backgroundColor:'rgba(0,0,0,0.2)'}}
-                            key={index}>
-                                <Image style={CSS.img} source={{uri: item}} />
-                                <Button 
-                                    iconName='delete' 
-                                    iconSize={35}
-                                    containerStyle={{
-                                    margin:3,
-                                    borderRadius:50,
-                                    backgroundColor:'rgba(0,0,0,.35)',
-                                    }}
-                                    onPress={()=>deletePhoto(index)}
-                                />
-                    </View>
-                ))
-              : 
-                images.map( (item, index) => (
-                    <View style={{flexDirection:'column',borderWidth:0, borderBottomColor:'#E39B02',alignItems:'center', backgroundColor:'rgba(0,0,0,0.2)'}}
-                            key={index}>
-                        <Image style={CSS.img} source={{uri: item}} />
-                        <Button 
-                            iconName='delete' 
-                            iconSize={35}
-                            containerStyle={{
-                            borderRadius:50,
-                            backgroundColor:'rgba(0,0,0,.35)',
-                            }}
-                            onPress={()=>deletePhoto(index)}
-                        />
-                    </View>
-                ))
+            </TouchableOpacity>
+        
+           
+            { images.length !== 0 ?
+                 <ScrollView  style={{height:170}} horizontal={true}>
+                    {
+                    images.map( (item, index) => (
+                        <View style={{alignItems:'center', backgroundColor:'rgba(255,255,255,0.6)', margin:5}} key={index}>
+                            <Image style={CSS.img} source={{uri: item}} />
+                            <Button.ButtonDefault
+                                iconName='delete' 
+                                iconSize={30}
+                                onPress={()=>deletePhoto(index)}/>
+                        </View>
+                    ))
+                    } 
 
-                }
-        </View>  */}
-         
+                </ScrollView>
+                : 
+                null
+            }
+        </View> 
         <View style={CSS.buttonContainer}>
             <Button.ButtonDefault
                 titleLeft="أغلق"
@@ -280,7 +260,7 @@ export default function AddProductForm(props) {
                 }}
                 onPress={()=>props.setProductFormVisibility(false)}
             /> 
-        { props.cancelButton  ?
+        { props.EditProduct  ?
             <Button.ButtonDefault
                 titleLeft="تعديل"
                 containerStyle={{
@@ -344,14 +324,15 @@ const CSS = StyleSheet.create({
   },
   title: {
     width:'100%',
-    fontSize: 30,
+    fontSize: 28,
     textAlign: 'center',
     color:'#fff',
     backgroundColor:'#2C4770',
     fontFamily:'Cairo-Bold',
     padding: 5,
     borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
+    borderTopRightRadius: 10,
+    letterSpacing:2
   },
   postInput: {
     fontSize: 15,
@@ -385,21 +366,16 @@ const CSS = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-around',
-    alignItems: 'center',
     width: '100%',
-    marginVertical: 10,
+    marginBottom:20
   },
   imgBlock:{
-    flex:1,
-    justifyContent:'center',
     resizeMode:'contain',
     alignItems:'center',
-    margin:7
   },
   img: {
-    width: Dimensions.get('window').width/3.7,
+    width: Dimensions.get('window').width/3.5,
     height: 120,
     resizeMode:'cover',
   },
@@ -407,6 +383,14 @@ const CSS = StyleSheet.create({
     textAlign:'center',
     fontSize: 20,
     color:'#2C4770'
+  },
+  imagesContainer:{
+    fontSize: 15,
+    borderBottomColor:'#2C4770',
+    borderBottomWidth:3,
+    marginTop:10,
+    backgroundColor:'rgba(0,0,0,0.5)',
+    paddingBottom: 5
   }
 });
 

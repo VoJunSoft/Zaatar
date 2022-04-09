@@ -90,7 +90,6 @@ const App = () => {
     <NavigationContainer>
       <StatusBar barStyle="light-content" hidden={false} backgroundColor='#2C4770'/>
       <Drawer.Navigator 
-          initialRouteName="Entry"
           screenOptions={{
             headerShown: true,
             drawerType:"front",

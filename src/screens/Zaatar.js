@@ -34,6 +34,7 @@ export default function Zaatar({route, navigation}) {
             .collection('products')
             .orderBy('date_listed', 'asc')
             .onSnapshot(querySnapshot => {
+                setProducts([])
                 querySnapshot.forEach(documentSnapshot => {
                     setProducts((prevState) => {
                         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
@@ -41,7 +42,7 @@ export default function Zaatar({route, navigation}) {
                 })
             })
 
-            return () => subscriber();
+            return () => subscriber
     }
 
     const $renderEmptyOrdersState = () => {
@@ -84,9 +85,8 @@ export default function Zaatar({route, navigation}) {
                 numColumns={2}
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
-                renderItem={ ({item}) => (
-                    // ownerId={route.params.id}
-                    <ProductCard item={item} />
+                renderItem={ ({item, index}) => (
+                    <ProductCard item={item} key={index}/>
                 )}
             />
         </SafeAreaView>

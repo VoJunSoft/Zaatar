@@ -48,14 +48,13 @@ const FullProductCard = (props) => {
     }
 
     //TODO retrieve data from firebase based on id and pass it instead of productInfo.seller (which is stored with product info)
-    const GoToSellerProfile = (data) => {
+    const GoToSellerProfile = () => {
      // if user is owner then go to his/her page
       if(productInfo.seller.id === ownerId){
            navigation.navigate('Profile')
       }else{
-          navigation.setParams('SellerProfile' , data)
-          // console.log('----->', productInfo.seller.id)
-          navigation.navigate('SellerProfile' , data)
+          global.sellerState = productInfo.seller
+          navigation.navigate('SellerProfile')
       }
 
       props.setFullProductVisibility(false)
@@ -71,10 +70,18 @@ const FullProductCard = (props) => {
     <TouchableOpacity 
         style={styles.ProfileHeader} 
         activeOpacity={0.7} 
-        onPress={()=>GoToSellerProfile(productInfo.seller)}>
-        <Text style={styles.title}>{productInfo.seller.name}</Text> 
+        onPress={GoToSellerProfile}>
+         <Buttons.ButtonDefault
+                titleRight={productInfo.seller.location} 
+                iconName="location"
+                iconSize={29}
+                horizontal={true}
+                textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#2C4770'}}
+                activeOpacity={0.9}
+                disabled/> 
+        <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
         <Avatar
-              size={50}
+              size={70}
               rounded
               source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/profile.png') }
               icon={{ name: 'user', type: 'font-awesome' }}
@@ -112,21 +119,20 @@ const FullProductCard = (props) => {
               <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center', marginRight:-10}}>
                   <Text style={[styles.title,{marginRight:2}]}>تفاصيل اضافيه </Text>
                   <Icon 
-                      iconName="fire"
-                      size={25}
+                      iconName="info"
+                      size={27}
                   />
               </View>
               <Text style={[styles.body, {marginRight:20}]}>{productInfo.description}</Text>
           </View>  
 
           <Buttons.ButtonDefault
-                titleRight="تواصل معنا عبر WhatApp "
-                iconName="add"
-                iconSize={30}
+                titleLeft="تواصل معنا عبر WhatApp "
+                iconName="whats"
+                iconSize={35}
                 horizontal={false}
-                containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', alignSelf:'center', margin: 15, padding: 5}}
-                textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 18, color: '#fff'}}
-                iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
+                containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', margin: 15, padding: 5}}
+                textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 18, color: '#fff', marginRight:5}}
                 onPress={()=>{productInfo.seller.id === props.ownerId ? Alert.alert('لا يمكنك الشراء من متجرك الخاص') : shareToWhatsApp(productInfo.seller.phone)}}
           /> 
 
@@ -154,19 +160,24 @@ const styles = StyleSheet.create({
         backgroundColor:'rgba(255,255,255,1)',
         width:'100%',
         flexDirection:'row',
-        justifyContent:'flex-end',
+        justifyContent:'space-between',
         alignItems:'center',
-        paddingRight:10,
-        padding:5
+        padding:2
     },
     imgBlock:{
       backgroundColor:'#323232'
     },
     title: {
       fontFamily:'Cairo-Bold',
-      fontSize: 17,
+      fontSize: 15,
       textAlign: 'center',
       color:'#171717',
+    },
+    headerText:{
+      fontFamily:'Cairo-Bold',
+      fontSize: 17,
+      textAlign: 'center',
+      color:'#2C4770',
     },
     body: {
       fontFamily:'Cairo-Regular',
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
       height:120,
       width:Dimensions.get('window').width/3,
       resizeMode:'cover',
-      borderWidth:3,
+      borderWidth:4,
     },
     infoBox:{
       width:'97%',
