@@ -15,19 +15,21 @@ import Buttons from '../elements/Button'
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import firestore from '@react-native-firebase/firestore';
+import RNRestart from 'react-native-restart'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Entry = ({navigation}) => {
     // user information state: {id, name, first_name, picture, email, location, phone}
 
-    useEffect( () => { 
-       const unsubscribe = navigation.addListener('focus', () => {
-             // auth().onAuthStateChanged((user) => {
-               // if(user)
-                  isLoggedIn()
-             // })
-        })
-        return () => unsubscribe()
-      },[])
+    // useEffect( () => { 
+    //    const unsubscribe = navigation.addListener('focus', () => {
+    //          // auth().onAuthStateChanged((user) => {
+    //            // if(user)
+    //              // isLoggedIn()
+    //          // })
+    //     })
+    //     return () => unsubscribe()
+    //   },[])
 
     const isLoggedIn = () => {
         try {
@@ -82,7 +84,9 @@ const Entry = ({navigation}) => {
           .then(()=>{
                 console.log(userInfo)
                 //if user is authenticated then go to main page
-                navigation.navigate('Zaatar')
+                //navigation.navigate('Zaatar')
+                //restart app to update app.js values
+                RNRestart.Restart()
                 //hide indicator
                 setIsloading(false)  
           })
@@ -104,6 +108,15 @@ const Entry = ({navigation}) => {
                     direction="normal">
                     <Image style={{width:300, height:300, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar3.png')} />
             </Animatable.View>
+
+            <Buttons.ButtonDefault
+                    titleLeft="دخول بدون تسجيل"
+                    iconName="exit"
+                    iconSize={39}
+                    containerStyle={{ justifyContent:'center', width:'60%', alignSelf:'center', padding: 3}}
+                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 16, color: '#fac300'}}
+                    iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
+                    onPress={()=>navigation.navigate('Zaatar')}/>
         </View>
         <View style={styles.EntryBox}>
             <View style={styles.InEntryBox}>
@@ -122,7 +135,6 @@ const Entry = ({navigation}) => {
                 <Input
                     placeholder="*******"
                     autoCompleteType={true}
-                    //placeholderTextColor="red"
                     label="كلمة المرور"
                     value={logInInfo.password}
                     secureTextEntry={true}
@@ -137,7 +149,7 @@ const Entry = ({navigation}) => {
                 <Buttons.ButtonDefault
                     titleLeft="دخول"
                     //iconName="profile"
-                    iconSize={40}
+                    //iconSize={40}
                     horizontal={false}
                     containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7}}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#fff'}}
@@ -147,8 +159,6 @@ const Entry = ({navigation}) => {
                 <Text style={{margin:5}}>- او -</Text>
                  <Buttons.ButtonDefault
                     titleLeft="مستخدم جديد"
-                    //iconName="new"
-                    //iconSize={39}
                     horizontal={false}
                     containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7}}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 16, color: '#fff'}}

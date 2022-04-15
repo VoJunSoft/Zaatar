@@ -12,7 +12,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native'
-import { Overlay} from 'react-native-elements' 
+import {Badge, Overlay} from 'react-native-elements' 
 import firestore from '@react-native-firebase/firestore';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
@@ -39,19 +39,27 @@ export default function AddProductForm(props) {
   //Handle image upload: the path from phone to show the chosen picture on screen (before upload)
   const [images, setImages] = useState(productInfo.photos)
   const [loadingImg, setLoadingImg] = useState(false)
+  const [errMsg, setErrMsg] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
+
   const choosePhotoFromLibrary = () => {
+    setErrMsg('')
     ImagePicker.openPicker({
       width: undefined,
       height: 350,
       multiple: true
     }).then((image) => {
-      image.forEach(item => {
-        const imageUri = Platform.OS === 'ios' ? item.sourceURL : item.path;
-        uploadImage(imageUri)
-      })  
+        if((image.length + images.length)<=5){
+          image.forEach(item => {
+            const imageUri = Platform.OS === 'ios' ? item.sourceURL : item.path;
+            uploadImage(imageUri)
+          }) 
+        }else{
+          setErrMsg('من فضلك لا تختار أكثر من 5 صور')
+        } 
     })
     .catch((e) =>{
-        //setImage([])
+        setErrMsg('حدث خطأ ما أثناء تحميل الصورة')
     })
   }
 
@@ -71,64 +79,74 @@ export default function AddProductForm(props) {
             setImages(images => [...images,url])
             setLoadingImg(false)
         } catch (e) {
-            //return null
+          setErrMsg('حدث خطأ ما أثناء تحميل الصورة')
         }
   }
 
   const handleSubmit = () => {
-      //TODO handle the rest of verification process
+    //TODO handle if statements in such away it return the exact missing information
+    setErrMsg('')
+    setSuccessMsg('')
     if(productInfo.product_name.length >= 4 
         && productInfo.category!=='' 
         && images.length>0 
         && productInfo.price.length > 0 
-        && productInfo.description.length >= 5){
-      toggleOverlay()
-      const subscriber = firestore()
-          .collection('products')
-          .add({...productInfo, photos: images})
-          .then(() => {
-              //reset form info
-              setProductInfo({
-                seller: props.userInfo,
-                product_name:'', 
-                photos: [], 
-                description: '', 
-                category: '', 
-                price: '', 
-                date_listed: {seconds: Math.floor(Date.now() / 1000)}
-              })
-              setImages([])
-              setVisible(false)
-              //show add success msg to reporter
-              //Alert.alert('تم قبول المقال بنجاح')
-          })
-          .catch((e)=>{
-              Alert.alert("الرجاء معاودة المحاولة في وقت لاحق")
-          })
-          return () => subscriber();
+        && productInfo.description.length >= 5
+        && images.length >=1 ){
+        toggleOverlay()
+        const subscriber = firestore()
+            .collection('products')
+            .add({...productInfo, photos: images})
+            .then(() => {
+                //reset form info
+                setProductInfo({
+                  seller: props.userInfo,
+                  product_name:'', 
+                  photos: [], 
+                  description: '', 
+                  category: '', 
+                  price: '', 
+                  date_listed: {seconds: Math.floor(Date.now() / 1000)}
+                })
+                setImages([])
+                setVisible(false)
+                //show add success msg to reporter
+                setSuccessMsg('تم قبول المنتج بنجاح')
+            })
+            .catch((e)=>{
+              setErrMsg("الرجاء معاودة المحاولة في وقت لاحق")
+            })
+            return () => subscriber();
     }else{
-        Alert.alert("املأ جميع البيانات")
+      setErrMsg("املأ جميع البيانات")
     }
   }
 
   const handleEdit = () => {
-    if(productInfo.product_name.length >= 4){
-        toggleOverlay()
-        const subscriber = firestore()
-          .collection('products')
-          .doc(productInfo.productId)
-          .update({...productInfo, photos: images})
-          .then(() => {
-            setVisible(false)
-            //show add success msg to reporter
-            //Alert.alert('تم تعديل المقال بنجاح')
+    setErrMsg('')
+    setSuccessMsg('')
+    if(productInfo.product_name.length >= 4 
+      && productInfo.category!=='' 
+      && images.length>0 
+      && productInfo.price.length > 0 
+      && productInfo.description.length >= 5
+      && images.length >=1 ){
+          toggleOverlay()
+          const subscriber = firestore()
+            .collection('products')
+            .doc(productInfo.productId)
+            .update({...productInfo, photos: images})
+            .then(() => {
+              setVisible(false)
+              //show add success msg to reporter
+              setSuccessMsg('تم تعديل المنتج بنجاح')
+            })
+            .catch((e)=>{
+              setErrMsg("الرجاء معاودة المحاولة في وقت لاحق")
           })
-          .catch((e)=>{
-            Alert.alert("الرجاء معاودة المحاولة في وقت لاحق")
-         })
-        return () => subscriber();
+          return () => subscriber();
     }else{
-        Alert.alert("املأ جميع البيانات")
+      setErrMsg("املأ جميع البيانات")
     }
   }
 
@@ -164,7 +182,6 @@ export default function AddProductForm(props) {
                 placeholderTextColor="white"
                 placeholder="اسم المنتجات"
                 underlineColorAndroid='transparent'
-              // autoFocus
             />
          </View>
          <Text style={{paddingLeft:5, color: productInfo.product_name.length < 5  ? 'red': 'green'}}>{productInfo.product_name.length}/25</Text>
@@ -175,7 +192,7 @@ export default function AddProductForm(props) {
                 style={CSS.postInputDate}
                 onChangeText={text=> setProductInfo({...productInfo,price: text})}
                 numberOfLines={1}
-                maxLength={5}
+                maxLength={7}
                 selectionColor="orange"
                 placeholderTextColor="white"
                 placeholder="السعر"
@@ -198,7 +215,7 @@ export default function AddProductForm(props) {
                 <Picker.Item label="دروس خصوصية" value="دروس خصوصية" />
             </Picker>
         </View>
-        <Text style={{paddingLeft:7, color: productInfo.price.length < 1  ? 'red': 'green'}}>{productInfo.price.length}/5</Text>
+        <Text style={{paddingLeft:7, color: productInfo.price.length < 1  ? 'red': 'green'}}>{productInfo.price.length}/7</Text>
         
         <TextInput
             value={productInfo.description}
@@ -211,15 +228,14 @@ export default function AddProductForm(props) {
             underlineColorAndroid='transparent'
             numberOfLines={5}
             multiline
-           // autoFocus
          />
          <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? 'red': 'green'}}>{productInfo.description.length}/125</Text>
         
         <View style={CSS.imagesContainer}>
             <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.imgBlock}>
-                    <Text style={{color:'#fff', fontFamily:'Cairo-Regular'}}>تحميل الصور</Text>
+                    <Text style={{color:'#fff', fontFamily:'Cairo-Regular', marginBottom:-15}}>تحميل الصور</Text>
                     <Icon iconName='photo' size={70} />
-                    {loadingImg ? <ActivityIndicator size={50}/> : null}
+                    {loadingImg ? <ActivityIndicator size={30} color/> : null}
             </TouchableOpacity>
         
            
@@ -241,7 +257,21 @@ export default function AddProductForm(props) {
                 : 
                 null
             }
+
+          <Badge
+            status={images.length > 0 ? "success" : "error"}
+            value={images.length > 0 ? "✓" : "✘"}
+            containerStyle={{ position: 'absolute', bottom: 3, left: 5}}
+            textStyle={{fontSize:10}} 
+            />
+       
         </View> 
+
+        <View style={{margin:15}}>
+          {successMsg === '' ? null :  <Text style={{color:'green', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
+          {errMsg === '' ? null :  <Text style={{color:'red', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+        </View>
+
         <View style={CSS.buttonContainer}>
             <Button.ButtonDefault
                 titleLeft="أغلق"
@@ -249,7 +279,6 @@ export default function AddProductForm(props) {
                     borderRadius: 5,
                     backgroundColor: '#2C4770',
                     width:'45%',
-                    marginTop:20,
                     justifyContent:'center',
                     padding:6
                 }}
@@ -267,7 +296,6 @@ export default function AddProductForm(props) {
                     borderRadius: 5,
                     backgroundColor: '#2C4770',
                     width:'45%',
-                    marginTop:20,
                     justifyContent:'center',
                     padding:6
                 }}
@@ -285,7 +313,6 @@ export default function AddProductForm(props) {
                     borderRadius: 5,
                     backgroundColor: '#2C4770',
                     width:'50%',
-                    marginTop:20,
                     justifyContent:'center',
                     padding:6
                 }}

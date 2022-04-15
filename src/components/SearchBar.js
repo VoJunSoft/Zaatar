@@ -1,25 +1,28 @@
 import React, {useState} from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 import Buttons from "../elements/Button"
-//import { TextInput } from 'react-native-gesture-handler'
 
 export default function SearchBar(props) {
 
-    const [searchBarVisibility, setSearchBarVisibility ] = useState(true)
+    //TODO make search button float
+    const [searchBarVisibility, setSearchBarVisibility ] = useState(props.serachBarVisibility)
     return (
         <View style={[styles.container,{
-                    width: searchBarVisibility ? '100%' :'20%',
-                    justifyContent: searchBarVisibility ? 'space-around' : 'flex-end',
+                    backgroundColor: searchBarVisibility ? '#2C4970' : null,
+                    width: searchBarVisibility ? '100%' :'15%',
+                    justifyContent: searchBarVisibility ? 'space-around' : 'center',
                     alignSelf:'flex-end'
                     }]}>
             {searchBarVisibility ?
                 <>
-                <Buttons.ButtonWithShadow iconName='delete' iconSize={25} containerStyle={{}} onPress={()=>props.setSearchInput('')} containerStyle={styles.icon}/>
+                <Buttons.ButtonWithShadow iconName='delete' iconSize={25} onPress={()=>props.setSearchInput('')} containerStyle={styles.icon}/>
                 <TextInput
                     value={props.searchInput}
                     style={styles.textInput}
                     placeholder="بحث..."
                     placeholderTextColor='#2C4970'
+                    textAlign='center'
+                    textAlignVertical='bottom'
                     maxLength={25}
                     onChangeText={(value) => props.setSearchInput(value)}
                 />
@@ -27,16 +30,21 @@ export default function SearchBar(props) {
                 :
                 null
             }
-            <Buttons.ButtonDefault iconName='search' iconSize={25} containerStyle={{}} onPress={()=>setSearchBarVisibility(!searchBarVisibility)} containerStyle={styles.icon}/>
+            <Buttons.ButtonDefault iconName='search' iconSize={25} 
+                onPress={()=>setSearchBarVisibility(!searchBarVisibility)} 
+                containerStyle={{
+                    backgroundColor:searchBarVisibility ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                    borderRadius: 50
+                    }}
+                />
         </View>
     )
 }
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#2C4970',
         flexDirection:'row',
         alignItems:'center',
-        padding: 5
+        padding: 7
     },
     title:{
         fontFamily:'Cairo-Bold',
@@ -46,9 +54,9 @@ const styles = StyleSheet.create({
     },
     textInput:{
         backgroundColor:'#fff',
-        width: '60%',
+        width: '70%',
         borderRadius: 15,
-        height: 40
+        height: 37,
     }, 
     dropShadow: {
         width:'100%',
@@ -59,7 +67,6 @@ const styles = StyleSheet.create({
     },
     icon:{
         backgroundColor:'rgba(255,255,255,0.3)',
-        padding: 2,
         borderRadius: 50
     }
 })

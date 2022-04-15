@@ -5,6 +5,7 @@ import FullProductCard from './FullProductCard'
 import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import AddProductForm from '../components/AddProductForm'
+import DropShadow from "react-native-drop-shadow";
 
 export default function ProductCard(props) {
     //products fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -14,18 +15,18 @@ export default function ProductCard(props) {
     //ProductForm.js visibility
     const [productFormVisibility, setProductFormVisibility] = useState(false)
 
-    useEffect(()=>{
-        //get seller info based on productInfo.seller.id and store it to {...productInfo, seller: {...documentSnapshot.data(), id: documentSnapshot.id}}
-        UpdateSellerInfo(productInfo.seller.id)
-    })
-
-    const UpdateSellerInfo = (SellerId) => {
+    //retrieve seller info from database based on seller id save to productInfo which will be passed to fullproductcard
+    //and save it to global variable which will be used to display
+    //previously sellerInfo are attached to each product posted which cause a bug in case seller updates their info
+    const UpdateShowSellerInfo = (SellerId) => {
         const subscriber = firestore()
                 .collection('users')
                 .doc(SellerId)
                 .get()
                 .then(documentSnapshot => {
                     setProductInfo({...productInfo, seller: {...documentSnapshot.data(), id: documentSnapshot.id}})
+                    global.sellerState = {...documentSnapshot.data(), id: documentSnapshot.id}
+                    setFullProductVisibility(true)
                 })
                 .catch((e) => {
                     //error
@@ -60,77 +61,41 @@ export default function ProductCard(props) {
 
     const DefaultView = (props) => {
         return(
-            <TouchableOpacity   style={styles.ProductCard} 
+            <TouchableOpacity   style={styles.ProductCardDefault} 
                                 activeOpacity={0.7} 
-                                onPress={()=>setFullProductVisibility(true)}
+                                onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
                                 disabled={props.deleteButtonVisibility}>
-                <Text style={styles.title}> {productInfo.product_name}</Text>
-                <Image style={{width: "100%", height: 170, borderRadius:0, marginTop: 5, marginBottom: 0}} source={{uri : productInfo.photos[0]}} /> 
-                <View style={{width: "100%",flexDirection:'row', 
-                                            justifyContent:props.deleteButtonVisibility ? 'space-between' : 'center', 
-                                            alignItems:'center'}}>    
-                    <Text style={[styles.body, {marginLeft:props.deleteButtonVisibility ? 10 : 0}]}> ₪{productInfo.price}</Text> 
+                <DropShadow style={styles.dropShadow}>
+                    <Image style={{width: "100%", height: 180, borderRadius: 13}} source={{uri : productInfo.photos[0]}} /> 
+                </DropShadow >
+                <View style={styles.subDefaultContainer}>    
+                    <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text>
                     { props.deleteButtonVisibility ?
-                        <Buttons.ButtonDefault 
-                                iconName="delete"
-                                iconSize={25}
-                                containerStyle={{
-                                    width:'30%',
-                                    justifyContent:'center',
-                                    backgroundColor: '#fac300'
-                                }}
-                                iconContainer={{
-                                    backgroundColor:'#fac300'
-                                }}
-                                onPress={()=> DeleteProduct(productInfo.productId)}
-                                />  : null
-                    } 
-                </View>        
-            </TouchableOpacity>
-        )
-    }
-
-    const SecondryView = (props) => {
-        return(
-            <TouchableOpacity   style={styles.ProductCard} 
-                                activeOpacity={0.7} 
-                                onPress={()=>setFullProductVisibility(true)}
-                                disabled={props.deleteButtonVisibility} >
-                <ImageBackground style={{width: "100%", height: 260}} source={{uri : productInfo.photos[0]}} > 
-                { props.deleteButtonVisibility ?
                     <View style={{
                             width:'100%',
-                            backgroundColor: 'rgba(255,255,255,0.99)',
+                            backgroundColor: 'rgba(255,255,255,0.4)',
                             flexDirection:'row',
-                            justifyContent:'space-around',
-                            }}>
-                        <Buttons.ButtonDefault 
-                            iconName="edit"
-                            iconSize={25}
-                            containerStyle={{
-                                width:'50%',
-                                justifyContent:'center',
-                                borderRightWidth:1
-                                
-                            }}
-                            onPress={()=>setProductFormVisibility(true)}/>  
-                        <Buttons.ButtonDefault 
-                            iconName="delete"
-                            iconSize={25}
-                            containerStyle={{
-                                width:'50%',
-                                justifyContent:'center',
-                            }}
-                            onPress={()=> DeleteProduct(productInfo.productId)}/>  
+                            justifyContent:'space-around'}}>
+                                <Buttons.ButtonDefault 
+                                    iconName="edit"
+                                    iconSize={25}
+                                    containerStyle={{
+                                        width:'50%',
+                                        justifyContent:'center',
+                                        borderRightWidth:1}}
+                                    onPress={()=>setProductFormVisibility(true)}/>  
+                                <Buttons.ButtonDefault 
+                                    iconName="delete"
+                                    iconSize={25}
+                                    containerStyle={{
+                                        width:'50%',
+                                        justifyContent:'center'}}
+                                    onPress={()=> DeleteProduct(productInfo.productId)}/>  
                     </View>
-                    : null
-                }                  
-                {/* <Image style={{width: "100%", height: 200, borderRadius:0, marginTop: 0, marginBottom: 0}} source={{uri : productInfo.photos[0]}} />  */}
-                <View style={{flex:1,width: "100%",flexDirection:'column', alignItems:'center', justifyContent:'flex-end'}}>
-                    <Text style={styles.body}> {productInfo.product_name}</Text>  
-                    <Text style={styles.body}> ₪{productInfo.price}</Text>    
-                </View>  
-                </ImageBackground>  
+                    : 
+                    <Text style={styles.titleDefault}> ₪{productInfo.price}</Text> 
+                }
+                </View>        
             </TouchableOpacity>
         )
     }
@@ -180,7 +145,7 @@ export default function ProductCard(props) {
 
     return (
         <>
-        {BGView(props)}
+        {DefaultView(props)}
         <Overlay isVisible={fullProductVisibility} 
                 onBackdropPress={()=>setFullProductVisibility(false)} 
                 fullScreen={true}
@@ -214,7 +179,7 @@ const styles = StyleSheet.create({
     },
     dropShadow:{
         shadowColor: '#323232',
-        shadowOffset: {width: -0, height: 0},
+        shadowOffset: {width: 2, height: 2},
         shadowOpacity: 0.7,
         shadowRadius: 1,
     },
@@ -227,10 +192,32 @@ const styles = StyleSheet.create({
         overflow:'hidden',
         alignItems:'center'
     },
+    ProductCardDefault:{
+        width:'45%',
+        backgroundColor:'#2C4770',
+        margin: 10,
+        borderRadius:13,
+        overflow:'hidden',
+    },
+    subDefaultContainer: {
+        width: "100%",
+        flexDirection:'column',  
+        alignItems:'center',
+        borderBottomLeftRadius:13,
+        borderBottomRightRadius:13,
+        borderWidth:0,
+        borderTopWidth:0,
+        borderColor:'rgba(255,255,255,0.5)',
+    },
     title:{
         fontFamily:'Cairo-Bold',
         fontSize: 15,
         color: '#2C4770',
+    },
+    titleDefault:{
+        fontFamily:'Cairo-Regular',
+        fontSize: 15,
+        color: '#fff',
     },
     body:{
         width:'100%',

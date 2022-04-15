@@ -5,20 +5,19 @@ import DropShadow from "react-native-drop-shadow";
 
 export default function ZaatarSearchBar(props) {
 
-    const $Categories = ['الكل' ,"انتيكا", "مستلزمات", "الات", "فن", 'خدمات' , "دروس خصوصية", 'اكسسوارات' , "غذاء"]
+    const $Categories = ['الكل' ,"انتيكا", "مستلزمات", "الات", "فن",'ورش عمل' , 'خدمات' , "دروس خصوصية", 'اكسسوارات' , "غذاء"]
     const [searchBarVisibility, setSearchBarVisibility ] = useState(false)
     return (
         <DropShadow style={styles.dropShadow}>
         <ScrollView horizontal={true} style={styles.container} showsHorizontalScrollIndicator={false}>
             <View style={[styles.SubContainer,{
-                        width: searchBarVisibility ? Dimensions.get('window').width/1.5 : 60,
+                        width: searchBarVisibility ? 220 : 60,
                         justifyContent: searchBarVisibility ? 'space-around' : 'center',
                         alignSelf:'center'
                         }]}>
 
                 <Buttons.ButtonDefault iconName='search' iconSize={30} containerStyle={{}} onPress={()=>setSearchBarVisibility(!searchBarVisibility)} containerStyle={styles.icon}/>
                 {searchBarVisibility ?
-                    <>
                      <TextInput
                         value={props.searchInput}
                         style={styles.textInput}
@@ -27,13 +26,11 @@ export default function ZaatarSearchBar(props) {
                         maxLength={25}
                         onChangeText={(value) => props.setSearchInput(value)}
                     />
-                    <Buttons.ButtonDefault iconName='delete' iconSize={25} containerStyle={{}} onPress={()=>props.setSearchInput('')} containerStyle={styles.icon}/>
-                    </>
                     :
                     null
                 }
                 </View>
-            {
+                {
                 $Categories.map((item, index)=>[
                     <Buttons.ButtonDefault 
                         key={index}
@@ -41,10 +38,9 @@ export default function ZaatarSearchBar(props) {
                         horizontal={true}
                         textStyle={styles.title}
                         containerStyle={[styles.CategoryContainer, {backgroundColor: item === props.category ? 'rgba(255,255,255,0.3)' : null}]}
-                        onPress={()=>props.setCategory(item)}
-                    />
-               ])
-            }
+                        onPress={()=>props.setCategory(item)}/>
+                    ])
+                 }
         </ScrollView>
         </DropShadow>
     )

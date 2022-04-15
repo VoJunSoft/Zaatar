@@ -6,21 +6,19 @@ export default function NavTab(props) {
     return (
         <DropShadow style={CSS.dropShadow}>
             <View style={{ 
-                        backgroundColor:'#2C4770', 
-                        borderTopWidth:0, 
-                        borderColor:'white',
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        flexDirection:'row', 
-                        alignItems:'center', 
+                        backgroundColor:'#fff', 
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15,
                         overflow:'hidden',
+                        flexDirection:'row', 
+                        alignItems:'center',
                         justifyContent:'space-between'}}>
 
-                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Events' ? 'rgba(255,255,255,0.2)' : null}]} onPress={()=>props.switchTabs('Events')}>
-                    <Text style={CSS.tabText}> الأحداث </Text>
+                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Stores' ? 'rgba(0,0,0,0.1)' : null}]} onPress={()=>props.switchTabs('Stores')}>
+                    <Text style={CSS.tabText}> متاجر </Text>
                 </Pressable>
 
-                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Workshops' ? 'rgba(255,255,255,0.2)' : null, borderTopRightRadius:10}]} onPress={()=>props.switchTabs('Workshops')}>
+                <Pressable style={[CSS.tabView, {backgroundColor: props.tabView === 'Workshops' ? 'rgba(0,0,0,0.1)' : null, borderTopRightRadius:10}]} onPress={()=>props.switchTabs('Workshops')}>
                     <Text style={CSS.tabText}> ورشات عمل </Text>
                 </Pressable>
 
@@ -32,7 +30,7 @@ export default function NavTab(props) {
 const CSS = StyleSheet.create({
     dropShadow: {
         width:'100%',
-        shadowColor: '#fff',
+        shadowColor: '#2C4770',
         shadowOffset: {width: 0, height: 0},
         shadowOpacity: 0.5,
         shadowRadius: 2,
@@ -42,7 +40,7 @@ const CSS = StyleSheet.create({
         padding:7,
     },
     tabText:{
-        color:'white',
+        color:'#2C4770',
         fontFamily:'Cairo-Bold',
         textAlign:'center',
         fontSize:15

@@ -4,69 +4,73 @@ import {
     Text, 
     StyleSheet,
     Dimensions,
-    BackHandler,
+    ScrollView,
     Alert,
     Keyboard,
     FlatList,
+    Image,
     ActivityIndicator
 } from 'react-native'
-import { Avatar, Overlay } from 'react-native-elements';
+import AppStyles from '../styles/AppStyle'
+import DropShadow from "react-native-drop-shadow"
+import { Avatar, Input, Divider, Overlay } from 'react-native-elements';
 import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard'
 import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
 import RNRestart from 'react-native-restart'
+import { useNavigation } from '@react-navigation/native';
 
-const Profile = (props) => {
+const ProfileStore = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
     // user information state: {id, name, first_name, picture, email, location, phone}
-    const [userInfo, setUserInfo] = useState(props.route.params)
-    
+    const [userInfo, setUserInfo] = useState(global.sellerState)
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
     const [productsBySellerId, setProductsBySellerId] = useState([])
 
-    //if profile is seller the userInfo = props.productInfo.seller else userinfo = getData
-    useEffect( () => {
-            fillProductsDataById()
-    },[])
+    //useEffect to retrieve the requested store/seller and refill page with new data on navigation
+    const [isLoading, setIsloading] = useState(true)
+    const navigation = useNavigation()
+    useEffect( () => { 
+    const unsubscribe = navigation.addListener('focus', () => {
+            setUserInfo(global.sellerState)
+            fillProductsDataById(global.sellerState.id)
+        })
+        return () => unsubscribe()
+    },[navigation])
 
-    const fillProductsDataById = () => {
+    //get products that belong to a certain store/seller by Id
+    const fillProductsDataById =  (idx) => {
         try{
-            const subscriber = firestore()
-                .collection('products')
-                .where('seller.id', "==", userInfo.id)
-                .onSnapshot(querySnapshot => {
-                    setProductsBySellerId([])
-                    querySnapshot.forEach(documentSnapshot => {
-                        setProductsBySellerId((prevState) => {
-                            return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
-                        })
-                    })
-                })
+            const subscriber =  firestore()
+                                    .collection('products')
+                                    .where('seller.id', "==", idx)
+                                    .onSnapshot(querySnapshot => {
+                                        setProductsBySellerId([])
+                                        querySnapshot.forEach(documentSnapshot => {
+                                            setProductsBySellerId((prevState) => {
+                                                return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+                                            })
+                                        })
+                                    })
 
-                return () => subscriber();
+            return () => subscriber();
         }catch(err){
-            //TODO getZaatarUserInfo from async and reload fillProductsDataById()
-            RNRestart.Restart()
+            //TODO forward to error page
+            //RNRestart.Restart()
         }
     }
 
-    const AddNewProduct = ()=>{
-        if(userInfo.phone ==='' || userInfo.location ==='')
-            Alert.alert('أكمل معلوماتك الشخصية أولاً من فضلك')
-        else
-            setProductFormVisibility(true)
-    }
-
+    //store umbrella bar
     const StoreShopSymbol = () => {
-        const sluts=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        const sluts=[1,2,3,4,5,6,7,8,9,10,11,12,13,14]
         return (
             sluts.map((item, index)=>(
                 <View style={[styles.storeSymbol, 
                             {
-                                backgroundColor:index%2===0 ? '#337096' : '#fff',
-                                height:34,
+                                backgroundColor:index%2===0 ? '#3F2C72' : '#fac300',
+                                height:28,
                             }]} key={index}>
     
                 </View> 
@@ -74,12 +78,10 @@ const Profile = (props) => {
         )
     }
     
-
-    const [deleteButtonVisibility, setDeleteButtonVisibility] = useState(false)
     const ProfileHeaderComponent = () =>{
         return(
             <>
-            <View style={{flexDirection:'row', padding: 5, paddingTop:10, paddingBottom:10, backgroundColor: '#2C4770'}}>
+            <View style={{flexDirection:'row', padding: 5, paddingTop:15, paddingBottom:15, backgroundColor: '#2C4770'}}>
                 <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
                     <Avatar
                         size={140}
@@ -143,74 +145,24 @@ const Profile = (props) => {
                         disabled/>
                 </View>
             </View>
-            <View style={{flexDirection:'row', justifyContent:'space-around', backgroundColor: '#2C4770', marginBottom: 10}}>
-                <Buttons.ButtonDefault 
-                    iconName="edit"
-                    iconSize={25}
-                    containerStyle={{
-                        width:'14%',
-                        justifyContent:'center',
-                        backgroundColor:deleteButtonVisibility ? '#fac300' : 'rgba(255,255,255,0.3)'
-                    }}
-                    onPress={()=> setDeleteButtonVisibility(!deleteButtonVisibility)}/>
-
-                <Buttons.ButtonDefault 
-                    titleLeft='منتج جديد'
-                    iconName="add"
-                    iconSize={25}
-                    containerStyle={{
-                        width:'35%',
-                        justifyContent:'center',
-                        backgroundColor:'rgba(255,255,255,0.3)'
-                    }}
-                    textStyle={{
-                        fontFamily: 'Cairo-Regular',
-                        color:'#fff',
-                        fontSize:15,
-                        letterSpacing:2,
-                        marginLeft:10
-                }}
-                onPress={()=> AddNewProduct()}
-                />
-                
-                <Buttons.ButtonDefault 
-                    titleLeft='تفاصيل المستخدم'
-                    iconName="profile"
-                    iconSize={25}
-                    containerStyle={{
-                        width:'49%',
-                        justifyContent:'center',
-                        backgroundColor:'rgba(255,255,255,0.3)'
-                    }}
-                    textStyle={{
-                        fontFamily: 'Cairo-Regular',
-                        color:'#fff',
-                        fontSize:15,
-                        letterSpacing:2,
-                        marginLeft:10
-                    }}
-                    onPress={()=>setProfileFormVisibility(true)}
-                    />
-            </View> 
+            <View style={{flexDirection:'row', justifyContent:'space-around', marginBottom:10}}>
+                <StoreShopSymbol />
+            </View>
             </>
         )
     }
 
     const $renderEmptyOrdersState = () => {
         return(
-            <>
-            {productsBySellerId.length === 0 ?
-                <>
-                    <Text style={styles.loading}>جار التحميل</Text>
-                    <ActivityIndicator color='#2C4770' size={35}/>
-                </>
-            :
-                    <Text style={styles.loading}>لا توجد منتجات في قائمتك</Text>
-            }
-            </>
+            <Text style={{
+                        color:'#2C4770', 
+                        fontFamily:'Cairo-Bold', 
+                        fontSize: 15,
+                        alignSelf:'center',
+                        marginTop:30
+                    }}>لا توجد منتجات في قائمتك</Text>
         )
     }
-
     //ProfileForm.js visibility
     const [profileFormVisibility, setProfileFormVisibility] = useState(false)
     //AddProductForm.js visibility
@@ -223,22 +175,20 @@ const Profile = (props) => {
             ListHeaderComponent={<ProfileHeaderComponent />}
             ListFooterComponent={productsBySellerId.length === 0 ? $renderEmptyOrdersState : null}
             stickyHeaderIndices={[0]}
-            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             numColumns={2}
             keyExtractor={item => item.productId}
             style={styles.ProductsList}
             renderItem={ ({item, index}) => (
-                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} key={index} />
-            )}
-        />
-
+                <ProductCard item={item} key={index} />
+            )}/>
         <Overlay isVisible={profileFormVisibility} 
                 onBackdropPress={()=>setProfileFormVisibility(!profileFormVisibility)} 
                 fullScreen={true}
                 overlayStyle={{
                     padding:0, 
                     width:'96%',
-                    height:'98%', 
+                    height:'96%', 
                     borderRadius:15,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
@@ -251,7 +201,7 @@ const Profile = (props) => {
                 overlayStyle={{
                     padding:0, 
                     width:'96%',
-                    height:'98%', 
+                    height:'96%', 
                     borderRadius:15,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
@@ -268,26 +218,29 @@ const styles = StyleSheet.create({
     },
     dropShadow:{
         shadowColor: '#323232',
-        shadowOffset: {width: -0, height: 0},
+        shadowOffset: {width: 2, height: 2},
         shadowOpacity: 0.7,
         shadowRadius: 1,
     },
     ProductsList:{
-        //backgroundColor: '#2C4770',
+       // backgroundColor: '#2C4770',
+    },
+    ProductCard:{
+        width:'45%',
+        alignItems:'center',
+        backgroundColor:'#fff',
+        marginTop: 15,
+        margin: 10,
+        borderRadius:10,
+        overflow:'hidden',
+        padding: 5
     },
     storeSymbol: {
-        width:'7%', 
-        borderBottomLeftRadius:11,
-        borderBottomRightRadius:11
-    },
-    loading: {
-        color:'#2C4770', 
-        fontFamily:'Cairo-Bold', 
-        fontSize: 15,
-        alignSelf:'center',
-        marginTop:100,
-        marginBottom:5
+        width:Dimensions.get('window').width/14, 
+        borderBottomLeftRadius:10,
+        borderBottomRightRadius:10,
+        marginTop:-2
     }
 })
 
-export default Profile;
+export default ProfileStore;

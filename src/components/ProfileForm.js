@@ -19,15 +19,17 @@ import auth from '@react-native-firebase/auth'
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import {useNavigation} from '@react-navigation/native';
+import RNRestart from 'react-native-restart'
 
 export default function ProfileForm(props) {
     const navigation = useNavigation();
     // user information state
     //TODO const [userInfo, setUserInfo] = useState(props.userInfo) HINT bug was fixed
-    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {})
+    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', location:'', name:''})
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
+    const [successMsg, setSuccessMsg] = useState('')
 
     //Edit user profile information
     const storeData = (value) => {
@@ -40,9 +42,9 @@ export default function ProfileForm(props) {
                     //immediate update to profile info
                     props.setUserInfo(value)
                     //Hide form
-                    props.setProfileFormVisibility(false)
+                    //props.setProfileFormVisibility(false)
                     setIsloading(false)
-                    Alert.alert('تم حفظ المعلومات') 
+                    setSuccessMsg('تم حفظ المعلومات')
                     //remove keyboard
                     //Keyboard.dismiss()
                 })
@@ -59,12 +61,14 @@ export default function ProfileForm(props) {
                         .then((userCreditentials) => {
                             //get uid and pass it to store data
                             const user = userCreditentials.user
-                            console.log(user)
                             //get user id, retrieve data from data base then store by id 
                             firestore().collection('users').doc(user.uid).set(data)
+                            //save to async storage
+                            AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...data, id: user.uid}))
                             .then(()=>{
-                                AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...data, id: user.uid}))
-                                navigation.navigate('Zaatar')
+                                setSuccessMsg('تم التسجيل بنجاح')
+                                //restart app to update app.js values
+                                RNRestart.Restart()
                             })
                             .catch((e)=>{
                                 //error firestore()
@@ -79,6 +83,8 @@ export default function ProfileForm(props) {
     }
 
     const SaveUserInfo = async () => {
+        setErrMsg('')
+        setSuccessMsg('')
         try{    
             if(userInfo.name.length >=4 && pass.length >=7
                 && userInfo.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) 
@@ -106,17 +112,16 @@ export default function ProfileForm(props) {
     
     const choosePhotoFromLibrary = () => {
         ImagePicker.openPicker({
-          width: undefined,
-          height: 150,
+          width: 200,
+          height: 200,
           cropping: true,
         }).then((image) => {
             const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
-            //upload and return image url
-            //uploadImage(imageUri)
             setImage(imageUri)
         })
         .catch((e) =>{
             //setImage([])
+            setErrMsg('حدث خطأ ما أثناء اختيار الصورة')
         })
       }
 
@@ -143,10 +148,14 @@ export default function ProfileForm(props) {
             return url
         } catch (e) {
             console.log(e)
+            setErrMsg('حدث خطأ ما أثناء تحميل الصورة')
             return null
         }
     }
 
+    const $VerifyEmail = (data) => {
+        return data.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+    }
     return (
         <View style={styles.container}>
             {!props.Registration? 
@@ -163,48 +172,65 @@ export default function ProfileForm(props) {
             </TouchableOpacity>
             : null}
             <ScrollView style={styles.userInfo} showsVerticalScrollIndicator={false}>
-                <Avatar
-                    size={150}
-                    rounded
-                    source={image ? {uri: image} : require('../assets/gallary/profile.png') }
-                    icon={{ name: 'user', type: 'font-awesome' }}
-                    containerStyle={{ backgroundColor: '#2C4770' , alignSelf:'center', margin:5}}
-                    onPress={()=>choosePhotoFromLibrary()}
-                />
+                { image ? 
+                    <Avatar
+                        size={150}
+                        rounded
+                        source={{uri: image}}
+                        icon={{ name: 'photo', type: 'font-awesome' }}
+                        containerStyle={{ backgroundColor: '#2C4770' , alignSelf:'center', margin:5}}
+                        onPress={()=>choosePhotoFromLibrary()}/>
+                :
+                    <Buttons.ButtonDefault
+                        titleRight='تحميل الصورة'
+                        iconName="photo"
+                        iconSize={100}
+                        horizontal={true}
+                        containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', alignSelf:'center', padding: 7, margin: 10}}
+                        textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 15, color: '#2C4770'}}
+                        iconContainer={{backgroundColor: '#2C4770', borderRadius:100, padding:10}}
+                        onPress={()=>choosePhotoFromLibrary()}/>
+                }
                 <Input
                     placeholder="khaled e.g."
                     //placeholderTextColor="red"
                     value={userInfo.name}
                     label="الاسم"
+                    maxLength={15}
                     rightIcon={{ type: 'font-awesome', name: 'user' }}
                     inputContainerStyle={{ alignSelf:'flex-end'}}
-                    containerStyle={{borderWidth:0}}
+                    containerStyle={{}}
                     labelStyle={{color:'#171717', textAlign:'right', fontFamily:'Cairo-Regular'}}
-                    onChangeText={value => setUserInfo({...userInfo, name: value })}
-                />
+                    onChangeText={value => setUserInfo({...userInfo, name: value })}/>
+                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? 'red': 'green'}}>{userInfo.name.length}/15</Text>
+
                 <Input
                     placeholder="khaled@junglesoft.com"
                     label="البريد الالكتروني"
                     value={userInfo.email}
+                    maxLength={25}
                     rightIcon={{ type: 'font-awesome', name: 'envelope' }}
                     inputContainerStyle={{ paddingLeft: 5}}
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, email: value })}
-                    {...props}
-                />
+                    {...props}/>
+                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? 'green' : 'red'}}>{userInfo.email.length}/25</Text>
+
                 <Input
                     placeholder="*******"
                     label="كلمة المرور"
                     value={pass}
                     secureTextEntry={true}
+                    maxLength={20}
                     rightIcon={{ type: 'font-awesome', name: 'key' }}
                     inputContainerStyle={{ paddingLeft: 5}}
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setPass(value)}
-                    {...props}
-                /> 
+                    {...props}/> 
+                <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? 'red': 'green'}}>{pass.length}/20</Text>
+
                 <Input
                     placeholder="0123456789"
                     label="الهاتف"
@@ -215,9 +241,10 @@ export default function ProfileForm(props) {
                     inputContainerStyle={{ paddingLeft: 5}}
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
-                    onChangeText={value => setUserInfo({...userInfo, phone: value })}
-                />
-                    <Input
+                    onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
+                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.phone.length !== 10  ? 'red': 'green'}}>{userInfo.phone.length}/10</Text>
+
+                <Input
                     placeholder="Umm-Elfahm"
                     label="البلد"
                     value={userInfo.location}
@@ -226,20 +253,19 @@ export default function ProfileForm(props) {
                     inputContainerStyle={{ paddingLeft: 5}}
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
-                    onChangeText={value => setUserInfo({...userInfo, location: value })}
-                />
+                    onChangeText={value => setUserInfo({...userInfo, location: value })}/>
+                <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.length < 4  ? 'red': 'green'}}>{userInfo.location.length}/15</Text>
+
                 { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
+                {successMsg === '' ? null :  <Text style={{color:'green', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
                 {errMsg === '' ? null :  <Text style={{color:'red', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+                <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Buttons.ButtonDefault
                     titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
-                    //iconName="add"
-                    iconSize={40}
-                    horizontal={false}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7, margin: 10}}
+                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7, margin: 10}}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#fff'}}
-                    iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
-                    onPress={SaveUserInfo}
-                />
+                    onPress={SaveUserInfo}/>
+                </View>
             </ScrollView>
         </View>
     )

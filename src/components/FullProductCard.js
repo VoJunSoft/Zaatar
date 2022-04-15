@@ -53,7 +53,7 @@ const FullProductCard = (props) => {
       if(productInfo.seller.id === ownerId){
            navigation.navigate('Profile')
       }else{
-          global.sellerState = productInfo.seller
+          //global.sellerState = productInfo.seller
           navigation.navigate('SellerProfile')
       }
 
