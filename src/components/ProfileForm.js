@@ -112,8 +112,8 @@ export default function ProfileForm(props) {
     
     const choosePhotoFromLibrary = () => {
         ImagePicker.openPicker({
-          width: 200,
-          height: 200,
+          width: 300,
+          height: 300,
           cropping: true,
         }).then((image) => {
             const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
@@ -156,6 +156,11 @@ export default function ProfileForm(props) {
     const $VerifyEmail = (data) => {
         return data.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
     }
+
+    const $VerifyPhone = (data) => {
+        return data.match(/\d/g)
+    }
+
     return (
         <View style={styles.container}>
             {!props.Registration? 
@@ -242,7 +247,7 @@ export default function ProfileForm(props) {
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.phone.length !== 10  ? 'red': 'green'}}>{userInfo.phone.length}/10</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyPhone(userInfo.phone) && userInfo.phone.length !== 10  ? 'red': 'green'}}>{userInfo.phone.length}/10</Text>
 
                 <Input
                     placeholder="Umm-Elfahm"

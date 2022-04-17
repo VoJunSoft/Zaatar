@@ -8,9 +8,8 @@ export default function SearchBar(props) {
     const [searchBarVisibility, setSearchBarVisibility ] = useState(props.serachBarVisibility)
     return (
         <View style={[styles.container,{
-                    backgroundColor: searchBarVisibility ? '#2C4970' : null,
                     width: searchBarVisibility ? '100%' :'15%',
-                    justifyContent: searchBarVisibility ? 'space-around' : 'center',
+                    justifyContent: 'space-around',
                     alignSelf:'flex-end'
                     }]}>
             {searchBarVisibility ?
@@ -20,7 +19,7 @@ export default function SearchBar(props) {
                     value={props.searchInput}
                     style={styles.textInput}
                     placeholder="بحث..."
-                    placeholderTextColor='#2C4970'
+                    placeholderTextColor='#fff'
                     textAlign='center'
                     textAlignVertical='bottom'
                     maxLength={25}
@@ -30,13 +29,7 @@ export default function SearchBar(props) {
                 :
                 null
             }
-            <Buttons.ButtonDefault iconName='search' iconSize={25} 
-                onPress={()=>setSearchBarVisibility(!searchBarVisibility)} 
-                containerStyle={{
-                    backgroundColor:searchBarVisibility ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                    borderRadius: 50
-                    }}
-                />
+            <Buttons.ButtonWithShadow iconName='search' iconSize={25} onPress={()=>setSearchBarVisibility(!searchBarVisibility)} containerStyle={styles.icon}/>
         </View>
     )
 }
@@ -53,20 +46,14 @@ const styles = StyleSheet.create({
         color:'#fff'
     },
     textInput:{
-        backgroundColor:'#fff',
+        backgroundColor:'#2C4970',
         width: '70%',
         borderRadius: 15,
-        height: 37,
+        height: 40,
     }, 
-    dropShadow: {
-        width:'100%',
-        shadowColor: '#fff',
-        shadowOffset: {width: -2, height: -2},
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
-    },
     icon:{
-        backgroundColor:'rgba(255,255,255,0.3)',
-        borderRadius: 50
+        backgroundColor:'#2C4970',
+        borderRadius: 50,
+        padding:2
     }
 })

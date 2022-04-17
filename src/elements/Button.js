@@ -87,8 +87,8 @@ const CSS = StyleSheet.create({
         alignItems:'center'
     },
     dropShadow: {
-        shadowColor: '#323232',
-        shadowOffset: {width: -7, height: 7},
+        shadowColor: '#171717',
+        shadowOffset: {width: -4, height: 3},
         shadowOpacity: 0.5,
         shadowRadius: 2,
       }

@@ -46,11 +46,12 @@ export default function AddProductForm(props) {
     setErrMsg('')
     ImagePicker.openPicker({
       width: undefined,
-      height: 350,
-      multiple: true
+      height: undefined,
+      multiple: true,
+      //cropping: true,
     }).then((image) => {
         if((image.length + images.length)<=5){
-          image.forEach(item => {
+          image.map(item => {
             const imageUri = Platform.OS === 'ios' ? item.sourceURL : item.path;
             uploadImage(imageUri)
           }) 
@@ -71,7 +72,7 @@ export default function AddProductForm(props) {
         const extension = filename.split('.').pop(); 
         const name = filename.split('.').slice(0, -1).join('.');
         filename = name + Date.now() + '.' + extension;
-        const storageRef = storage().ref(`products/${filename}`);
+        const storageRef = storage().ref(`products/${productInfo.seller.name}/${filename}`);
         const task = storageRef.putFile(uploadUri);
         try {
             await task;
@@ -79,7 +80,7 @@ export default function AddProductForm(props) {
             setImages(images => [...images,url])
             setLoadingImg(false)
         } catch (e) {
-          setErrMsg('حدث خطأ ما أثناء تحميل الصورة')
+          setErrMsg('!حدث خطأ ما أثناء تحميل الصورة')
         }
   }
 
@@ -205,6 +206,7 @@ export default function AddProductForm(props) {
                 onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, category:itemValue})}>
                 <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
                 <Picker.Item label="انتيكا" value="انتيكا" />
+                <Picker.Item label="ورش عمل" value="ورش عمل" />
                 <Picker.Item label="ملابس" value="ملابس" />
                 <Picker.Item label="مستلزمات" value="مستلزمات" />
                 <Picker.Item label="اكسسوارات" value="اكسسوارات" />
@@ -235,7 +237,7 @@ export default function AddProductForm(props) {
             <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.imgBlock}>
                     <Text style={{color:'#fff', fontFamily:'Cairo-Regular', marginBottom:-15}}>تحميل الصور</Text>
                     <Icon iconName='photo' size={70} />
-                    {loadingImg ? <ActivityIndicator size={30} color/> : null}
+                    {loadingImg ? <ActivityIndicator size={30} color='#fff'/> : null}
             </TouchableOpacity>
         
            

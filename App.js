@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -6,6 +5,7 @@ import 'react-native-gesture-handler'
  * @format
  * @flow strict-local
  */
+import 'react-native-gesture-handler'
 import React, {useEffect, useState} from 'react'
 import {
   View,
@@ -26,10 +26,12 @@ import SellerProfile from './src/screens/SellerProfile'
 import Settings from './src/screens/Settings'
 import Registration from './src/screens/Registration'
 import Entry from './src/screens/Entry'
-import Elements from './src/screens/Elements'
+import Stores from './src/screens/Stores'
+import WorkShops from './src/screens/Workshops'
 import AppStyles from './src/styles/AppStyle'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar } from 'react-native-elements'
+import Buttons from './src/elements/Button'
 //import NavigationBar from 'react-native-navbar-color'
 
 I18nManager.forceRTL(false)
@@ -79,6 +81,19 @@ const App = () => {
         />
         <Text style={AppStyles.textTitle}>{userInfo.id ? 'الصفحه الشخصيه' : 'تسجيل الدخول'}</Text>
       </View>
+    )
+  }
+
+  const MenuItem = (props) => {
+    return(
+      <Buttons.ButtonDefault 
+          titleLeft={props.title}
+          iconName={props.icon}
+          iconSize={27}
+          containerStyle={{justifyContent:'flex-end'}}
+          textStyle={{fontFamily: 'Cairo-Regular',color:'#2C4770', fontSize:14}}
+          disabled
+      />
     )
   }
 
@@ -134,8 +149,7 @@ const App = () => {
                 title: 'الصفحه الشخصيه',
                 headerShown: false,
                 drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/Zaatar.png')}/>
-              }}
-          />
+              }}/>
           <Drawer.Screen
               name="Registration"
               component={Registration}
@@ -143,21 +157,42 @@ const App = () => {
                 headerShown: false,
                 drawerItemStyle: {
                   display: "none",
-                }}}
-          />
+                }}}/>
           <Drawer.Screen
               name="Zaatar"
               component={Zaatar}
               options={{
                 title:'زعتر',
-                drawerIcon:({focused})=>(
-                  <FontAwesomeIcons 
-                      name='home'
-                      color={focused ? '#2C4770' : '#2C4770'}
-                      size={20}
-                  />
-                )}}
-          />
+                // drawerIcon:({focused})=>(
+                //   <FontAwesomeIcons 
+                //       name='home'
+                //       color={focused ? '#2C4770' : '#2C4770'}
+                //       size={20}
+                //   />)
+                drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>
+              }}/>
+           <Drawer.Screen
+            name="Stores"
+            component={Stores}
+            options={{
+              title:'صفحات تجارية',
+              drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
+            }}/>
+          
+          <Drawer.Screen
+            name="WorkShops"
+            component={WorkShops}
+            options={{
+              title:'ورش عمل',
+              drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
+            }}/>
+          <Drawer.Screen
+            name="Settings"
+            component={Settings}
+            options={{
+              title:'اعدادات',
+              drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>
+            }}/>
           <Drawer.Screen
             name="SellerProfile"
             component={SellerProfile}
@@ -165,34 +200,7 @@ const App = () => {
               title:'متجر',
               drawerItemStyle: {
                 display: "none",
-              }}}
-          />
-           <Drawer.Screen
-            name="Elements"
-            component={Elements}
-            options={{
-              title:'محلات تجارية',
-              drawerIcon:({focused})=>(
-                <FontAwesomeIcons 
-                    name='anchor'
-                    color={focused ? '#2C4770' : '#2C4770'}
-                    size={20}
-                />
-              )}}
-          />
-          <Drawer.Screen
-            name="Settings"
-            component={Settings}
-            options={{
-              title:'اعدادات',
-              drawerIcon:({focused})=>(
-                <FontAwesomeIcons 
-                    name='tools'
-                    color={focused ? '#2C4770' : '#2C4770'}
-                    size={20}
-                />
-              )}}
-          />
+            }}}/>
         </>
         :
         <>
@@ -203,49 +211,36 @@ const App = () => {
             options={{
               title: 'الصفحه الشخصيه',
               drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/profile.png')}/>
-            }}
-          />
+            }}/>
           <Drawer.Screen
             name="Zaatar"
             component={Zaatar}
             options={{
               title:'زعتر',
-              //title:'الصفحة الرئيسية',
-              drawerIcon:({focused})=>(
-                <FontAwesomeIcons 
-                    name='home'
-                    color={focused ? '#2C4770' : '#2C4770'}
-                    size={20}
-                />
-              )}}
-          />
-          <Drawer.Screen
-            name="Elements"
-            component={Elements}
+              drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>
+            }}/>
+            <Drawer.Screen
+            name="Stores"
+            component={Stores}
             options={{
-              title:'محلات تجارية',
-              drawerIcon:({focused})=>(
-                <FontAwesomeIcons 
-                    name='anchor'
-                    color={focused ? '#2C4770' : '#2C4770'}
-                    size={20}
-                />
-              )}}
-          />
+              title:'صفحات تجارية',
+              drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
+            }}/>
+            <Drawer.Screen
+            name="WorkShops"
+            component={WorkShops}
+            options={{
+              title:'ورش عمل',
+              drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
+            }}/>
           <Drawer.Screen
             name="Settings"
             component={Settings}
             initialParams={{user: isUser}}
             options={{
               title:'اعدادات',
-              drawerIcon:({focused})=>(
-                <FontAwesomeIcons 
-                    name='tools'
-                    color={focused ? '#2C4770' : '#2C4770'}
-                    size={20}
-                />
-              )}}
-          />
+              drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>
+            }}/>
           <Drawer.Screen
             name="SellerProfile"
             component={SellerProfile}
@@ -253,8 +248,7 @@ const App = () => {
               title:'متجر',
               drawerItemStyle: {
                 display: "none",
-              }}}
-          />
+            }}}/>
         </>
         }
       </Drawer.Navigator>

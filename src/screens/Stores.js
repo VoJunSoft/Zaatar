@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, ActivityIndicator } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
-import StoreCard from './StoreCard'
-import SearchBar from './SearchBar'
+import StoreCard from '../components/StoreCard'
+import SearchBar from '../components/SearchBar'
 
 export default function Stores(props) {
     const [stores, setStores] = useState([])
@@ -52,10 +52,9 @@ export default function Stores(props) {
     }
 
     return (
+        <>
         <FlatList 
             data={filterDataBaseOnSearch()}
-            ListHeaderComponent={<SearchBar setSearchInput={setSearchInput} searchInput={searchInput} serachBarVisibility={false}/>}
-            //stickyHeaderIndices={[0]}
             ListFooterComponent={stores.length === 0 ? $renderEmptyOrdersState : null}
             showsHorizontalScrollIndicator={false}
             numColumns={2}
@@ -64,7 +63,8 @@ export default function Stores(props) {
             renderItem={ ({item, index}) => (
                 <StoreCard item={item} key={index}/>
             )}/>
-       
+        <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} serachBarVisibility={false}/>
+        </>
     )
 }
 

@@ -10,6 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard'
 import ZaatarSearchBar from '../components/ZaatarSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+//import { GetProductsByDate } from '../firebase/Firestore';
 
 export default function Zaatar() {
 
@@ -18,15 +19,15 @@ export default function Zaatar() {
     const [products, setProducts] = useState([])
     useEffect( () => {
         //get Data from asyncstorage on page load and store it to userInfo
-        fillProducts()
+        GetProductsByDate()
     },[])
 
-    const fillProducts = () => {
+    const GetProductsByDate = () => {
+        setProducts([])
         const subscriber = firestore()
             .collection('products')
             .orderBy('date_listed', 'asc')
             .onSnapshot(querySnapshot => {
-                setProducts([])
                 querySnapshot.forEach(documentSnapshot => {
                     setProducts((prevState) => {
                         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]

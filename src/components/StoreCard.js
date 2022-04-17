@@ -82,7 +82,7 @@ const StoreCard = (props) => {
 const styles = StyleSheet.create({
     container:{
         width:Dimensions.get('window').width/2.2,
-        height:Dimensions.get('window').width/1.3,
+        height:Dimensions.get('window').height/2.7,
         backgroundColor: '#fff',
         borderRadius:20,
         overflow:'hidden',

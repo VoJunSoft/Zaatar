@@ -54,6 +54,8 @@ const CusIcon = (props) => {
         gear: require('../assets/icons/gear.png'),
         whats: require('../assets/icons/whats.png'),
         info: require('../assets/icons/info.png'),
+        zaatar: require('../assets/icons/zaatar.png'),
+        store: require('../assets/icons/store.png'),
     })
    
     return(

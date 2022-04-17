@@ -81,12 +81,11 @@ const FullProductCard = (props) => {
                 disabled/> 
         <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
         <Avatar
-              size={70}
+              size={60}
               rounded
               source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/profile.png') }
               icon={{ name: 'user', type: 'font-awesome' }}
               containerStyle={{ backgroundColor: '#2C4770', marginLeft:10}}
-              key={1}
           />
     </TouchableOpacity>  
    
@@ -95,21 +94,25 @@ const FullProductCard = (props) => {
           animation="bounceInDown"
           easing="ease"
           iterationCount={1}
-          duration={1000}
+          duration={2000}
           direction="normal">
           <Image style={styles.imgLarge} source={{uri: productInfo.photos[imgIndex]}} /> 
-          <ScrollView style={styles.imgBlock} horizontal={true}>
-            {
-                productInfo.photos.map( (item, index) => (
-                    <Pressable 
-                        key={index}
-                        onPress={() => setImageIndex(index)} 
-                        style={{margin:0}}>
-                            <Image style={[styles.imgSmall,{borderColor: imgIndex===index ? '#fac300' : null }]} source={{uri: item}} />  
-                    </Pressable>
-                ))
-            }
-          </ScrollView>
+          {props.productInfo.photos.length > 0 ?
+            <ScrollView style={styles.imgBlock} horizontal={true}>
+              {
+                  props.productInfo.photos.map( (item, index) => (
+                      <Pressable 
+                          key={index}
+                          onPress={() => setImageIndex(index)} 
+                          style={{margin:0}}>
+                              <Image style={[styles.imgSmall,{borderColor: imgIndex===index ? '#fac300' : null }]} source={{uri: item}} />  
+                      </Pressable>
+                  ))
+              }
+            </ScrollView>
+            :
+            null
+          }
           <View style={styles.cardBlock}>
               <Text style={styles.title}>₪{productInfo.price}</Text>
               <Text style={styles.title}>{productInfo.product_name}</Text> 
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        padding:2
+        padding:5
     },
     imgBlock:{
       backgroundColor:'#323232'
@@ -187,7 +190,7 @@ const styles = StyleSheet.create({
       color:'#171717',
     },
     imgLarge: {
-      height:400,
+      height:320,
       width:'100%',
       resizeMode:'cover',
     },
