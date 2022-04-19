@@ -61,12 +61,12 @@ export default function ProductCard(props) {
 
     const DefaultView = (props) => {
         return(
-            <TouchableOpacity   style={styles.ProductCardDefault} 
+            <TouchableOpacity   style={[styles.ProductCardDefault,{padding: props.deleteButtonVisibility ? 0 : 4}]} 
                                 activeOpacity={0.7} 
                                 onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
                                 disabled={props.deleteButtonVisibility}>
                 <DropShadow style={styles.dropShadow}>
-                    <Image style={{width: "100%", height: 120, borderRadius: 13}} source={{uri : productInfo.photos[0]}} /> 
+                    <Image style={styles.displayImg} source={{uri : productInfo.photos[0]}} /> 
                 </DropShadow >
                 <View style={styles.subDefaultContainer}>    
                     <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text>
@@ -198,7 +198,6 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius:13,
         overflow:'hidden',
-        padding: 4
     },
     subDefaultContainer: {
         width: "100%",
@@ -229,4 +228,12 @@ const styles = StyleSheet.create({
         letterSpacing:1,
         fontFamily:'Cairo-Bold'
     },
+    displayImg:{
+        width: "100%", 
+        height: 120, 
+        //borderTopLeftRadius: 13, 
+        //borderTopRightRadius: 13, 
+        borderRadius:10,
+        alignSelf:'center'
+    }
 })

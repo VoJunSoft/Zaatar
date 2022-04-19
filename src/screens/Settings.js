@@ -12,6 +12,7 @@ import {
  import auth from '@react-native-firebase/auth'
  import AsyncStorage from '@react-native-async-storage/async-storage'
  import Share from "react-native-share"
+ import {contactUsByWhatsapp} from '../scripts/Communication'
 
 const Settings = ({navigation, route}) => {
 console.log(route.params)
@@ -49,11 +50,6 @@ console.log(route.params)
         }
     }
 
-    const contactUs = (phoneNumber)=>{
-        let data = 'زعتر - '
-        Linking.openURL(`whatsapp://send?text=${data}&phone=${phoneNumber}`)
-    }
-
     return (
     <ScrollView style={styles.container}>
         {/* <Image style={styles.img} source={require('../assets/gallary/Zaatar3.png')} /> */}
@@ -68,7 +64,7 @@ console.log(route.params)
                     containerStyle={styles.button}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#2C4770'}}
                     iconContainer={{borderRadius:50}}
-                    onPress={()=>contactUs('0527919300')}/>
+                    onPress={()=>contactUsByWhatsapp('','0527919300')}/>
         <Buttons.ButtonDefault
                     titleLeft="مشاركه"
                     iconName="share"

@@ -1,27 +1,29 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, FlatList, Dimensions, ActivityIndicator } from 'react-native'
-import firestore from '@react-native-firebase/firestore'
 import { Avatar } from 'react-native-elements'
 import SearchBar from '../components/SearchBar'
 import Buttons from '../elements/Button'
 import { handleDate } from '../scripts/Time'
+import {contactUsByWhatsapp} from '../scripts/Communication'
+import firestore from '@react-native-firebase/firestore'
+//import {GetProductsByDate} from '../firebase/Firestore'
 
 export default function Workshops(props) {
     const [workshops, setWorkshops] = useState([])
     useEffect( () => {
-        //get Data from users database
-        fillUpWorkshop()
+        //get Data from workshop database
+        fillUpWorkshops()
     },[])
 
-    //stores object fields: id, name, location, phone, picture, email
-    const fillUpWorkshop = () => {
+    //stored object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
+    // TODO add registration form
+    const fillUpWorkshops = () => {
         const subscriber = firestore()
-            .collection('products')
+            .collection('workshops')
             //.orderBy('date_listed', 'asc')
             .onSnapshot(querySnapshot => {
                 setWorkshops([])
                 querySnapshot.forEach(documentSnapshot => {
-                    if(documentSnapshot.data().category === 'ورش عمل')
                         setWorkshops((prevState) => {
                             return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
                         })
@@ -31,12 +33,14 @@ export default function Workshops(props) {
             return() => subscriber()
     }
 
+    //TODO based on seller id get seller info
+
     const [searchInput, setSearchInput] = useState("")
     const filterDataBaseOnSearch = () =>{
         if(searchInput==='')
                 return workshops
             else
-                return workshops.filter(item=> item.name.includes(searchInput) || item.location.includes(searchInput))
+                return workshops.filter(item=> item.title.includes(searchInput) || item.location.includes(searchInput))
     }
 
     const $renderEmptyOrdersState = () => {
@@ -53,18 +57,20 @@ export default function Workshops(props) {
             <>
             <View style={styles.card}>
                 <View style={styles.bodyCard}>
-                    <Text style={styles.text}>{props.item.product_name}</Text>
-                    <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                        <Text style={styles.text}>{handleDate(props.item.date_listed.seconds)}</Text>
+                    <View style={{flexDirection:'row', justifyContent:'flex-end'}}>
+                        {/* <Text style={styles.text}>{handleDate(props.item.date_posted.seconds)}</Text> */}
+                        <Text style={styles.text}>{props.item.title}</Text>
+                    </View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                        <Buttons.ButtonDefault 
+                            titleLeft={props.item.seller.phone}
+                            iconName='whats'
+                            iconSize={27}
+                            containerStyle={{justifyContent:'center'}}
+                            textStyle={styles.text}
+                            onPress={()=>contactUsByWhatsapp(props.item.title, props.item.seller.phone)} />
                         <Text style={styles.text}>{props.item.seller.name}</Text>
                     </View>
-                    {/* <Buttons.ButtonDefault 
-                        titleLeft={props.item.seller.location}
-                        iconName='location'
-                        iconSize={27}
-                        containerStyle={{justifyContent:'flex-end'}}
-                        textStyle={styles.text}
-                        disabled /> */}
                 </View>
                 <View style={styles.headerCard}>
                     <Avatar
@@ -72,21 +78,41 @@ export default function Workshops(props) {
                         rounded
                         source={{uri: props.item.seller.picture}}
                         icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
-                        containerStyle={{ backgroundColor: '#fff', margin: 5}}/>
+                        containerStyle={{ backgroundColor: '#fff', margin: 2}}/>
                 </View>
             </View>
             <View style={styles.imgBlock}>
-                <Image style={styles.img} source={{uri: props.item.photos[2]}}/>
-                <Text style={styles.textInfo}>{props.item.description}</Text>
-                <Buttons.ButtonDefault 
-                        titleLeft={props.item.seller.phone}
-                        iconName='whats'
-                        iconSize={27}
-                        containerStyle={{justifyContent:'center'}}
-                        textStyle={styles.text}
-                        disabled />
+                <Image style={styles.img} source={{uri: props.item.image}}/>
             </View>
             </>
+        )
+    }
+
+       const WorkShopCardAlpha = (props) => {
+        return(
+            <View style={{width: '100%', flexDirection:'row', justifyContent:'space-around', marginTop:15}}>
+                <View style={{  width:'80%',
+                                height:Dimensions.get('window').height/1.3,
+                                borderRadius:10,
+                                }}>
+                    <Image style={{ //backgroundColor:'rgba(0,0,0,0.3)', 
+                                    width:'100%', 
+                                    height:'100%',
+                                    borderRadius:20,
+                                    marginTop:0,
+                                    resizeMode:'contain',
+                                }} source={{uri: props.item.image}}/>
+                </View>
+
+                <View style={{width:'17%'}}>
+                    <Avatar
+                        size={65}
+                        rounded
+                        source={{uri: props.item.seller.picture}}
+                        icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
+                        containerStyle={{ backgroundColor: '#fff', alignSelf:'center'}}/>
+                </View>
+            </View>
         )
     }
 
@@ -94,7 +120,7 @@ export default function Workshops(props) {
         <FlatList 
             data={filterDataBaseOnSearch()}
             ListFooterComponent={workshops.length === 0 ? $renderEmptyOrdersState : null}
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             keyExtractor={item => item.id}
             style={styles.StoreList}
             renderItem={ ({item, index}) => (
@@ -106,7 +132,7 @@ export default function Workshops(props) {
 
 const styles= StyleSheet.create({
     StoreList:{
-       alignSelf:'center',
+       //alignSelf:'center',
     },
     loading: {
         color:'#2C4770', 
@@ -119,27 +145,28 @@ const styles= StyleSheet.create({
     card:{
         marginTop:15,
         flexDirection:'row',
-        borderTopLeftRadius:10,
+        //borderRadius:8,
         overflow:'hidden',
-        alignSelf:'center',
+        alignSelf:'flex-end',
     },
     headerCard:{
-        width:'25%',
-        backgroundColor:'rgba(0,0,0,0.2)',
+        width:'23%',
+        backgroundColor:'#2C4770',
         alignItems:'center',
         padding: 5,
-        borderTopRightRadius:10,
-        borderLeftWidth:0.1
+        borderLeftWidth:0.2
     },
     bodyCard:{
-        width:'72%',
+        width:'71%',
         justifyContent:'center',
-        backgroundColor:'rgba(0,0,0,0.2)', 
-        padding: 5,
+        backgroundColor:'rgba(0,0,0,0.3)', 
+        // /padding: 5,
+        borderTopLeftRadius:15,
+        borderBottomLeftRadius:15,
     },
     text:{
         color:'#2C4770', 
-        marginRight: 10,
+        marginRight: 5,
         fontFamily:'Cairo-Regular'
     },
     textInfo:{
@@ -150,21 +177,18 @@ const styles= StyleSheet.create({
     },
     img:{
         width:'100%',
-        height:Dimensions.get('window').height/1.7,
+        height:Dimensions.get('window').height/1.3,
         alignSelf:'center',
-        //borderBottomLeftRadius:10,
-        //borderBottomRightRadius:10,
-        resizeMode:'cover'
+        borderRadius:10,
+        resizeMode:'contain',
+        marginTop:5
     },
     imgBlock:{
         alignSelf:'center',
         width:'97%',
-        backgroundColor:'rgba(0,0,0,0.2)', 
-        //paddingLeft:7,
-        //paddingRight:7,
-        paddingBottom:10,
         borderBottomLeftRadius:10,
         borderBottomRightRadius:10,
+        overflow:'hidden'
     }
 })
 
