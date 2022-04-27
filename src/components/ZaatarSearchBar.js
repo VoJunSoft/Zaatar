@@ -5,7 +5,18 @@ import DropShadow from "react-native-drop-shadow";
 
 export default function ZaatarSearchBar(props) {
 
-    const $Categories = ['الكل' ,"انتيكا", "مستلزمات", "الات", "فن",'ورش عمل' , 'خدمات' , "دروس خصوصية", 'اكسسوارات' , "غذاء"]
+    const $Categories = [
+                        'الكل'
+                        , "مستلزمات"
+                        , 'اكسسوارات'
+                        , "الات"
+                        , "فن"
+                        , 'خدمات'
+                        ,'ورش عمل'
+                        , "دروس خصوصية"
+                        , "غذاء"  
+                        ,'انتيكا'
+                        ]
     const [searchBarVisibility, setSearchBarVisibility ] = useState(false)
     return (
         <DropShadow style={styles.dropShadow}>

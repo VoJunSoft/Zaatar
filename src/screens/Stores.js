@@ -6,7 +6,7 @@ import SearchBar from '../components/SearchBar'
 
 export default function Stores(props) {
     const [stores, setStores] = useState([])
-    useEffect( () => {
+    useEffect(() => {
         //get Data from users database
         fillUpStoresList()
     },[])
@@ -38,32 +38,23 @@ export default function Stores(props) {
 
     const $renderEmptyOrdersState = () => {
         return(
-            <>
-            {stores.length === 0 ?
-                <>
-                    <Text style={styles.loading}>جار التحميل</Text>
-                    <ActivityIndicator color='#2C4770' size={35}/>
-                </>
-            :
-                    <Text style={styles.loading}>لم نتمكن من تحديد موقع أي متجر في هذه الأثناء. الرجاء معاودة المحاولة في وقت لاحق.</Text>
-            }
-            </>
+                <Text style={styles.loading}>لم نتمكن من تحديد موقع أي متجر</Text>
         )
-    }
+    }  
 
     return (
         <>
         <FlatList 
             data={filterDataBaseOnSearch()}
-            ListFooterComponent={stores.length === 0 ? $renderEmptyOrdersState : null}
+            ListFooterComponent={filterDataBaseOnSearch().length === 0 ? $renderEmptyOrdersState : null}
             showsHorizontalScrollIndicator={false}
             numColumns={2}
             keyExtractor={item => item.id}
             style={styles.StoreList}
             renderItem={ ({item, index}) => (
-                <StoreCard item={item} key={index}/>
+                <StoreCard item={item}/>
             )}/>
-        <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} serachBarVisibility={false}/>
+        <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>
         </>
     )
 }

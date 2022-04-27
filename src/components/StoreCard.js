@@ -18,22 +18,17 @@ const StoreCard = (props) => {
    const nav = useNavigation()
     const [store, setStoreInfo] = useState(props.item)
     useEffect( ()=>{
-        getData() 
+        getData()
       }, [])
     
       //get owner (logged in user) to compare with other sellers ids
       const [ownerId, setOwnerId] = useState('')
       const getData =  () => {
-        try {
-               AsyncStorage.getItem('userInfoZaatar')
+            AsyncStorage.getItem('userInfoZaatar')
                .then((value) => {
-                    if(value !== null){
+                    if(value !== null)
                       setOwnerId(JSON.parse(value).id)
-                    } 
                })
-        } catch(e) {
-          // error reading value
-        }
       }
   
       //TODO retrieve data from firebase based on id and pass it instead of productInfo.seller (which is stored with product info)

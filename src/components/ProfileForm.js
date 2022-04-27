@@ -16,10 +16,11 @@ import Buttons from '../elements/Button'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
-import ImagePicker from 'react-native-image-crop-picker';
-import storage from '@react-native-firebase/storage';
-import {useNavigation} from '@react-navigation/native';
+import ImagePicker from 'react-native-image-crop-picker'
+import storage from '@react-native-firebase/storage'
+import {useNavigation} from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
+import CountryPicker from 'react-native-country-picker-modal'
 
 export default function ProfileForm(props) {
     const navigation = useNavigation();
@@ -161,6 +162,22 @@ export default function ProfileForm(props) {
         return data.match(/\d/g)
     }
 
+    //show/hide country code
+    const [show, setShow] = useState(false)
+    const $countryPicker = () => {
+        return(
+            <CountryPicker 
+                withFilter
+                withAlphaFilter={true}
+                withCallingCode
+                containerStyle={{width:'40%'}} 
+                onSelect={country=>{
+                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0]} })
+                    console.log(userInfo.location)
+                }}
+                visible={false}/>
+        )
+    }
     return (
         <View style={styles.container}>
             {!props.Registration? 
@@ -198,7 +215,6 @@ export default function ProfileForm(props) {
                 }
                 <Input
                     placeholder="khaled e.g."
-                    //placeholderTextColor="red"
                     value={userInfo.name}
                     label="الاسم"
                     maxLength={15}
@@ -235,30 +251,48 @@ export default function ProfileForm(props) {
                     onChangeText={value => setPass(value)}
                     {...props}/> 
                 <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? 'red': 'green'}}>{pass.length}/20</Text>
+                
+                <View style={styles.flexInput}>
+                    <Input
+                        placeholder="+972"
+                        label={$countryPicker()}
+                        value={userInfo.location.code}
+                        //rightIcon={{ type: 'font-awesome', name: 'map' }}
+                        maxLength={15}
+                        inputContainerStyle={{ }}
+                        containerStyle={{width:'30%'}}
+                        labelStyle={{color:'#171717', textAlign:'right'}}
+                        //onFocus={$countryPicker()}
+                        />
+                     
+                        
+                    <Input
+                        placeholder="0123456789"
+                        label="الهاتف"
+                        value={userInfo.phone}
+                        rightIcon={{ type: 'font-awesome', name: 'mobile' }}
+                        maxLength={10}
+                        keyboardType='numeric'
+                        inputContainerStyle={{ paddingLeft: 5}}
+                        containerStyle={{width:'60%'}}
+                        labelStyle={{color:'#171717', textAlign:'right'}}
+                        onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
+                </View>
+                <View style={styles.flexInput}>
+                    <Text style={{width:'40%',paddingLeft:20, marginTop:-25, color: 'green'}}>✓</Text>
+                    <Text style={{width:'60%',paddingLeft:20, marginTop:-25, color: $VerifyPhone(userInfo.phone) && userInfo.phone.length !== 10  ? 'red': 'green'}}>{userInfo.phone.length}/10</Text>
+                </View>
 
                 <Input
-                    placeholder="0123456789"
-                    label="الهاتف"
-                    value={userInfo.phone}
-                    rightIcon={{ type: 'font-awesome', name: 'mobile' }}
-                    maxLength={10}
-                    keyboardType='numeric'
-                    inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{borderWidth:0}}
-                    labelStyle={{color:'#171717', textAlign:'right'}}
-                    onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyPhone(userInfo.phone) && userInfo.phone.length !== 10  ? 'red': 'green'}}>{userInfo.phone.length}/10</Text>
-
-                <Input
-                    placeholder="Umm-Elfahm"
+                    placeholder="ام الفحم"
                     label="البلد"
                     value={userInfo.location}
                     rightIcon={{ type: 'font-awesome', name: 'map' }}
                     maxLength={15}
                     inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{borderWidth:0}}
+                    containerStyle={{}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
-                    onChangeText={value => setUserInfo({...userInfo, location: value })}/>
+                    onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/>
                 <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.length < 4  ? 'red': 'green'}}>{userInfo.location.length}/15</Text>
 
                 { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
@@ -311,5 +345,9 @@ const styles = StyleSheet.create({
         flex:1,
         width: '90%',
         alignSelf: 'center',
+    },
+    flexInput:{
+        flexDirection:'row',
+        justifyContent:'space-between'
     }
 })

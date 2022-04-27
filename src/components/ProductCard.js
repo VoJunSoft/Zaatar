@@ -59,7 +59,7 @@ export default function ProductCard(props) {
         )
     }
 
-    const DefaultView = (props) => {
+    const DefaultView = () => {
         return(
             <TouchableOpacity   style={[styles.ProductCardDefault,{padding: props.deleteButtonVisibility ? 0 : 4}]} 
                                 activeOpacity={0.7} 
@@ -93,59 +93,23 @@ export default function ProductCard(props) {
                                     onPress={()=> DeleteProduct(productInfo.productId)}/>  
                     </View>
                     : 
-                    <Text style={styles.titleDefault}> ₪{productInfo.price}</Text> 
+                    <View style={{
+                        width:'100%',
+                        flexDirection:'row',
+                        justifyContent:'space-around',
+                        alignItems:'baseline'}}>
+                        <Text style={styles.titleDefault}> ₪{productInfo.price}</Text> 
+                        {/* <Text style={styles.dateDefault}>{handleTimeDifference(productInfo.date_listed.seconds)}</Text>  */}
+                    </View>
                 }
                 </View>        
             </TouchableOpacity>
         )
     }
 
-    const BGView = (props) => {
-        return(
-            <TouchableOpacity   style={styles.ProductCard} 
-                                activeOpacity={0.7} 
-                                onPress={()=>setFullProductVisibility(true)}
-                                disabled={props.deleteButtonVisibility}>
-                <ImageBackground style={{width: "100%", height: 250}} source={{uri : productInfo.photos[0]}} > 
-                    <View style={{flex:1,flexDirection:'column', justifyContent:'space-between'}}>
-                        <Text style={[styles.body, {padding: 3}]}> {productInfo.product_name}</Text>  
-                        { props.deleteButtonVisibility ?
-                        <View style={{
-                                width:'100%',
-                                backgroundColor: 'rgba(255,255,255,0.9)',
-                                flexDirection:'row',
-                                justifyContent:'space-around',
-                                }}>
-                            <Buttons.ButtonDefault 
-                                iconName="edit"
-                                iconSize={30}
-                                containerStyle={{
-                                    width:'50%',
-                                    justifyContent:'center',
-                                    borderRightWidth:1
-                                }}
-                                onPress={()=>setProductFormVisibility(true)}/>  
-                            <Buttons.ButtonDefault 
-                                iconName="delete"
-                                iconSize={25}
-                                containerStyle={{
-                                    width:'50%',
-                                    justifyContent:'center',
-                                }}
-                                onPress={()=> DeleteProduct(productInfo.productId)}/>  
-                        </View>
-                        : 
-                        <Text style={styles.body}> ₪{productInfo.price}</Text>  
-                }    
-                    </View>  
-                </ImageBackground> 
-            </TouchableOpacity>
-        )
-    }
-
     return (
         <>
-        {DefaultView(props)}
+        <DefaultView />
         <Overlay isVisible={fullProductVisibility} 
                 onBackdropPress={()=>setFullProductVisibility(false)} 
                 fullScreen={true}
@@ -200,13 +164,13 @@ const styles = StyleSheet.create({
         overflow:'hidden',
     },
     subDefaultContainer: {
+        flex:1,
         width: "100%",
         flexDirection:'column',  
         alignItems:'center',
+        justifyContent:'space-between',
         borderBottomLeftRadius:13,
         borderBottomRightRadius:13,
-        borderWidth:0,
-        borderTopWidth:0,
         borderColor:'rgba(255,255,255,0.5)',
     },
     title:{
@@ -218,6 +182,13 @@ const styles = StyleSheet.create({
         fontFamily:'Cairo-Regular',
         fontSize: 15,
         color: '#fff',
+        textAlign:'center',
+    },
+    dateDefault:{
+        fontFamily:'Cairo-Regular',
+        fontSize: 12,
+        color: '#fff',
+        textAlign:'center',
     },
     body:{
         width:'100%',

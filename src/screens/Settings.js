@@ -11,8 +11,7 @@ import {
  import Buttons from '../elements/Button'
  import auth from '@react-native-firebase/auth'
  import AsyncStorage from '@react-native-async-storage/async-storage'
- import Share from "react-native-share"
- import {contactUsByWhatsapp} from '../scripts/Communication'
+ import {contactUsByWhatsapp, share} from '../scripts/Communication'
 
 const Settings = ({navigation, route}) => {
 console.log(route.params)
@@ -37,19 +36,6 @@ console.log(route.params)
             ])
     }
 
-    const share = async () => {
-        const customOptions = {
-            title: "زعتر",
-            message: "سوق المبيعات",
-            url: 'https://play.google.com/store/apps/details?id=com.junglesoft.alhadath'
-          }
-        try {
-          await Share.open(customOptions)
-        } catch (err) {
-          console.log(err);
-        }
-    }
-
     return (
     <ScrollView style={styles.container}>
         {/* <Image style={styles.img} source={require('../assets/gallary/Zaatar3.png')} /> */}
@@ -64,7 +50,7 @@ console.log(route.params)
                     containerStyle={styles.button}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#2C4770'}}
                     iconContainer={{borderRadius:50}}
-                    onPress={()=>contactUsByWhatsapp('','0527919300')}/>
+                    onPress={()=>contactUsByWhatsapp('+972527919300')}/>
         <Buttons.ButtonDefault
                     titleLeft="مشاركه"
                     iconName="share"
@@ -75,7 +61,7 @@ console.log(route.params)
                     iconContainer={{borderRadius:50}}
                     onPress={()=>share()}/>
         {route.params ?
-        <Buttons.ButtonDefault
+            <Buttons.ButtonDefault
                     titleLeft="خروج"
                     iconName="exit"
                     iconSize={40}
@@ -83,7 +69,10 @@ console.log(route.params)
                     containerStyle={styles.button}
                     textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#2C4770'}}
                     iconContainer={{borderRadius:50}}
-                    onPress={()=>handleLogOut()}/>: null}
+                    onPress={()=>handleLogOut()}/>
+        : 
+            null
+        }
     </ScrollView>
     )
 }

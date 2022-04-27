@@ -19,7 +19,6 @@ import {
 } from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
 import {createDrawerNavigator} from '@react-navigation/drawer'
-import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
 import Zaatar from './src/screens/Zaatar'
 import Profile from './src/screens/Profile'
 import SellerProfile from './src/screens/SellerProfile'
@@ -33,6 +32,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar } from 'react-native-elements'
 import Buttons from './src/elements/Button'
 //import NavigationBar from 'react-native-navbar-color'
+//import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
 
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
@@ -108,7 +108,7 @@ const App = () => {
     <NavigationContainer>
       <StatusBar barStyle="light-content" hidden={false} backgroundColor='#2C4770'/>
       <Drawer.Navigator 
-          initialRouteName='Zaatar'
+          initialRouteName='Entry'
           screenOptions={{
             headerShown: true,
             drawerType:"front",

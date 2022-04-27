@@ -138,9 +138,10 @@ export default function AddProductForm(props) {
             .doc(productInfo.productId)
             .update({...productInfo, photos: images})
             .then(() => {
-              setVisible(false)
               //show add success msg to reporter
               setSuccessMsg('تم تعديل المنتج بنجاح')
+              //hide indicator (loading/editing msg)
+              setVisible(false)
             })
             .catch((e)=>{
               setErrMsg("الرجاء معاودة المحاولة في وقت لاحق")
@@ -179,7 +180,7 @@ export default function AddProductForm(props) {
                 style={[CSS.postInput,{width: '100%'}]}
                 onChangeText={text=> setProductInfo({...productInfo,product_name: text})}
                 maxLength={25}
-                selectionColor="orange"
+                selectionColor="white"
                 placeholderTextColor="white"
                 placeholder="اسم المنتجات"
                 underlineColorAndroid='transparent'
@@ -194,7 +195,7 @@ export default function AddProductForm(props) {
                 onChangeText={text=> setProductInfo({...productInfo,price: text})}
                 numberOfLines={1}
                 maxLength={7}
-                selectionColor="orange"
+                selectionColor="white"
                 placeholderTextColor="white"
                 placeholder="السعر"
                 keyboardType='numeric'
@@ -224,7 +225,7 @@ export default function AddProductForm(props) {
             style={[CSS.postInput,{marginTop:12, textAlignVertical:'top'}]}
             onChangeText={text=> setProductInfo({...productInfo,description: text})}
             maxLength={125}
-            selectionColor="orange"
+            selectionColor="white"
             placeholderTextColor="white"
             placeholder="معلومات اضافية"
             underlineColorAndroid='transparent'
@@ -411,7 +412,8 @@ const CSS = StyleSheet.create({
   loading: {
     textAlign:'center',
     fontSize: 20,
-    color:'#2C4770'
+    color:'#2C4770',
+    fontFamily:'Cairo-Bold',
   },
   imagesContainer:{
     fontSize: 15,

@@ -228,7 +228,7 @@ const Profile = (props) => {
             keyExtractor={item => item.productId}
             style={styles.ProductsList}
             renderItem={ ({item, index}) => (
-                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} key={index} />
+                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility}/>
             )}
         />
 

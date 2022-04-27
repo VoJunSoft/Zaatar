@@ -5,7 +5,7 @@ import Buttons from "../elements/Button"
 export default function SearchBar(props) {
 
     //TODO make search button float
-    const [searchBarVisibility, setSearchBarVisibility ] = useState(props.serachBarVisibility)
+    const [searchBarVisibility, setSearchBarVisibility ] = useState(props.searchBarVisibility)
     return (
         <View style={[styles.container,{
                     width: searchBarVisibility ? '100%' :'15%',
@@ -29,7 +29,15 @@ export default function SearchBar(props) {
                 :
                 null
             }
-            <Buttons.ButtonWithShadow iconName='search' iconSize={25} onPress={()=>setSearchBarVisibility(!searchBarVisibility)} containerStyle={styles.icon}/>
+            {!props.hideSearchIcon ?
+                <Buttons.ButtonWithShadow 
+                        iconName='search' 
+                        iconSize={25} 
+                        //onPress={()=>setSearchBarVisibility(!searchBarVisibility)} 
+                        containerStyle={styles.icon}/>
+                :
+                null
+            }
         </View>
     )
 }

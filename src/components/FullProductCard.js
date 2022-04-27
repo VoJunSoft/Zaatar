@@ -17,6 +17,8 @@ import { Avatar } from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Animatable from 'react-native-animatable';
+import {handleDate, handleTimeDifference} from '../scripts/Time'
+import {shareToWhatsApp} from '../scripts/Communication'
 
 const FullProductCard = (props) => {
     const navigation = useNavigation()
@@ -58,11 +60,6 @@ const FullProductCard = (props) => {
       }
 
       props.setFullProductVisibility(false)
-    }
-
-    const shareToWhatsApp = (phoneNumber) => {
-      let data = 'زعتر - ' + productInfo.product_name + ' (' + productInfo.description + ') ' + 'السعر :' + productInfo.price + '₪'
-      Linking.openURL(`whatsapp://send?text=${data}&phone=${phoneNumber}`);
     }
 
     return (
@@ -114,29 +111,34 @@ const FullProductCard = (props) => {
             null
           }
           <View style={styles.cardBlock}>
+              <Text style={styles.title}>{handleDate(productInfo.date_listed.seconds)}</Text>
               <Text style={styles.title}>₪{productInfo.price}</Text>
               <Text style={styles.title}>{productInfo.product_name}</Text> 
           </View> 
 
           <View style={styles.infoBox}>
-              <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center', marginRight:-10}}>
-                  <Text style={[styles.title,{marginRight:2}]}>تفاصيل اضافيه </Text>
+              <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center'}}>
+                  <Text style={[styles.title,{marginRight:3, marginTop:5}]}>تفاصيل اضافيه </Text>
                   <Icon 
                       iconName="info"
                       size={27}
                   />
               </View>
-              <Text style={[styles.body, {marginRight:20}]}>{productInfo.description}</Text>
+              <Text style={[styles.body, {marginRight:25}]}>{productInfo.description}</Text>
           </View>  
 
           <Buttons.ButtonDefault
                 titleLeft="تواصل معنا عبر WhatApp "
                 iconName="whats"
-                iconSize={35}
+                iconSize={30}
                 horizontal={false}
                 containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', margin: 15, padding: 5}}
-                textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 18, color: '#fff', marginRight:5}}
-                onPress={()=>{productInfo.seller.id === props.ownerId ? Alert.alert('لا يمكنك الشراء من متجرك الخاص') : shareToWhatsApp(productInfo.seller.phone)}}
+                textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 15, color: '#fff', marginRight:5}}
+                onPress={()=>{productInfo.seller.id === props.ownerId ? 
+                    Alert.alert('لا يمكنك الشراء من متجرك الخاص') 
+                    : 
+                    shareToWhatsApp('+972' + productInfo.seller.phone, productInfo.product_name, productInfo.description, productInfo.price)
+                  }}
           /> 
 
     </Animatable.View>
@@ -155,8 +157,7 @@ const styles = StyleSheet.create({
       width:'100%',
       flexDirection:'row',
       justifyContent:'space-between',
-      alignItems:'center',
-      alignSelf:'center',
+      alignItems:'baseline',
       padding:5
     },
     ProfileHeader:{
@@ -174,20 +175,20 @@ const styles = StyleSheet.create({
       fontFamily:'Cairo-Bold',
       fontSize: 15,
       textAlign: 'center',
-      color:'#171717',
+      color:'#2C4770',
     },
     headerText:{
       fontFamily:'Cairo-Bold',
-      fontSize: 17,
+      fontSize: 20,
       textAlign: 'center',
       color:'#2C4770',
     },
     body: {
       fontFamily:'Cairo-Regular',
-      fontSize: 17,
+      fontSize: 15,
       textAlign: 'right',
-      marginRight:10,
       color:'#171717',
+      padding:2
     },
     imgLarge: {
       height:320,
@@ -201,10 +202,9 @@ const styles = StyleSheet.create({
       borderWidth:4,
     },
     infoBox:{
-      width:'97%',
       padding: 5,
       marginTop:5,
-      borderBottomWidth:0,
+      //backgroundColor:'yellow'
     },
     });
 
