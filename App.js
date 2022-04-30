@@ -97,6 +97,7 @@ const App = () => {
     )
   }
 
+
   const HeaderRightIcon = () => {
     return(
       <TouchableOpacity onPress={()=> {}}>
@@ -104,11 +105,12 @@ const App = () => {
       </TouchableOpacity>
     )
   }
+
   return (
     <NavigationContainer>
       <StatusBar barStyle="light-content" hidden={false} backgroundColor='#2C4770'/>
       <Drawer.Navigator 
-          initialRouteName='Entry'
+          initialRouteName='Zaatar'
           screenOptions={{
             headerShown: true,
             drawerType:"front",
@@ -215,6 +217,7 @@ const App = () => {
           <Drawer.Screen
             name="Zaatar"
             component={Zaatar}
+            initialParams={userInfo}
             options={{
               title:'زعتر',
               drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>

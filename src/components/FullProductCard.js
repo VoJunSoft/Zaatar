@@ -69,7 +69,7 @@ const FullProductCard = (props) => {
         activeOpacity={0.7} 
         onPress={GoToSellerProfile}>
          <Buttons.ButtonDefault
-                titleRight={productInfo.seller.location} 
+                titleRight={productInfo.seller.location.city} 
                 iconName="location"
                 iconSize={29}
                 horizontal={true}
@@ -137,7 +137,7 @@ const FullProductCard = (props) => {
                 onPress={()=>{productInfo.seller.id === props.ownerId ? 
                     Alert.alert('لا يمكنك الشراء من متجرك الخاص') 
                     : 
-                    shareToWhatsApp('+972' + productInfo.seller.phone, productInfo.product_name, productInfo.description, productInfo.price)
+                    shareToWhatsApp('+' + productInfo.seller.location.code + productInfo.seller.phone, productInfo.product_name, productInfo.description, productInfo.price)
                   }}
           /> 
 

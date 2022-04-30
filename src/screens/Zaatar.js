@@ -11,13 +11,15 @@ import ProductCard from '../components/ProductCard'
 import ZaatarSearchBar from '../components/ZaatarSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Zaatar() {
+export default function Zaatar(props) {
     //products fields: productId ... {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
     // userInfo state: {id, name, first_name, picture, email, location, phone}
     const [products, setProducts] = useState([])
+    //const [userInfo, setInfoUser] = useState(props.route.params)
     useEffect(() => {
         //get Data from asyncstorage on page load and store it to userInfo
         GetProductsByDate()
+        console.log(props.route.params)
     },[])
 
     const GetProductsByDate = () => {
@@ -27,9 +29,11 @@ export default function Zaatar() {
             .onSnapshot(querySnapshot => {
                 setProducts([])
                 querySnapshot.forEach(documentSnapshot => {
-                    setProducts((prevState) => {
-                        return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
-                    })
+                    //if(documentSnapshot.data().seller.location.country === userInfo.location.country){
+                        setProducts((prevState) => {
+                            return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+                        })
+                    //}
                 })
             })
 

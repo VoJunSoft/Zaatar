@@ -26,6 +26,7 @@ const ProfileStore = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
     // user information state: {id, name, first_name, picture, email, location, phone}
     const [userInfo, setUserInfo] = useState(global.sellerState)
+
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
     const [productsBySellerId, setProductsBySellerId] = useState([])
 
@@ -110,7 +111,7 @@ const ProfileStore = (props) => {
                         disabled/>
 
                      <Buttons.ButtonDefault 
-                        titleLeft={userInfo.location ? userInfo.location : 'موقعك'}
+                        titleLeft={userInfo.location.city ? userInfo.location.city : 'موقعك'}
                         iconName="location"
                         iconSize={25}
                         containerStyle={{

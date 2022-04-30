@@ -60,7 +60,7 @@ const StoreCard = (props) => {
                         <Text style={[styles.body]}>{store.phone}</Text>
                     </View>
                     <Buttons.ButtonDefault
-                        titleRight={store.location} 
+                        titleRight={store.location.city} 
                         iconName="location"
                         iconSize={35}
                         horizontal={true}

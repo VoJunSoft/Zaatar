@@ -9,9 +9,9 @@ import {
     Keyboard,
     TouchableOpacity,
     Platform,
-    ActivityIndicator
+    ActivityIndicator,
 } from 'react-native'
-import { Avatar, Input } from 'react-native-elements'
+import { Avatar, Input, Badge } from 'react-native-elements'
 import Buttons from '../elements/Button'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import firestore from '@react-native-firebase/firestore'
@@ -21,12 +21,12 @@ import storage from '@react-native-firebase/storage'
 import {useNavigation} from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
+import {Picker} from '@react-native-picker/picker'
 
 export default function ProfileForm(props) {
     const navigation = useNavigation();
     // user information state
-    //TODO const [userInfo, setUserInfo] = useState(props.userInfo) HINT bug was fixed
-    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', location:'', name:''})
+    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', location:{country:'', code:'972', city:'', flag:'IL'}, name:''})
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
@@ -38,7 +38,7 @@ export default function ProfileForm(props) {
             AsyncStorage.setItem('userInfoZaatar', JSON.stringify(value))
             .then(()=>{
                 // Add a new document in collection "users" with ID if it does not exist
-                firestore().collection('users').doc(userInfo.id).set(value ,{merge: true})
+                firestore().collection('users').doc(userInfo.id).set(value)
                 .then(()=>{
                     //immediate update to profile info
                     props.setUserInfo(value)
@@ -73,14 +73,14 @@ export default function ProfileForm(props) {
                             })
                             .catch((e)=>{
                                 //error firestore()
-                                setErrMsg('آسف حدث خطأ أثناء حفظ البيانات الخاصة بك', e)
+                                setErrMsg('آسف حدث خطأ أثناء حفظ البيانات الخاصة بك')
                             })
                         })
                         .catch((e)=>{
                             //err auth()
-                            setErrMsg('يبدو أن بريدك الإلكتروني موجود بالفعل', e)
+                            setErrMsg('يبدو أن بريدك الإلكتروني موجود بالفعل')
                         })           
-        return()=> sub
+        return()=> unsub
     }
 
     const SaveUserInfo = async () => {
@@ -90,7 +90,7 @@ export default function ProfileForm(props) {
             if(userInfo.name.length >=4 && pass.length >=7
                 && userInfo.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) 
                 && userInfo.phone.match(/\d/g)
-                && userInfo.location.length >=4 ){
+                && userInfo.location.city.length >=4 ){
                 
                 setIsloading(true)
                 const imageUri = await uploadImage()
@@ -162,31 +162,31 @@ export default function ProfileForm(props) {
         return data.match(/\d/g)
     }
 
-    //show/hide country code
-    const [show, setShow] = useState(false)
     const $countryPicker = () => {
         return(
             <CountryPicker 
                 withFilter
+                region='Asia'
+                countryCode={userInfo.location.flag ? userInfo.location.flag : 'IL'}
                 withAlphaFilter={true}
                 withCallingCode
-                containerStyle={{width:'40%'}} 
+                containerButtonStyle={{paddingLeft: 10, padding:8, borderRightWidth:0.5, backgroundColor:'#2C4770'}}
                 onSelect={country=>{
-                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0]} })
-                    console.log(userInfo.location)
-                }}
-                visible={false}/>
+                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2} })
+                    console.log(userInfo)
+                }}/>
         )
     }
+  
     return (
         <View style={styles.container}>
             {!props.Registration? 
              <TouchableOpacity onPress={()=>props.setProfileFormVisibility(false)} 
-                          style={{backgroundColor: '#2C4770', borderTopLeftRadius:10, borderTopRightRadius:10, width:'100%'}}
+                          style={{backgroundColor: '#2C4770', width:'100%'}}
                           activeOpacity={0.7}>
                 <Text style={{
                     color:'#fff',
-                    fontSize:30,
+                    fontSize:27,
                     textAlign:'center'
                 }}> 
                 ⓧ
@@ -219,9 +219,10 @@ export default function ProfileForm(props) {
                     label="الاسم"
                     maxLength={15}
                     rightIcon={{ type: 'font-awesome', name: 'user' }}
-                    inputContainerStyle={{ alignSelf:'flex-end'}}
+                    inputContainerStyle={{paddingRight:0}}
                     containerStyle={{}}
-                    labelStyle={{color:'#171717', textAlign:'right', fontFamily:'Cairo-Regular'}}
+                    labelStyle={{color:'#171717', textAlign:'right'}}
+                    autoCompleteType
                     onChangeText={value => setUserInfo({...userInfo, name: value })}/>
                 <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? 'red': 'green'}}>{userInfo.name.length}/15</Text>
 
@@ -231,7 +232,7 @@ export default function ProfileForm(props) {
                     value={userInfo.email}
                     maxLength={25}
                     rightIcon={{ type: 'font-awesome', name: 'envelope' }}
-                    inputContainerStyle={{ paddingLeft: 5}}
+                    inputContainerStyle={{paddingRight:0}}
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, email: value })}
@@ -245,7 +246,7 @@ export default function ProfileForm(props) {
                     secureTextEntry={true}
                     maxLength={20}
                     rightIcon={{ type: 'font-awesome', name: 'key' }}
-                    inputContainerStyle={{ paddingLeft: 5}}
+                    inputContainerStyle={{paddingRight:0}}
                     containerStyle={{borderWidth:0}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setPass(value)}
@@ -253,19 +254,10 @@ export default function ProfileForm(props) {
                 <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? 'red': 'green'}}>{pass.length}/20</Text>
                 
                 <View style={styles.flexInput}>
-                    <Input
-                        placeholder="+972"
-                        label={$countryPicker()}
-                        value={userInfo.location.code}
-                        //rightIcon={{ type: 'font-awesome', name: 'map' }}
-                        maxLength={15}
-                        inputContainerStyle={{ }}
-                        containerStyle={{width:'30%'}}
-                        labelStyle={{color:'#171717', textAlign:'right'}}
-                        //onFocus={$countryPicker()}
-                        />
-                     
-                        
+                    <View style={styles.countryCodeBox}>
+                        <$countryPicker />
+                        <Text style={styles.countryCode}>(+{userInfo.location.code})</Text>
+                    </View>  
                     <Input
                         placeholder="0123456789"
                         label="الهاتف"
@@ -273,36 +265,42 @@ export default function ProfileForm(props) {
                         rightIcon={{ type: 'font-awesome', name: 'mobile' }}
                         maxLength={10}
                         keyboardType='numeric'
-                        inputContainerStyle={{ paddingLeft: 5}}
+                        inputContainerStyle={{ alignSelf:'flex-end'}}
                         containerStyle={{width:'60%'}}
                         labelStyle={{color:'#171717', textAlign:'right'}}
+                        autoCompleteType
                         onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
                 </View>
+             
                 <View style={styles.flexInput}>
-                    <Text style={{width:'40%',paddingLeft:20, marginTop:-25, color: 'green'}}>✓</Text>
-                    <Text style={{width:'60%',paddingLeft:20, marginTop:-25, color: $VerifyPhone(userInfo.phone) && userInfo.phone.length !== 10  ? 'red': 'green'}}>{userInfo.phone.length}/10</Text>
+                     <Badge
+                        status={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "success" : "error"}
+                        value={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "✓" : "✘"}
+                        containerStyle={{ position: 'absolute', bottom: 10, left: 15}}
+                        textStyle={{fontSize:10}} />
                 </View>
 
                 <Input
                     placeholder="ام الفحم"
                     label="البلد"
-                    value={userInfo.location}
+                    value={userInfo.location.city}
                     rightIcon={{ type: 'font-awesome', name: 'map' }}
                     maxLength={15}
-                    inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{}}
+                    inputContainerStyle={{ alignSelf:'flex-end'}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
+                    autoCompleteType
                     onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.length < 4  ? 'red': 'green'}}>{userInfo.location.length}/15</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.city.length < 4  ? 'red': 'green'}}>{userInfo.location.city.length}/15</Text>
 
                 { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
                 {successMsg === '' ? null :  <Text style={{color:'green', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
                 {errMsg === '' ? null :  <Text style={{color:'red', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+
                 <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Buttons.ButtonDefault
                     titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
                     containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7, margin: 10}}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#fff'}}
+                    textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 18, color: '#fff'}}
                     onPress={SaveUserInfo}/>
                 </View>
             </ScrollView>
@@ -348,6 +346,21 @@ const styles = StyleSheet.create({
     },
     flexInput:{
         flexDirection:'row',
-        justifyContent:'space-between'
+        justifyContent:'space-between',
+        alignItems:'center',
+    },
+    countryCode:{
+        fontSize:15,
+        color:'#171717',
+        textAlign:'center',
+        paddingLeft: 8,
+    },
+    countryCodeBox:{
+        flexDirection:'row', 
+        width: '40%', 
+        alignItems:'center', 
+        borderWidth:0.3,
+        borderRadius:15,
+        overflow:'hidden',
     }
 })

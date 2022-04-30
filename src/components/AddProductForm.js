@@ -67,15 +67,17 @@ export default function AddProductForm(props) {
   const uploadImage =  async (img) => {
         setLoadingImg(true)
         const uploadUri = img;
-        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1)
+        let directory = productInfo.seller.id
+
         // Add timestamp to File Name
-        const extension = filename.split('.').pop(); 
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension;
-        const storageRef = storage().ref(`products/${productInfo.seller.name}/${filename}`);
-        const task = storageRef.putFile(uploadUri);
+        const extension = filename.split('.').pop() 
+        const name = filename.split('.').slice(0, -1).join('.')
+        filename = name + Date.now() + '.' + extension
+        const storageRef = storage().ref(`products/${directory}/${filename}`)
+        const task = storageRef.putFile(uploadUri)
         try {
-            await task;
+            await task
             const url = await storageRef.getDownloadURL()
             setImages(images => [...images,url])
             setLoadingImg(false)
@@ -107,7 +109,7 @@ export default function AddProductForm(props) {
                   description: '', 
                   category: '', 
                   price: '', 
-                  date_listed: {seconds: Math.floor(Date.now() / 1000)}
+                  date_listed: {seconds: Math.floor(Date.now() / 1000)} //firestore.FieldValue.serverTimestamp(),
                 })
                 setImages([])
                 setVisible(false)
@@ -235,7 +237,7 @@ export default function AddProductForm(props) {
          <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? 'red': 'green'}}>{productInfo.description.length}/125</Text>
         
         <View style={CSS.imagesContainer}>
-            <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.imgBlock}>
+            <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.iconBlock}>
                     <Text style={{color:'#fff', fontFamily:'Cairo-Regular', marginBottom:-15}}>تحميل الصور</Text>
                     <Icon iconName='photo' size={70} />
                     {loadingImg ? <ActivityIndicator size={30} color='#fff'/> : null}
@@ -246,16 +248,21 @@ export default function AddProductForm(props) {
                  <ScrollView  style={{height:170}} horizontal={true}>
                     {
                     images.map( (item, index) => (
-                        <View style={{alignItems:'center', backgroundColor:'rgba(255,255,255,0.6)', margin:5}} key={index}>
+                        <View style={CSS.imgBlock} key={index}>
                             <Image style={CSS.img} source={{uri: item}} />
                             <Button.ButtonDefault
                                 iconName='delete' 
                                 iconSize={30}
-                                onPress={()=>deletePhoto(index)}/>
+                                onPress={()=>deletePhoto(index)}
+                                containerStyle={{
+                                      backgroundColor:'rgba(255,255,255,0.5)',
+                                      borderRadius: 50,
+                                      padding:2,
+                                      margin:5
+                                  }}/>
                         </View>
                     ))
                     } 
-
                 </ScrollView>
                 : 
                 null
@@ -270,7 +277,7 @@ export default function AddProductForm(props) {
        
         </View> 
 
-        <View style={{margin:15}}>
+        <View style={{margin:10}}>
           {successMsg === '' ? null :  <Text style={{color:'green', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
           {errMsg === '' ? null :  <Text style={{color:'red', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
         </View>
@@ -283,12 +290,12 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'45%',
                     justifyContent:'center',
-                    padding:6
+                    padding: 5
                 }}
                 textStyle={{ 
                     fontSize: 18, 
                     color:'#fff',
-                    fontFamily:'Cairo-Bold'
+                    fontFamily:'Cairo-Regular'
                 }}
                 onPress={()=>props.setProductFormVisibility(false)}
             /> 
@@ -300,12 +307,12 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'45%',
                     justifyContent:'center',
-                    padding:6
+                    padding: 5
                 }}
                 textStyle={{ 
                     fontSize: 18, 
                     color:'#fff',
-                    fontFamily:'Cairo-Bold'
+                    fontFamily:'Cairo-Regular'
                 }}
                 onPress={() => handleEdit()}
             />
@@ -317,12 +324,12 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'50%',
                     justifyContent:'center',
-                    padding:6
+                    padding: 5
                 }}
                 textStyle={{ 
                     fontSize: 18, 
                     color:'#fff',
-                    fontFamily:'Cairo-Bold'
+                    fontFamily:'Cairo-Regular'
                 }}
                 onPress={() => handleSubmit()}
                 />
@@ -354,15 +361,15 @@ const CSS = StyleSheet.create({
   },
   title: {
     width:'100%',
-    fontSize: 28,
+    fontSize: 25,
     textAlign: 'center',
     color:'#fff',
     backgroundColor:'#2C4770',
-    fontFamily:'Cairo-Bold',
+    fontFamily:'Cairo-Regular',
     padding: 5,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    letterSpacing:2
+    //borderTopLeftRadius: 10,
+    //borderTopRightRadius: 10,
+    letterSpacing:5
   },
   postInput: {
     fontSize: 15,
@@ -396,11 +403,12 @@ const CSS = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     width: '100%',
-    marginBottom:20
+    alignSelf:'center',
+    marginBottom:15
   },
-  imgBlock:{
+  iconBlock:{
     resizeMode:'contain',
     alignItems:'center',
   },
@@ -408,6 +416,14 @@ const CSS = StyleSheet.create({
     width: Dimensions.get('window').width/3.5,
     height: 120,
     resizeMode:'cover',
+  },
+  imgBlock:{
+    alignItems:'center', 
+    borderWidth:0.2, 
+    borderColor:'rgba(255,255,255,0.5)', 
+    margin:5,
+    borderRadius: 5,
+    overflow:'hidden'
   },
   loading: {
     textAlign:'center',
@@ -421,7 +437,8 @@ const CSS = StyleSheet.create({
     borderBottomWidth:3,
     marginTop:10,
     backgroundColor:'rgba(0,0,0,0.5)',
-    paddingBottom: 5
+    paddingBottom: 5,
+    height: 285,
   }
 });
 

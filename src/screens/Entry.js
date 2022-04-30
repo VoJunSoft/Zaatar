@@ -19,8 +19,7 @@ import RNRestart from 'react-native-restart'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Entry = ({navigation}) => {
-    // user information state: {id, name, first_name, picture, email, location, phone}
-
+    // user information state: {id, name, picture, email, location: {}, phone}
     // useEffect( () => { 
     //    const unsubscribe = navigation.addListener('focus', () => {
     //          // auth().onAuthStateChanged((user) => {
@@ -30,25 +29,25 @@ const Entry = ({navigation}) => {
     //     })
     //     return () => unsubscribe()
     //   },[])
-
-    const isLoggedIn = () => {
-        try {
-               AsyncStorage.getItem('userInfoZaatar')
-               .then((value) => {
-                    if(value !== null){
-                        console.log(value)
-                        navigation.navigate('Zaatar')
-                    }
-               })
-        } catch(e) {
-          // error reading value
-        }
-    }
+    // const isLoggedIn = () => {
+    //     try {
+    //            AsyncStorage.getItem('userInfoZaatar')
+    //            .then((value) => {
+    //                 if(value !== null){
+    //                     console.log(value)
+    //                     navigation.navigate('Zaatar')
+    //                 }
+    //            })
+    //     } catch(e) {
+    //       // error reading value
+    //     }
+    // }
      
     const [logInInfo, setLogInInfo] = useState({email:'', password:''})
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
     const handleLogIn = () => {
+        setErrMsg('')
         if(logInInfo.email==='' || logInInfo.password==='')
            return setErrMsg('احدى المعلومات غير صحيحه')
 
@@ -70,6 +69,24 @@ const Entry = ({navigation}) => {
             return () => unsub
       }
 
+      //verify email input
+      const $VerifyEmail = (data) => {
+            return data.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+      }
+      //request password reset
+      const forgotPassword = (Email) => {
+            if ($VerifyEmail(Email)){
+                auth().sendPasswordResetEmail(Email)
+                .then(function (user) {
+                    setErrMsg('تم إرسال رسالة التحقق')
+                }).catch(function (e) {
+                    setErrMsg('تحقق من عنوان بريدك الإلكتروني')
+                })
+            }else{
+                setErrMsg('تحقق من عنوان بريدك الإلكتروني')
+            }
+      }
+
       const [userInfo, setUserInfo] = useState({})
       const getUserInfo = (irec) => {
           const subscriber = firestore()
@@ -83,8 +100,6 @@ const Entry = ({navigation}) => {
           })
           .then(()=>{
                 console.log(userInfo)
-                //if user is authenticated then go to main page
-                //navigation.navigate('Zaatar')
                 //restart app to update app.js values
                 RNRestart.Restart()
                 //hide indicator
@@ -118,12 +133,12 @@ const Entry = ({navigation}) => {
                     iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
                     onPress={()=>navigation.navigate('Zaatar')}/>
         </View>
+
         <View style={styles.EntryBox}>
             <View style={styles.InEntryBox}>
                 <Input
                     placeholder="khaled@junglesoft.com"
                     autoCompleteType={true}
-                    //placeholderTextColor="red"
                     label="البريد الالكتروني"
                     value={logInInfo.email}
                     rightIcon={{ type: 'font-awesome', name: 'envelope' }}
@@ -140,20 +155,35 @@ const Entry = ({navigation}) => {
                     secureTextEntry={true}
                     rightIcon={{ type: 'font-awesome', name: 'key' }}
                     inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{borderWidth:0, width:'80%'}}
+                    containerStyle={{marginTop:-10, width:'80%'}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setLogInInfo({...logInInfo, password: value })}
                 />
                 { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
-                <Text style={{color:'red'}}>{errMsg}</Text>
+                <View style={{flexDirection:'row', alignItems:'center'}}>
+                    {errMsg!=='' ?
+                        <Buttons.ButtonDefault titleLeft="[استرجاع كلمة المرور]" onPress={()=>forgotPassword(logInInfo.email)} containerStyle={{}}/>
+                    :
+                        null
+                    }
+                    <Text style={{color:'red'}}>{errMsg}</Text>
+                </View>
                 <Buttons.ButtonDefault
                     titleLeft="دخول"
-                    //iconName="profile"
+                    //iconName="exit"
                     //iconSize={40}
                     horizontal={false}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7}}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#fff'}}
-                    iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
+                    containerStyle={{ 
+                        justifyContent:'center', 
+                        borderRadius: 5, 
+                        width:'70%', 
+                        backgroundColor: '#2C4770', 
+                        alignSelf:'center', 
+                        padding: 7, 
+                        marginTop: errMsg==='' ? 0 : 5
+                    }}
+                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 16, color: '#fff'}}
+                    //iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
                     onPress={()=>handleLogIn()}
                 />
                 <Text style={{margin:5}}>- او -</Text>

@@ -53,7 +53,7 @@ const Profile = (props) => {
     }
 
     const AddNewProduct = ()=>{
-        if(userInfo.phone ==='' || userInfo.location ==='')
+        if(userInfo.phone ==='' || userInfo.location.city ==='')
             Alert.alert('أكمل معلوماتك الشخصية أولاً من فضلك')
         else
             setProductFormVisibility(true)
@@ -108,7 +108,7 @@ const Profile = (props) => {
                         disabled/>
 
                      <Buttons.ButtonDefault 
-                        titleLeft={userInfo.location ? userInfo.location : 'موقعك'}
+                        titleLeft={userInfo.location.city ? userInfo.location.city : 'موقعك'}
                         iconName="location"
                         iconSize={25}
                         containerStyle={{
@@ -238,8 +238,8 @@ const Profile = (props) => {
                 overlayStyle={{
                     padding:0, 
                     width:'96%',
-                    height:'98%', 
-                    borderRadius:15,
+                    height:'100%', 
+                    borderRadius:0,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
             <ProfileForm userInfo={userInfo} setUserInfo={setUserInfo} setProfileFormVisibility={setProfileFormVisibility} disabled/>
@@ -251,8 +251,8 @@ const Profile = (props) => {
                 overlayStyle={{
                     padding:0, 
                     width:'96%',
-                    height:'98%', 
-                    borderRadius:15,
+                    height:'100%', 
+                    borderRadius:0,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
             <AddProductForm userInfo={userInfo} setProductFormVisibility={setProductFormVisibility} />

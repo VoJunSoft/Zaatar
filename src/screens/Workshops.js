@@ -16,7 +16,7 @@ export default function Workshops(props) {
         fillUpWorkshops()
     },[])
 
-    //stored object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
+    //stored object fields: id, title, date_posted, from, to, location:{country, code, city}, phone, image, email, seller:{id, email, location,name,phone,picture}
     const fillUpWorkshops = () => {
         const subscriber = firestore()
             .collection('workshops')
@@ -41,7 +41,7 @@ export default function Workshops(props) {
                 return workshops
             else
                 return workshops.filter(item=>  item.title.includes(searchInput) || 
-                                                item.location.includes(searchInput) || 
+                                                item.location.city.includes(searchInput) || 
                                                 item.seller.name.includes(searchInput)
                                         )
     }
@@ -107,7 +107,11 @@ export default function Workshops(props) {
                         containerStyle={{ alignSelf:'center', margin: 3}}/>
                 </View>
                 </ImageBackground>
-                <Text style={[styles.tempStyle,{backgroundColor:'rgba(255,255,255,0.5)'}]}>{userMsg}</Text>
+                {userMsg !== '' ?
+                    <Text style={[styles.tempStyle,{backgroundColor:'rgba(255,255,255,0.5)'}]}>{userMsg}</Text>
+                    : 
+                    null
+                }
             </View>
             </DropShadow>
         )

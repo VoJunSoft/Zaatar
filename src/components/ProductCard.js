@@ -4,7 +4,7 @@ import { Overlay } from 'react-native-elements';
 import FullProductCard from './FullProductCard'
 import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
-import AddProductForm from '../components/AddProductForm'
+import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
 
 export default function ProductCard(props) {
@@ -128,11 +128,11 @@ export default function ProductCard(props) {
                 overlayStyle={{
                     padding:0, 
                     width:'96%',
-                    height:'98%', 
-                    borderRadius:15,
+                    height:'100%', 
+                    borderRadius:0,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
-            <AddProductForm userInfo={productInfo.seller} productInfo={productInfo} setProductFormVisibility={setProductFormVisibility} EditProduct={true}/>
+            <EditProductForm userInfo={productInfo.seller} productInfo={productInfo} setProductFormVisibility={setProductFormVisibility} EditProduct={true}/>
         </Overlay>
         </>
     )

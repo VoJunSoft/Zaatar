@@ -33,7 +33,7 @@ export default function Stores(props) {
         if(searchInput==='')
                 return stores
             else
-                return stores.filter(item=> item.name.includes(searchInput) || item.location.includes(searchInput))
+                return stores.filter(item=> item.name.includes(searchInput) || item.location.city.includes(searchInput))
     }
 
     const $renderEmptyOrdersState = () => {
