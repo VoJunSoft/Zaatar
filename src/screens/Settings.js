@@ -45,30 +45,24 @@ console.log(route.params)
         <Buttons.ButtonDefault
                     titleLeft="تواصل معنا"
                     iconName="whats"
-                    iconSize={40}
-                    horizontal={false}
+                    iconSize={35}
                     containerStyle={styles.button}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#2C4770'}}
-                    iconContainer={{borderRadius:50}}
+                    textStyle={styles.ButtonText}
                     onPress={()=>contactUsByWhatsapp('+972527919300')}/>
         <Buttons.ButtonDefault
                     titleLeft="مشاركه"
                     iconName="share"
-                    iconSize={40}
-                    horizontal={false}
+                    iconSize={35}
                     containerStyle={styles.button}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#2C4770'}}
-                    iconContainer={{borderRadius:50}}
+                    textStyle={styles.ButtonText}
                     onPress={()=>share()}/>
         {route.params ?
             <Buttons.ButtonDefault
                     titleLeft="خروج"
                     iconName="exit"
-                    iconSize={40}
-                    horizontal={false}
+                    iconSize={35}
                     containerStyle={styles.button}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 18, color: '#2C4770'}}
-                    iconContainer={{borderRadius:50}}
+                    textStyle={styles.ButtonText}
                     onPress={()=>handleLogOut()}/>
         : 
             null
@@ -84,7 +78,7 @@ const styles = StyleSheet.create({
         paddingTop: 20
     },
     title:{
-        fontFamily:'Cairo-Bold',
+        fontFamily:'Cairo-Regular',
         fontSize:18,
         textAlign:'center',
         color:'#fff',
@@ -97,12 +91,19 @@ const styles = StyleSheet.create({
         alignSelf:'center',
     },
     button:{
-        justifyContent:'space-around', 
+        justifyContent:'flex-end',
         borderRadius: 5, 
         width:'70%', 
-        backgroundColor: '#fff', 
+        backgroundColor: 'rgba(255,255,255,0.2)', 
         alignSelf:'flex-end',
-        marginTop:15
+        marginTop:15,
+        paddingRight:8
+    },
+    ButtonText: {
+        fontFamily: 'Cairo-Regular' ,
+        fontSize: 17, 
+        color: '#171717',
+        marginRight: 20
     }
 })
 export default Settings;

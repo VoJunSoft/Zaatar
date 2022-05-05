@@ -19,8 +19,8 @@ import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard'
 import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
-import RNRestart from 'react-native-restart'
 import { useNavigation } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient'
 
 const ProfileStore = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
@@ -70,12 +70,25 @@ const ProfileStore = (props) => {
             sluts.map((item, index)=>(
                 <View style={[styles.storeSymbol, 
                             {
-                                backgroundColor:index%2===0 ? '#3F2C72' : '#fac300',
-                                height:28,
+                                backgroundColor:index%2===0 ? '#8E2DE2' : '#fac300', //dark night #373B44
+                                height:30,
                             }]} key={index}>
     
                 </View> 
             ))
+        )
+    }
+
+    //store umbrella bar
+    const StoreShopSymbolBeta = () => {
+        return (
+            <LinearGradient 
+                //start={{x: 0, y: 0}} 
+                //end={{x: 1, y: 0}}
+                colors={['#4b6cb7', '#2C4770','#182848']} 
+                style={styles.linearGradient}>
+
+            </LinearGradient>
         )
     }
     
@@ -85,11 +98,11 @@ const ProfileStore = (props) => {
             <View style={{flexDirection:'row', padding: 5, paddingTop:15, paddingBottom:15, backgroundColor: '#2C4770'}}>
                 <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
                     <Avatar
-                        size={140}
+                        size={150}
                         rounded
                         source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/profile.png') }
                         icon={{ name: 'user', type: 'font-awesome' }}
-                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', margin:5}}
+                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:4}}
                     />
                 </View>
                 <View style={{width:'60%', justifyContent:'center', paddingLeft: 5}}>
@@ -97,57 +110,29 @@ const ProfileStore = (props) => {
                         titleLeft={userInfo.name ? userInfo.name : 'مستخدم'}
                         iconName="profile"
                         iconSize={25}
-                        containerStyle={{
-                            justifyContent:'flex-end',
-                            letterSpacing:3,
-                        }}
-                        textStyle={{
-                            fontFamily: 'Cairo-Bold',
-                            color:'#fff',
-                            fontSize:18,
-                            marginRight:5,
-                            textAlign:'center',
-                        }}
+                        containerStyle={{justifyContent:'flex-end'}}
+                        textStyle={styles.SellerInfo}
                         disabled/>
 
                      <Buttons.ButtonDefault 
                         titleLeft={userInfo.location.city ? userInfo.location.city : 'موقعك'}
                         iconName="location"
                         iconSize={25}
-                        containerStyle={{
-                            justifyContent:'flex-end',
-                        }}
-                        textStyle={{
-                            fontFamily: 'Cairo-Regular',
-                            color:'#fff',
-                            fontSize:18,
-                            letterSpacing:3,
-                            marginRight:10,
-
-                            textAlign:'center'
-                        }}
+                        containerStyle={{justifyContent:'flex-end'}}
+                        textStyle={styles.SellerInfo}
                         disabled/>
 
                     <Buttons.ButtonDefault 
                         titleLeft={userInfo.phone ? userInfo.phone: 'رقم التليفون'}
                         iconName="mic"
                         iconSize={25}
-                        containerStyle={{
-                            justifyContent:'flex-end',
-                            marginTop:5
-                        }}
-                        textStyle={{
-                            fontFamily: 'Cairo-Regular',
-                            color:'#fff',
-                            fontSize:18,
-                            letterSpacing:2,
-                            marginRight:10
-                        }}
+                        containerStyle={{justifyContent:'flex-end'}}
+                        textStyle={styles.SellerInfo}
                         disabled/>
                 </View>
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-around', marginBottom:10}}>
-                <StoreShopSymbol />
+                <StoreShopSymbolBeta />
             </View>
             </>
         )
@@ -238,9 +223,21 @@ const styles = StyleSheet.create({
     },
     storeSymbol: {
         width:Dimensions.get('window').width/14, 
-        borderBottomLeftRadius:10,
-        borderBottomRightRadius:10,
-        marginTop:-2
+        //borderBottomLeftRadius:10,
+        //borderBottomRightRadius:10,
+    },
+    SellerInfo: {
+        fontFamily: 'Cairo-Regular',
+        color:'#fff',
+        fontSize:18,
+        letterSpacing:1,
+        marginRight:10,
+        textAlign:'center',
+        marginBottom:5
+    },
+    linearGradient:{
+        flex:1,
+        height: 30
     }
 })
 

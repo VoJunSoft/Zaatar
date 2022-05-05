@@ -21,12 +21,12 @@ import storage from '@react-native-firebase/storage'
 import {useNavigation} from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
-import {Picker} from '@react-native-picker/picker'
+import * as RNLocalize from "react-native-localize"
 
 export default function ProfileForm(props) {
     const navigation = useNavigation();
     // user information state
-    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', location:{country:'', code:'972', city:'', flag:'IL'}, name:''})
+    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', location:{country:'Palestine', code:'970', city:'', flag:'PS'}, name:''})
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
@@ -60,9 +60,8 @@ export default function ProfileForm(props) {
         const unsub=  auth()
                         .createUserWithEmailAndPassword(userInfo.email, pass)
                         .then((userCreditentials) => {
-                            //get uid and pass it to store data
+                            //get creditentials, uid and store to database if user does not exist
                             const user = userCreditentials.user
-                            //get user id, retrieve data from data base then store by id 
                             firestore().collection('users').doc(user.uid).set(data)
                             //save to async storage
                             AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...data, id: user.uid}))
@@ -166,15 +165,15 @@ export default function ProfileForm(props) {
         return(
             <CountryPicker 
                 withFilter
-                region='Asia'
-                countryCode={userInfo.location.flag ? userInfo.location.flag : 'IL'}
+                countryCode={userInfo.location.flag}
                 withAlphaFilter={true}
                 withCallingCode
                 containerButtonStyle={{paddingLeft: 10, padding:8, borderRightWidth:0.5, backgroundColor:'#2C4770'}}
                 onSelect={country=>{
                     setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2} })
                     console.log(userInfo)
-                }}/>
+                }}
+                />
         )
     }
   
@@ -266,7 +265,7 @@ export default function ProfileForm(props) {
                         maxLength={10}
                         keyboardType='numeric'
                         inputContainerStyle={{ alignSelf:'flex-end'}}
-                        containerStyle={{width:'60%'}}
+                        containerStyle={{width:'61%'}}
                         labelStyle={{color:'#171717', textAlign:'right'}}
                         autoCompleteType
                         onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
@@ -357,7 +356,7 @@ const styles = StyleSheet.create({
     },
     countryCodeBox:{
         flexDirection:'row', 
-        width: '40%', 
+        width: '38%', 
         alignItems:'center', 
         borderWidth:0.3,
         borderRadius:15,

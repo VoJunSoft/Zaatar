@@ -55,6 +55,7 @@ const FullProductCard = (props) => {
       if(productInfo.seller.id === ownerId){
            navigation.navigate('Profile')
       }else{
+          // global.sellerState was updated @ ProductCard.js when FullProductCard was opened
           //global.sellerState = productInfo.seller
           navigation.navigate('SellerProfile')
       }

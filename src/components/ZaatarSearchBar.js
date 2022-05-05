@@ -7,14 +7,17 @@ export default function ZaatarSearchBar(props) {
 
     const $Categories = [
                         'الكل'
-                        , "مستلزمات"
-                        , 'اكسسوارات'
+                        , "سيارات"
                         , "الات"
-                        , "فن"
+                        , "مستلزمات"
+                        , "اثاث"
+                        , 'اكسسوارات'
+                        , "ملابس"
                         , 'خدمات'
                         ,'ورش عمل'
                         , "دروس خصوصية"
-                        , "غذاء"  
+                        , "غذاء"
+                        , "فن"  
                         ,'انتيكا'
                         ]
     const [searchBarVisibility, setSearchBarVisibility ] = useState(false)

@@ -19,8 +19,8 @@ import AddProductForm from '../components/AddProductForm'
 import RNRestart from 'react-native-restart'
 
 const Profile = (props) => {
-    // const {id, name, first_name, picture, email, location, phone} = route.params
-    // user information state: {id, name, first_name, picture, email, location, phone}
+    // const {id, name, picture, email, location:{}, phone} = route.params
+    // user information state: {id, name, picture, email, location:{}, phone}
     const [userInfo, setUserInfo] = useState(props.route.params)
     
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -58,23 +58,7 @@ const Profile = (props) => {
         else
             setProductFormVisibility(true)
     }
-
-    const StoreShopSymbol = () => {
-        const sluts=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        return (
-            sluts.map((item, index)=>(
-                <View style={[styles.storeSymbol, 
-                            {
-                                backgroundColor:index%2===0 ? '#337096' : '#fff',
-                                height:34,
-                            }]} key={index}>
     
-                </View> 
-            ))
-        )
-    }
-    
-
     const [deleteButtonVisibility, setDeleteButtonVisibility] = useState(false)
     const ProfileHeaderComponent = () =>{
         return(

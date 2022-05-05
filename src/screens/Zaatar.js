@@ -6,22 +6,39 @@ import {
     FlatList,
     ActivityIndicator
 } from 'react-native'
-import firestore from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore'
 import ProductCard from '../components/ProductCard'
-import ZaatarSearchBar from '../components/ZaatarSearchBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import ZaatarSearchBar from '../components/ZaatarSearchBar'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import * as RNLocalize from "react-native-localize"
 
 export default function Zaatar(props) {
     //products fields: productId ... {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
     // userInfo state: {id, name, first_name, picture, email, location, phone}
     const [products, setProducts] = useState([])
     //const [userInfo, setInfoUser] = useState(props.route.params)
+    let CountryName
     useEffect(() => {
+        //get user location
+        CountryName = userLocation()
         //get Data from asyncstorage on page load and store it to userInfo
         GetProductsByDate()
-        console.log(props.route.params)
     },[])
 
+    // get userLocation
+    const userLocation = () =>{
+        try{    
+            //get country name from navigation params
+            console.log('PARAMS :', props.route.params)
+            return props.route.params.location.flag
+        }catch(e){
+            //in case of error return
+            //TODO get location using react-native-localize
+            console.log('LOCALIZE :',RNLocalize.getCountry())
+            return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
+        }
+        
+    }
     const GetProductsByDate = () => {
         const subscriber = firestore()
             .collection('products')
@@ -29,11 +46,11 @@ export default function Zaatar(props) {
             .onSnapshot(querySnapshot => {
                 setProducts([])
                 querySnapshot.forEach(documentSnapshot => {
-                    //if(documentSnapshot.data().seller.location.country === userInfo.location.country){
+                    if(documentSnapshot.data().seller.location.flag === CountryName || CountryName==='ALL'){
                         setProducts((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
-                    //}
+                    }
                 })
             })
 

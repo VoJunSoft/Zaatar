@@ -46,7 +46,12 @@ const App = () => {
   const [userInfo, setUserInfo] = useState({})
   const [isUser, setIsUser] = useState(false)
   useEffect( ()=>{
-    getData() 
+    //    const unsubscribe = navigation.addListener('focus', () => {
+    //          auth().onAuthStateChanged((user) => {
+    //            if(user)
+                    getData()
+    //          })
+    //     })
     // const nav = [
     //       NavigationBar.setStatusBarColor("#2C4770",true), 
     //       NavigationBar.setStatusBarTheme('light',true), 
@@ -89,9 +94,9 @@ const App = () => {
       <Buttons.ButtonDefault 
           titleLeft={props.title}
           iconName={props.icon}
-          iconSize={27}
+          iconSize={25}
           containerStyle={{justifyContent:'flex-end'}}
-          textStyle={{fontFamily: 'Cairo-Regular',color:'#2C4770', fontSize:14}}
+          textStyle={{fontFamily: 'Cairo-Regular',color:'#2C4770', fontSize:13}}
           disabled
       />
     )
@@ -130,10 +135,10 @@ const App = () => {
             },
             drawerActiveBackgroundColor:'rgba(0,0,0,0.1)',
             drawerStyle:{
-              backgroundColor:'white',
+              backgroundColor:'#FEEBDA', //'#FEEBDA',
               width:230,
-              borderTopRightRadius:16,
-              borderBottomRightRadius:16,
+              borderTopRightRadius:12,
+              borderBottomRightRadius:12,
               padding:5
             },
             drawerLabelStyle:{

@@ -6,6 +6,7 @@ import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
+import { handleTimeDifference } from '../scripts/Time';
 
 export default function ProductCard(props) {
     //products fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -24,6 +25,7 @@ export default function ProductCard(props) {
                 .doc(SellerId)
                 .get()
                 .then(documentSnapshot => {
+                    //update seller info from users database
                     setProductInfo({...productInfo, seller: {...documentSnapshot.data(), id: documentSnapshot.id}})
                     global.sellerState = {...documentSnapshot.data(), id: documentSnapshot.id}
                     setFullProductVisibility(true)
@@ -97,9 +99,9 @@ export default function ProductCard(props) {
                         width:'100%',
                         flexDirection:'row',
                         justifyContent:'space-around',
-                        alignItems:'baseline'}}>
+                        alignItems:'center'}}>
+                        {/* <Text style={[styles.dateDefault,styles.circle]}>{handleTimeDifference(productInfo.date_listed.seconds)}</Text>  */}
                         <Text style={styles.titleDefault}> ₪{productInfo.price}</Text> 
-                        {/* <Text style={styles.dateDefault}>{handleTimeDifference(productInfo.date_listed.seconds)}</Text>  */}
                     </View>
                 }
                 </View>        
@@ -186,7 +188,6 @@ const styles = StyleSheet.create({
     },
     dateDefault:{
         fontFamily:'Cairo-Regular',
-        fontSize: 12,
         color: '#fff',
         textAlign:'center',
     },
@@ -206,5 +207,11 @@ const styles = StyleSheet.create({
         //borderTopRightRadius: 13, 
         borderRadius:10,
         alignSelf:'center'
+    },
+    circle:{
+        backgroundColor:'rgba(255,255,255,0.2)',
+        borderRadius:50,
+        padding: 3,
+        fontSize: 12,
     }
 })

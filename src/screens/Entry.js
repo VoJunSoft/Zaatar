@@ -20,28 +20,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Entry = ({navigation}) => {
     // user information state: {id, name, picture, email, location: {}, phone}
-    // useEffect( () => { 
-    //    const unsubscribe = navigation.addListener('focus', () => {
-    //          // auth().onAuthStateChanged((user) => {
-    //            // if(user)
-    //              // isLoggedIn()
-    //          // })
-    //     })
-    //     return () => unsubscribe()
-    //   },[])
-    // const isLoggedIn = () => {
-    //     try {
-    //            AsyncStorage.getItem('userInfoZaatar')
-    //            .then((value) => {
-    //                 if(value !== null){
-    //                     console.log(value)
-    //                     navigation.navigate('Zaatar')
-    //                 }
-    //            })
-    //     } catch(e) {
-    //       // error reading value
-    //     }
-    // }
      
     const [logInInfo, setLogInInfo] = useState({email:'', password:''})
     const [isLoading, setIsloading] = useState(false)
@@ -143,7 +121,7 @@ const Entry = ({navigation}) => {
                     value={logInInfo.email}
                     rightIcon={{ type: 'font-awesome', name: 'envelope' }}
                     inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{borderWidth:0, width:'80%'}}
+                    containerStyle={{width:'80%'}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setLogInInfo({...logInInfo, email: value })}
                     />
@@ -155,7 +133,7 @@ const Entry = ({navigation}) => {
                     secureTextEntry={true}
                     rightIcon={{ type: 'font-awesome', name: 'key' }}
                     inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{marginTop:-10, width:'80%'}}
+                    containerStyle={{marginTop:-15, width:'80%', marginBottom:-15}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setLogInInfo({...logInInfo, password: value })}
                 />
@@ -170,8 +148,6 @@ const Entry = ({navigation}) => {
                 </View>
                 <Buttons.ButtonDefault
                     titleLeft="دخول"
-                    //iconName="exit"
-                    //iconSize={40}
                     horizontal={false}
                     containerStyle={{ 
                         justifyContent:'center', 
@@ -179,20 +155,18 @@ const Entry = ({navigation}) => {
                         width:'70%', 
                         backgroundColor: '#2C4770', 
                         alignSelf:'center', 
-                        padding: 7, 
+                        padding: 5, 
                         marginTop: errMsg==='' ? 0 : 5
                     }}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 16, color: '#fff'}}
-                    //iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
+                    textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 16, color: '#fff'}}
                     onPress={()=>handleLogIn()}
                 />
                 <Text style={{margin:5}}>- او -</Text>
                  <Buttons.ButtonDefault
                     titleLeft="مستخدم جديد"
                     horizontal={false}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7}}
-                    textStyle={{fontFamily: 'Cairo-Bold' ,fontSize: 16, color: '#fff'}}
-                    iconContainer={{backgroundColor:'rgba(255,255,255,0.25)', borderRadius:50}}
+                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5}}
+                    textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 16, color: '#fff'}}
                     onPress={()=>navigation.navigate('Registration')}
                 />
             </View>
@@ -209,7 +183,7 @@ const styles = StyleSheet.create({
     },
     EntryHeader:{
         width:'100%',
-        height: Dimensions.get('window').height/2,
+        height: Dimensions.get('window').height/1.85,
         backgroundColor: '#2C4770',
         justifyContent:'center',
         alignItems:'center',

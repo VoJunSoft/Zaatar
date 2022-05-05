@@ -38,13 +38,13 @@ export const handleTimeDifference = (data) => {
     let years = Math.floor(months / 12)
 
     if (years > 0)
-        return years + ' years'
+        return years + 'yrs'
     else if (months > 0)
-        return months + ' months'
+        return months + 'mons'
     else if (days > 0)
-        return days + ' days'
+        return days + 'd'
     else if (hrs > 0)
-        return hrs + ' hrs'
+        return hrs + 'hrs'
     else if (mins > 0)
-        return days + ' mins'
+        return days + 'mins'
 }
