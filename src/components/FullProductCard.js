@@ -81,9 +81,9 @@ const FullProductCard = (props) => {
         <Avatar
               size={60}
               rounded
-              source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/profile.png') }
-              icon={{ name: 'user', type: 'font-awesome' }}
-              containerStyle={{ backgroundColor: '#2C4770', marginLeft:10}}
+              source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/p1.png') }
+              icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
+              containerStyle={{ backgroundColor: '#fff', marginLeft:10, borderWidth:1}}
           />
     </TouchableOpacity>  
    

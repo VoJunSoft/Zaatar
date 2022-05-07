@@ -21,7 +21,7 @@ import storage from '@react-native-firebase/storage'
 import {useNavigation} from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
-import * as RNLocalize from "react-native-localize"
+//import * as RNLocalize from "react-native-localize"
 
 export default function ProfileForm(props) {
     const navigation = useNavigation();

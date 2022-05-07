@@ -3,13 +3,33 @@ import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, ActivityIndicato
 import firestore from '@react-native-firebase/firestore'
 import StoreCard from '../components/StoreCard'
 import SearchBar from '../components/SearchBar'
+import * as RNLocalize from "react-native-localize"
 
 export default function Stores(props) {
     const [stores, setStores] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    // user's location
+    let CountryName
+
     useEffect(() => {
+        CountryName = userLocation()
         //get Data from users database
         fillUpStoresList()
     },[])
+
+    // get userLocation
+    const userLocation = () =>{
+        try{    
+            //get country name from navigation params
+            console.log('PARAMS :', props.route.params)
+            return props.route.params.location.flag
+        }catch(e){
+            //in case of error return
+            //get location using react-native-localize
+            console.log('LOCALIZE :',RNLocalize.getCountry())
+            return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
+        }   
+    }
 
     //stores object fields: id, name, location, phone, picture, email
     const fillUpStoresList = () => {
@@ -19,10 +39,13 @@ export default function Stores(props) {
             .onSnapshot(querySnapshot => {
                 setStores([])
                 querySnapshot.forEach(documentSnapshot => {
-                    setStores((prevState) => {
-                        return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
-                    })
+                    if(documentSnapshot.data().location.flag === CountryName || CountryName==='ALL'){
+                        setStores((prevState) => {
+                            return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
+                        })
+                    }
                 })
+                setIsLoading(false)
             })
 
             return() => subscriber()
@@ -36,11 +59,20 @@ export default function Stores(props) {
                 return stores.filter(item=> item.name.includes(searchInput) || item.location.city.includes(searchInput))
     }
 
-    const $renderEmptyOrdersState = () => {
+    const $renderEmptyOrdersState = () => { 
         return(
+            <>
+            {isLoading ?
+                <>
+                    <Text style={styles.loading}>جار التحميل</Text>
+                    <ActivityIndicator color='#2C4770' size={35}/>
+                </>
+            :
                 <Text style={styles.loading}>لم نتمكن من تحديد موقع أي متجر</Text>
+            }
+            </>
         )
-    }  
+    }
 
     return (
         <>
@@ -63,6 +95,7 @@ const styles= StyleSheet.create({
     StoreList:{
        // margin:5
        alignSelf:'center',
+       //backgroundColor:'#FEEBDA'
     },
     loading: {
         color:'#2C4770', 

@@ -209,13 +209,15 @@ export default function AddProductForm(props) {
                 onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, category:itemValue})}>
                 <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
                 <Picker.Item label="سيارات" value="سيارات" />
+                <Picker.Item label="الكترونيات" value="الكترونيات" />
+                <Picker.Item label="ادوات" value="ادوات" />
+                <Picker.Item label="الات" value="الات" />
                 <Picker.Item label="اثاث" value="اثاث" />
                 <Picker.Item label="انتيكا" value="انتيكا" />
                 <Picker.Item label="ورش عمل" value="ورش عمل" />
                 <Picker.Item label="ملابس" value="ملابس" />
                 <Picker.Item label="مستلزمات" value="مستلزمات" />
                 <Picker.Item label="اكسسوارات" value="اكسسوارات" />
-                <Picker.Item label="الات" value="الات" />
                 <Picker.Item label="خدمات" value="خدمات" />
                 <Picker.Item label="فن" value="فن" />
                 <Picker.Item label="غذاء" value="غذاء" />

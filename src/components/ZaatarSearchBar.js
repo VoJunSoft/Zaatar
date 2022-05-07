@@ -8,6 +8,8 @@ export default function ZaatarSearchBar(props) {
     const $Categories = [
                         'الكل'
                         , "سيارات"
+                        , "الكترونيات"
+                        , "ادوات"
                         , "الات"
                         , "مستلزمات"
                         , "اثاث"
@@ -66,18 +68,19 @@ const styles = StyleSheet.create({
         marginBottom:10
     },
     title:{
-        fontFamily:'Cairo-Bold',
-        fontSize: 12,
+        fontFamily:'Cairo-Regular',
+        fontSize: 14,
         textAlign:'center',
-        color:'#fff'
+        color:'#fff',
     },
     CategoryContainer:{
-        width:100,
-        marginRight: 0,
+       //width:100,
         borderRightWidth:1,
         margin:0,
         borderRadius:0,
-        alignItems:'center'
+        alignItems:'center',
+        paddingLeft:25,
+        paddingRight: 25
     }, 
     dropShadow: {
         shadowColor: '#fff',

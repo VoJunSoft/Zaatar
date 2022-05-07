@@ -25,7 +25,7 @@ const Profile = (props) => {
     
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
     const [productsBySellerId, setProductsBySellerId] = useState([])
-
+    const [isLoading, setIsLoading] = useState(true)
     //if profile is seller the userInfo = props.productInfo.seller else userinfo = getData
     useEffect( () => {
             fillProductsDataById()
@@ -43,6 +43,7 @@ const Profile = (props) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
                     })
+                    setIsLoading(false)
                 })
 
                 return () => subscriber();
@@ -68,9 +69,9 @@ const Profile = (props) => {
                     <Avatar
                         size={140}
                         rounded
-                        source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/profile.png') }
-                        icon={{ name: 'user', type: 'font-awesome' }}
-                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', margin:5}}
+                        source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/p1.png') }
+                        icon={{ name: 'user', type: 'font-awesome', color : '#2C4770'}}
+                        containerStyle={{backgroundColor:'#fff', margin:5}}
                     />
                 </View>
                 <View style={{width:'60%', justifyContent:'center', paddingLeft: 5}}>
@@ -183,13 +184,13 @@ const Profile = (props) => {
     const $renderEmptyOrdersState = () => {
         return(
             <>
-            {productsBySellerId.length === 0 ?
+            {isLoading ?
                 <>
                     <Text style={styles.loading}>جار التحميل</Text>
                     <ActivityIndicator color='#2C4770' size={35}/>
                 </>
             :
-                    <Text style={styles.loading}>لا توجد منتجات في قائمتك</Text>
+                <Text style={styles.loading}>لا توجد منتجات في قائمتك</Text>
             }
             </>
         )

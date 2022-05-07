@@ -34,7 +34,8 @@ const ProfileStore = (props) => {
     const [isLoading, setIsloading] = useState(true)
     const navigation = useNavigation()
     useEffect( () => { 
-    const unsubscribe = navigation.addListener('focus', () => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            setIsloading(true)
             setUserInfo(global.sellerState)
             fillProductsDataById(global.sellerState.id)
         })
@@ -47,13 +48,20 @@ const ProfileStore = (props) => {
             const subscriber =  firestore()
                                     .collection('products')
                                     .where('seller.id', "==", idx)
-                                    .onSnapshot(querySnapshot => {
+                                    .get()
+                                    .then(querySnapshot => {
                                         setProductsBySellerId([])
                                         querySnapshot.forEach(documentSnapshot => {
                                             setProductsBySellerId((prevState) => {
                                                 return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                                             })
                                         })
+                                    })
+                                    .then(()=>{
+                                        setIsloading(false)
+                                    })
+                                    .catch((e)=>{
+                                        setIsloading(false)
                                     })
 
             return () => subscriber();
@@ -100,8 +108,8 @@ const ProfileStore = (props) => {
                     <Avatar
                         size={150}
                         rounded
-                        source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/profile.png') }
-                        icon={{ name: 'user', type: 'font-awesome' }}
+                        source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/p1.png') }
+                        icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
                         containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:4}}
                     />
                 </View>
@@ -146,7 +154,7 @@ const ProfileStore = (props) => {
                         fontSize: 15,
                         alignSelf:'center',
                         marginTop:30
-                    }}>لا توجد منتجات في قائمتك</Text>
+                    }}>لا توجد منتجات في هذا المتجر</Text>
         )
     }
     //ProfileForm.js visibility
@@ -156,18 +164,22 @@ const ProfileStore = (props) => {
     
     return (
         <>
-        <FlatList 
-            data={productsBySellerId}
-            ListHeaderComponent={<ProfileHeaderComponent />}
-            ListFooterComponent={productsBySellerId.length === 0 ? $renderEmptyOrdersState : null}
-            stickyHeaderIndices={[0]}
-            showsHorizontalScrollIndicator={false}
-            numColumns={2}
-            keyExtractor={item => item.productId}
-            style={styles.ProductsList}
-            renderItem={ ({item, index}) => (
-                <ProductCard item={item} key={index} />
-            )}/>
+        {isLoading ?
+            <ActivityIndicator color='#2C4770' size={50} style={{marginTop:200}}/>
+            :
+            <FlatList 
+                data={productsBySellerId}
+                ListHeaderComponent={<ProfileHeaderComponent />}
+                ListFooterComponent={productsBySellerId.length === 0 ? $renderEmptyOrdersState : null}
+                stickyHeaderIndices={[0]}
+                showsHorizontalScrollIndicator={false}
+                numColumns={2}
+                keyExtractor={item => item.productId}
+                style={styles.ProductsList}
+                renderItem={ ({item, index}) => (
+                    <ProductCard item={item} key={index} />
+                )}/>
+        }
         <Overlay isVisible={profileFormVisibility} 
                 onBackdropPress={()=>setProfileFormVisibility(!profileFormVisibility)} 
                 fullScreen={true}

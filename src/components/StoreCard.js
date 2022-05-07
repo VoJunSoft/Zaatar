@@ -46,17 +46,17 @@ const StoreCard = (props) => {
         <View style={styles.EntryHeader}>
             <Text style={styles.title}>{store.name}</Text>
             <Avatar
-              size={145}
+              size={135}
               rounded
-              source={{uri: store.picture}}
+              source={store.picture ? {uri: store.picture} : require('../assets/gallary/p1.png')}
               icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
-              containerStyle={{ backgroundColor: '#fff', margin: 5}}
+              containerStyle={{backgroundColor:'#fff', margin: 3}}
           />
         </View>
         <View style={styles.EntryBox}>
             <View style={styles.info}>
-                    <View style={{flexDirection:'column', width:'60%'}}>
-                        <Text style={[styles.body]}>🌟🌟🌟🌟</Text>
+                    <View style={{flexDirection:'column', width:'50%'}}>
+                        <Text style={[styles.body]}>🌟🌟🌟</Text>
                         <Text style={[styles.body]}>{store.phone}</Text>
                     </View>
                     <Buttons.ButtonDefault
@@ -65,7 +65,7 @@ const StoreCard = (props) => {
                         iconSize={35}
                         horizontal={true}
                         textStyle={styles.body}
-                        containerStyle={{width:'40%'}}
+                        containerStyle={{width:'50%'}}
                         activeOpacity={0.9}
                         disabled/> 
             </View>
@@ -79,33 +79,31 @@ const styles = StyleSheet.create({
         width:Dimensions.get('window').width/2.2,
         height:Dimensions.get('window').height/2.7,
         backgroundColor: '#fff',
-        borderRadius:20,
+        borderRadius:15,
         overflow:'hidden',
         margin: 10,
     },
     EntryHeader:{
         backgroundColor: '#2C4770',
-        justifyContent:'center',
+        justifyContent:'space-evenly',
         alignItems:'center',
         borderBottomRightRadius:100,
-        padding:10,
+        padding:5,
         height:'75%'
     },
     EntryBox:{
-        height:'20%',
+        margin:0,
         backgroundColor: '#2C4770',
-       // margin: -1
     },
     title:{
         fontSize:15,
         textAlign:'center',
         color:'#fff',
         fontFamily:'Cairo-Bold',
-        marginBottom: 10
     },
     body:{
-        fontFamily: 'Cairo-Regular' ,
-        fontSize: 12, 
+        fontFamily: 'Cairo-Bold' ,
+        fontSize: 11, 
         color: '#2C4770',
         textAlign:'center'
     },
@@ -113,11 +111,10 @@ const styles = StyleSheet.create({
         width:'100%',
         flexDirection:'row',
         justifyContent:'space-between',
-        alignItems: 'flex-end',
-        padding:5,
+        alignItems: 'baseline',
         backgroundColor: '#fff',
-        borderTopLeftRadius:100,
-        paddingTop:20,
+        borderTopLeftRadius:50,
+        //paddingTop:20,
     }
 
 })

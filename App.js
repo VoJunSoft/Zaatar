@@ -81,8 +81,8 @@ const App = () => {
             size={120}
             rounded
             source={userInfo.picture ? {uri: userInfo.picture} : props.img }
-            icon={{ name: 'user', type: 'font-awesome' }}
-            containerStyle={{ backgroundColor: '#2C4770', margin: 5}}
+            icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
+            containerStyle={{ backgroundColor: '#fff', margin: 3}}
         />
         <Text style={AppStyles.textTitle}>{userInfo.id ? 'الصفحه الشخصيه' : 'تسجيل الدخول'}</Text>
       </View>
@@ -153,7 +153,6 @@ const App = () => {
               name="Entry"
               component={Entry}
               options={{
-                title: 'الصفحه الشخصيه',
                 headerShown: false,
                 drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/Zaatar.png')}/>
               }}/>
@@ -217,7 +216,7 @@ const App = () => {
             initialParams={userInfo}
             options={{
               title: 'الصفحه الشخصيه',
-              drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/profile.png')}/>
+              drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/p1.png')}/>
             }}/>
           <Drawer.Screen
             name="Zaatar"
@@ -230,6 +229,7 @@ const App = () => {
             <Drawer.Screen
             name="Stores"
             component={Stores}
+            initialParams={userInfo}
             options={{
               title:'صفحات تجارية',
               drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
@@ -237,6 +237,7 @@ const App = () => {
             <Drawer.Screen
             name="WorkShops"
             component={WorkShops}
+            initialParams={userInfo}
             options={{
               title:'ورش عمل',
               drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>

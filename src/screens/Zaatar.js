@@ -16,6 +16,7 @@ export default function Zaatar(props) {
     //products fields: productId ... {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
     // userInfo state: {id, name, first_name, picture, email, location, phone}
     const [products, setProducts] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     //const [userInfo, setInfoUser] = useState(props.route.params)
     let CountryName
     useEffect(() => {
@@ -33,12 +34,12 @@ export default function Zaatar(props) {
             return props.route.params.location.flag
         }catch(e){
             //in case of error return
-            //TODO get location using react-native-localize
+            //get location using react-native-localize
             console.log('LOCALIZE :',RNLocalize.getCountry())
             return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
-        }
-        
+        }   
     }
+
     const GetProductsByDate = () => {
         const subscriber = firestore()
             .collection('products')
@@ -52,6 +53,7 @@ export default function Zaatar(props) {
                         })
                     }
                 })
+                setIsLoading(false)
             })
 
             return() => subscriber()
@@ -60,7 +62,7 @@ export default function Zaatar(props) {
     const $renderEmptyOrdersState = () => {
         return(
             <>
-            {products.length === 0 ?
+            {isLoading ?
                 <>
                     <Text style={styles.loading}>جار التحميل</Text>
                     <ActivityIndicator color='#2C4770' size={35}/>
@@ -83,7 +85,7 @@ export default function Zaatar(props) {
                 return products.filter(item=> item.category === category)
         }else{
             if(category === 'الكل')            
-                return products.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput))
+                return products.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) 
             else
                  return products.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) && item.category === category)
         }
@@ -111,7 +113,7 @@ export default function Zaatar(props) {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        //backgroundColor: '#2C4770'
+        //backgroundColor: '#FEEBDA'
     },
     ProductsList:{
 

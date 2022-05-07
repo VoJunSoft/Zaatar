@@ -16,79 +16,78 @@ import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import firestore from '@react-native-firebase/firestore';
 import RNRestart from 'react-native-restart'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Entry = ({navigation}) => {
-    // user information state: {id, name, picture, email, location: {}, phone}
-     
+// user information state: {id, name, picture, email, location: {}, phone}
     const [logInInfo, setLogInInfo] = useState({email:'', password:''})
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
     const handleLogIn = () => {
-        setErrMsg('')
-        if(logInInfo.email==='' || logInInfo.password==='')
-           return setErrMsg('احدى المعلومات غير صحيحه')
+    setErrMsg('')
+    if(logInInfo.email==='' || logInInfo.password==='')
+        return setErrMsg('احدى المعلومات غير صحيحه')
 
-        setIsloading(true)
-        const unsub=  auth()
-            .signInWithEmailAndPassword(logInInfo.email, logInInfo.password)
-            .then((userCreditentials) => {
-                //User account signed in
-                //get uid and pass it to store data
-                const user = userCreditentials.user
-                console.log(user)
-                //get user id, retrieve data from data base then store by id 
-                getUserInfo(user.uid) 
-            })
-            .catch(error => {
-              setIsloading(false)
-              setErrMsg('احدى المعلومات غير صحيحه')
-          })
-            return () => unsub
-      }
+    setIsloading(true)
+    const unsub=  auth()
+        .signInWithEmailAndPassword(logInInfo.email, logInInfo.password)
+        .then((userCreditentials) => {
+            //User account signed in
+            //get uid and pass it to store data
+            const user = userCreditentials.user
+            console.log(user)
+            //get user id, retrieve data from data base then store by id 
+            getUserInfo(user.uid) 
+        })
+        .catch(error => {
+            setIsloading(false)
+            setErrMsg('احدى المعلومات غير صحيحه')
+        })
+        return () => unsub
+    }
 
-      //verify email input
-      const $VerifyEmail = (data) => {
-            return data.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
-      }
-      //request password reset
-      const forgotPassword = (Email) => {
-            if ($VerifyEmail(Email)){
-                auth().sendPasswordResetEmail(Email)
-                .then(function (user) {
-                    setErrMsg('تم إرسال رسالة التحقق')
-                }).catch(function (e) {
-                    setErrMsg('تحقق من عنوان بريدك الإلكتروني')
-                })
-            }else{
+    //verify email input
+    const $VerifyEmail = (data) => {
+        return data.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+    }
+    
+    //request password reset
+    const forgotPassword = (Email) => {
+        if ($VerifyEmail(Email)){
+            auth().sendPasswordResetEmail(Email)
+            .then(function (user) {
+                setErrMsg('تم إرسال رسالة التحقق')
+            }).catch(function (e) {
                 setErrMsg('تحقق من عنوان بريدك الإلكتروني')
-            }
-      }
+            })
+        }else{
+            setErrMsg('تحقق من عنوان بريدك الإلكتروني')
+        }
+    }
 
-      const [userInfo, setUserInfo] = useState({})
-      const getUserInfo = (irec) => {
-          const subscriber = firestore()
-          .collection('users')
-          .doc(irec)
-          .get()
-          .then(documentSnapshot => {
-              console.log(documentSnapshot.data())
-              setUserInfo({...documentSnapshot.data(), id: irec})
-              AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...documentSnapshot.data(), id: irec})) 
-          })
-          .then(()=>{
-                console.log(userInfo)
-                //restart app to update app.js values
-                RNRestart.Restart()
-                //hide indicator
-                setIsloading(false)  
-          })
-          .catch((e) => {
-              setIsloading(false)
-              setErrMsg('احدى المعلومات غير صحيحه')
-          })
-          return () => subscriber
-      }
+    const [userInfo, setUserInfo] = useState({})
+    const getUserInfo = (irec) => {
+        const subscriber = firestore()
+        .collection('users')
+        .doc(irec)
+        .get()
+        .then(documentSnapshot => {
+            console.log(documentSnapshot.data())
+            setUserInfo({...documentSnapshot.data(), id: irec})
+            AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...documentSnapshot.data(), id: irec})) 
+        })
+        .then(()=>{
+            console.log(userInfo)
+            //restart app to update app.js values
+            RNRestart.Restart()
+            //hide indicator
+            setIsloading(false)  
+        })
+        .catch((e) => {
+            setIsloading(false)
+            setErrMsg('احدى المعلومات غير صحيحه')
+        })
+        return () => subscriber
+    }
 
     return (
     <ScrollView style={styles.container}>

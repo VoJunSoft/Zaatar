@@ -7,14 +7,34 @@ import { handleDate } from '../scripts/Time'
 import {contactUsByWhatsapp} from '../scripts/Communication'
 import firestore from '@react-native-firebase/firestore'
 import DropShadow from "react-native-drop-shadow"
+import * as RNLocalize from "react-native-localize"
 //import {getWorkShops} from '../firebase/Firestore'
 
 export default function Workshops(props) {
     const [workshops, setWorkshops] = useState([])
+    const [isLoading, setIsLoading] = useState(true) 
+    // user's location
+    let CountryName
+
     useEffect( () => {
+        CountryName = userLocation()
         //get Data from workshop database
         fillUpWorkshops()
     },[])
+
+    // get userLocation
+    const userLocation = () =>{
+        try{    
+            //get country name from navigation params
+            console.log('PARAMS :', props.route.params)
+            return props.route.params.location.flag
+        }catch(e){
+            //in case of error return
+            //get location using react-native-localize
+            console.log('LOCALIZE :',RNLocalize.getCountry())
+            return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
+        }   
+    }
 
     //stored object fields: id, title, date_posted, from, to, location:{country, code, city}, phone, image, email, seller:{id, email, location,name,phone,picture}
     const fillUpWorkshops = () => {
@@ -24,10 +44,13 @@ export default function Workshops(props) {
             .onSnapshot(querySnapshot => {
                 setWorkshops([])
                 querySnapshot.forEach(documentSnapshot => {
+                    if(documentSnapshot.data().location.flag === CountryName || CountryName==='ALL'){
                         setWorkshops((prevState) => {
                             return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
                         })
+                    }
                 })
+                setIsLoading(false)
             })
 
             return() => subscriber()
@@ -46,9 +69,18 @@ export default function Workshops(props) {
                                         )
     }
 
-    const $renderEmptyOrdersState = () => {
+    const $renderEmptyOrdersState = () => { 
         return(
+            <>
+            {isLoading ?
+                <>
+                    <Text style={styles.loading}>جار التحميل</Text>
+                    <ActivityIndicator color='#2C4770' size={35}/>
+                </>
+            :
                 <Text style={styles.loading}>لا توجد بيانات متاحة</Text>
+            }
+            </>
         )
     }
 
@@ -102,9 +134,9 @@ export default function Workshops(props) {
                     <Avatar
                         size={50}
                         rounded
-                        source={{uri: props.item.seller.picture}}
-                        icon={{ name: 'user', type: 'font-awesome', color: '#fff' }}
-                        containerStyle={{ alignSelf:'center', margin: 3}}/>
+                        source={props.item.seller.picture ? {uri: props.item.seller.picture} : require('../assets/gallary/p1.png')}
+                        icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
+                        containerStyle={{backgroundColor:'#fff', margin: 3}}/>
                 </View>
                 </ImageBackground>
                 {userMsg !== '' ?
