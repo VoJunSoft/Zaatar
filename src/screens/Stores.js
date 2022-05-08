@@ -24,7 +24,7 @@ export default function Stores(props) {
             console.log('PARAMS :', props.route.params)
             return props.route.params.location.flag
         }catch(e){
-            //in case of error return
+            //in case of error 
             //get location using react-native-localize
             console.log('LOCALIZE :',RNLocalize.getCountry())
             return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
@@ -35,7 +35,7 @@ export default function Stores(props) {
     const fillUpStoresList = () => {
         const subscriber = firestore()
             .collection('users')
-            //.orderBy('date_listed', 'asc')
+            //.orderBy('date_posted', 'asc')
             .onSnapshot(querySnapshot => {
                 setStores([])
                 querySnapshot.forEach(documentSnapshot => {

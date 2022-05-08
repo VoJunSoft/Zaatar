@@ -42,28 +42,55 @@ console.log(route.params)
         <Text style={styles.title}> تم إنشاء هذا التطبيق من أجل ربط البائعين من أماكن مختلفة في جميع أنحاء البلاد. </Text>
         <Text style={styles.title}> تتيح لك هذه المنصة سرد المنتجات التي ترغب في بيعها أو التواصل مع البائعين الذين لديهم منتجات تهمك.</Text>
         <Text style={styles.title}>يمكن أن تكون المنتجات: يدوية الصنع أو مستعملة أو فنية أو أثرية أو مقتنيات أو حتى ورشة عمل أو نوع معين من الخدمات.</Text>
+        <Text style={styles.title}>نحن لسنا مسؤولين عن أي متجر أو منشور على هذه المنصة.</Text>
         <Buttons.ButtonDefault
-                    titleLeft="تواصل معنا"
-                    iconName="whats"
-                    iconSize={35}
-                    containerStyle={styles.button}
-                    textStyle={styles.ButtonText}
-                    onPress={()=>contactUsByWhatsapp('+972527919300')}/>
+                titleLeft="تغيير الاعتمادات"
+                iconName="settings"
+                iconSize={35}
+                containerStyle={styles.button}
+                textStyle={[styles.ButtonText,{textDecorationLine:'line-through'}]}
+                //onPress={{}}
+                />
         <Buttons.ButtonDefault
-                    titleLeft="مشاركه"
-                    iconName="share"
-                    iconSize={35}
-                    containerStyle={styles.button}
-                    textStyle={styles.ButtonText}
-                    onPress={()=>share()}/>
+                titleLeft="إشعارات"
+                iconName="bell"
+                iconSize={35}
+                containerStyle={styles.button}
+                textStyle={[styles.ButtonText,{textDecorationLine:'line-through'}]}
+                //onPress={{}}
+                />
+        {/* <Buttons.ButtonDefault
+                titleLeft="تواصل معنا"
+                iconName="whats"
+                iconSize={35}
+                containerStyle={styles.button}
+                textStyle={styles.ButtonText}
+                onPress={()=>contactUsByWhatsapp('+972527919300')}/> */}
+        <Buttons.ButtonDefault
+                titleLeft="مشاركه"
+                iconName="share"
+                iconSize={35}
+                containerStyle={styles.button}
+                textStyle={styles.ButtonText}
+                onPress={()=>share()}/>
         {route.params ?
-            <Buttons.ButtonDefault
-                    titleLeft="خروج"
-                    iconName="exit"
-                    iconSize={35}
-                    containerStyle={styles.button}
-                    textStyle={styles.ButtonText}
-                    onPress={()=>handleLogOut()}/>
+            <>
+                <Buttons.ButtonDefault
+                        titleLeft="خروج"
+                        iconName="exit"
+                        iconSize={35}
+                        containerStyle={styles.button}
+                        textStyle={styles.ButtonText}
+                        onPress={()=>handleLogOut()}/>
+                <Buttons.ButtonDefault
+                        titleLeft="حذف الحساب"
+                        iconName="delete"
+                        iconSize={35}
+                        containerStyle={styles.button}
+                        textStyle={[styles.ButtonText,{textDecorationLine:'line-through'}]}
+                        //onPress={{}}
+                        />
+            </>
         : 
             null
         }
@@ -79,10 +106,10 @@ const styles = StyleSheet.create({
     },
     title:{
         fontFamily:'Cairo-Regular',
-        fontSize:18,
-        textAlign:'center',
+        fontSize:17,
+        textAlign:'right',
         color:'#fff',
-        margin: 10
+        margin: 5
     },
     img:{
         width:100, 
@@ -96,7 +123,7 @@ const styles = StyleSheet.create({
         width:'70%', 
         backgroundColor: 'rgba(255,255,255,0.2)', 
         alignSelf:'flex-end',
-        marginTop:15,
+        marginTop:12,
         paddingRight:8
     },
     ButtonText: {

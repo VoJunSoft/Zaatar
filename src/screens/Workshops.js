@@ -40,7 +40,7 @@ export default function Workshops(props) {
     const fillUpWorkshops = () => {
         const subscriber = firestore()
             .collection('workshops')
-            //.orderBy('date_listed', 'asc')
+            .orderBy('date_posted', 'asc')
             .onSnapshot(querySnapshot => {
                 setWorkshops([])
                 querySnapshot.forEach(documentSnapshot => {

@@ -41,6 +41,8 @@ export default function Zaatar(props) {
     }
 
     const GetProductsByDate = () => {
+        //TODO ::: retrieve users' IDs within the same location [] and retrieve every product that has a matching seller.id 
+        //This way we retrieve all products of all of the stores within the area.
         const subscriber = firestore()
             .collection('products')
             .orderBy('date_listed', 'asc')
