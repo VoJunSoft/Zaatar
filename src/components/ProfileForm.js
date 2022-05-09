@@ -26,7 +26,8 @@ import CountryPicker from 'react-native-country-picker-modal'
 export default function ProfileForm(props) {
     const navigation = useNavigation();
     // user information state
-    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', location:{country:'Palestine', code:'970', city:'', flag:'PS'}, name:''})
+    //TODO ::: get location:{} of nonusers based on thier location instead of the initial values currently being passed
+    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', name:'', location:{country:'Israel', code:'972', city:'', flag:'IL'}})
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
@@ -170,8 +171,7 @@ export default function ProfileForm(props) {
                 withCallingCode
                 containerButtonStyle={{paddingLeft: 10, padding:8, borderRightWidth:0.5, backgroundColor:'#2C4770'}}
                 onSelect={country=>{
-                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2} })
-                    console.log(userInfo)
+                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2, currency: country.currency[0]} })
                 }}
                 />
         )

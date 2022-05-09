@@ -82,7 +82,7 @@ const App = () => {
             rounded
             source={userInfo.picture ? {uri: userInfo.picture} : props.img }
             icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-            containerStyle={{ backgroundColor: '#fff', margin: 3}}
+            containerStyle={{ backgroundColor: isUser ? '#fff' : '#2C4770', margin: 3}}
         />
         <Text style={AppStyles.textTitle}>{userInfo.id ? 'الصفحه الشخصيه' : 'تسجيل الدخول'}</Text>
       </View>
@@ -120,7 +120,7 @@ const App = () => {
             headerShown: true,
             drawerType:"front",
             drawerPosition:"left",
-            overlayColor:'#00000055',
+            overlayColor:'#00000040', //'#E5EEFF10',
             headerTitleAlign:'center',
             headerRight:(()=> <HeaderRightIcon/>),
             headerStyle:{
@@ -135,7 +135,7 @@ const App = () => {
             },
             drawerActiveBackgroundColor:'rgba(0,0,0,0.1)',
             drawerStyle:{
-              backgroundColor:'#FEEBDA', //'#FEEBDA',
+              backgroundColor:'#E5EEFF', //#A3BFF6 , #DEE4EF, #BDD0F6
               width:230,
               borderTopRightRadius:12,
               borderBottomRightRadius:12,

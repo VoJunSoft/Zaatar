@@ -30,6 +30,8 @@ const FullProductCard = (props) => {
     //large image display index
     const [imgIndex, setImageIndex] = useState(0)
 
+    const [errMsg, setErrMsg] = useState()
+
     useEffect( ()=>{
       getData() 
     }, [])
@@ -127,16 +129,16 @@ const FullProductCard = (props) => {
               </View>
               <Text style={[styles.body, {marginRight:25}]}>{productInfo.description}</Text>
           </View>  
-
+          <Text style={{color: 'red', alignSelf:'center', fontSize:12, fontFamily:'Cairo-Regular'}}>{errMsg ? errMsg : null}</Text>
           <Buttons.ButtonDefault
                 titleLeft="تواصل معنا عبر WhatApp "
                 iconName="whats"
                 iconSize={30}
                 horizontal={false}
-                containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', margin: 15, padding: 5}}
+                containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', margin: 5, padding: 5, alignSelf:'center'}}
                 textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 15, color: '#fff', marginRight:5}}
-                onPress={()=>{productInfo.seller.id === props.ownerId ? 
-                    Alert.alert('لا يمكنك الشراء من متجرك الخاص') 
+                onPress={()=>{productInfo.seller.id === ownerId ? 
+                    setErrMsg('لا يمكنك الشراء من متجرك الخاص') 
                     : 
                     shareToWhatsApp('+' + productInfo.seller.location.code + productInfo.seller.phone, productInfo.product_name, productInfo.description, productInfo.price)
                   }}

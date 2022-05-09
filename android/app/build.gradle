@@ -137,8 +137,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        versionCode 1
-        versionName "1.0"
+        versionCode 1.1
+        versionName "1.1"
     }
     splits {
         abi {
@@ -207,6 +207,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.2.0')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.android.support:multidex:1.0.3'
     //compile project(':react-native-navbar-color')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

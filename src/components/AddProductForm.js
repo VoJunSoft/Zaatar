@@ -183,7 +183,7 @@ export default function AddProductForm(props) {
                 onChangeText={text=> setProductInfo({...productInfo,product_name: text})}
                 maxLength={25}
                 selectionColor="white"
-                placeholderTextColor="white"
+                placeholderTextColor='#2C4770'
                 placeholder="اسم المنتجات"
                 underlineColorAndroid='transparent'
             />
@@ -198,7 +198,7 @@ export default function AddProductForm(props) {
                 numberOfLines={1}
                 maxLength={7}
                 selectionColor="white"
-                placeholderTextColor="white"
+                placeholderTextColor='#2C4770'
                 placeholder="السعر"
                 keyboardType='numeric'
                 underlineColorAndroid='transparent'
@@ -228,23 +228,23 @@ export default function AddProductForm(props) {
         
         <TextInput
             value={productInfo.description}
-            style={[CSS.postInput,{marginTop:12, textAlignVertical:'top'}]}
+            style={[CSS.postInput,{marginTop:10, textAlignVertical:'top'}]}
             onChangeText={text=> setProductInfo({...productInfo,description: text})}
             maxLength={125}
             selectionColor="white"
-            placeholderTextColor="white"
+            placeholderTextColor='#2C4770'
             placeholder="معلومات اضافية"
             underlineColorAndroid='transparent'
-            numberOfLines={5}
+            numberOfLines={4}
             multiline
          />
          <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? 'red': 'green'}}>{productInfo.description.length}/125</Text>
         
         <View style={CSS.imagesContainer}>
             <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.iconBlock}>
-                    <Text style={{color:'#fff', fontFamily:'Cairo-Regular', marginBottom:-15}}>تحميل الصور</Text>
-                    <Icon iconName='photo' size={70} />
-                    {loadingImg ? <ActivityIndicator size={30} color='#fff'/> : null}
+                    <Text style={{color:'#2C4770', fontFamily:'Cairo-Regular', fontSize:12}}>تحميل الصور</Text>
+                    <Icon iconName='photo' size={50} />
+                    {loadingImg ? <ActivityIndicator size={20} color='#2C4770'/> : null}
             </TouchableOpacity>
         
            
@@ -294,7 +294,7 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'45%',
                     justifyContent:'center',
-                    padding: 5
+                    padding: 4
                 }}
                 textStyle={{ 
                     fontSize: 18, 
@@ -311,7 +311,7 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'45%',
                     justifyContent:'center',
-                    padding: 5
+                    padding: 4
                 }}
                 textStyle={{ 
                     fontSize: 18, 
@@ -328,7 +328,7 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'50%',
                     justifyContent:'center',
-                    padding: 5
+                    padding: 4
                 }}
                 textStyle={{ 
                     fontSize: 18, 
@@ -346,8 +346,7 @@ export default function AddProductForm(props) {
                 overlayStyle={{
                     padding:0, 
                     width:'96%',
-                    height:'96%', 
-                    borderRadius:15,
+                    height:'100%', 
                     backgroundColor:'rgba(255,255,255,0.7)',
                     }}>
                 <ActivityIndicator size={100} color="#2C4770" marginTop={'50%'} />
@@ -379,25 +378,26 @@ const CSS = StyleSheet.create({
     fontSize: 15,
     borderBottomColor:'#2C4770',
     borderBottomWidth:3,
-    marginTop:10,
+    marginTop:5,
     fontFamily: "Cairo-Regular",
     textAlign:'right',
-    color: 'white',
-    borderRadius:0,
+    color: '#2C4770',
+    borderRadius:5,
     paddingRight:10,
-    backgroundColor:'rgba(0,0,0,0.5)',
+    backgroundColor:'#ACC6F8'
   },
   postInputDate: {
     width:'48%',
-    textAlignVertical:'top',
+    //textAlignVertical:'top',
     fontSize: 15,
     borderBottomColor:'#2C4770',
     borderBottomWidth:3,
     margin:0,
+    borderRadius:5,
     fontFamily: "Cairo-Regular",
     textAlign:'center',
-    backgroundColor:'rgba(0,0,0,0.5)',
-    color: 'white',
+    backgroundColor:'#ACC6F8',
+    color: '#2C4770',
   },
   dateBlock: {
     flexDirection:'row',
@@ -410,15 +410,25 @@ const CSS = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
     alignSelf:'center',
-    marginBottom:15
+    marginBottom:10
   },
   iconBlock:{
-    resizeMode:'contain',
+    width:130,
+    height:130,
+    justifyContent:'center',
     alignItems:'center',
+    backgroundColor:'#fff',
+    alignSelf:'center',
+    borderRadius:100,
+    marginTop:-70,
+    borderWidth:2,
+    borderColor:'#2C4770',
+    overflow:'hidden',
+    padding:10
   },
   img: {
     width: Dimensions.get('window').width/3.5,
-    height: 120,
+    height: 130,
     resizeMode:'cover',
   },
   imgBlock:{
@@ -439,10 +449,11 @@ const CSS = StyleSheet.create({
     fontSize: 15,
     borderBottomColor:'#2C4770',
     borderBottomWidth:3,
-    marginTop:10,
-    backgroundColor:'rgba(0,0,0,0.5)',
+    marginTop:60,
+    backgroundColor:'#ACC6F8',
     paddingBottom: 5,
-    height: 285,
+    height: 260,
+    borderRadius: 5,
   }
 });
 

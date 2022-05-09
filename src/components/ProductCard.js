@@ -6,7 +6,9 @@ import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
-import { handleTimeDifference } from '../scripts/Time';
+//import { handleTimeDifference } from '../scripts/Time';
+import TopProductCardView from './TopProductCardView'
+import DiscountProductCardView from './DiscountProductCardView'
 
 export default function ProductCard(props) {
     //products fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -61,57 +63,73 @@ export default function ProductCard(props) {
         )
     }
 
+    const getView = (view) =>{
+        //getView(props.view)
+        switch(view){
+            case 'HeaderCards':
+                return <TopProductCardView productInfo={props.item}/>
+            case 'HangerCards':
+                return <DiscountProductCardView productInfo={props.item}/>
+            default:
+              return <DefaultView />
+        }
+    }
+
     const DefaultView = () => {
         return(
-            <TouchableOpacity   style={[styles.ProductCardDefault,{padding: props.deleteButtonVisibility ? 0 : 4}]} 
-                                activeOpacity={0.7} 
-                                onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
-                                disabled={props.deleteButtonVisibility}>
+            <View style={{backgroundColor:'#2C4770'}}>
                 <DropShadow style={styles.dropShadow}>
-                    <Image style={styles.displayImg} source={{uri : productInfo.photos[0]}} /> 
+                    <Image style={styles.displayImg} source={productInfo.photos[0] ? {uri : productInfo.photos[0]} : require('../assets/gallary/Zaatar.png')} />
                 </DropShadow >
                 <View style={styles.subDefaultContainer}>    
-                    <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text>
-                    { props.deleteButtonVisibility ?
-                    <View style={{
-                            width:'100%',
-                            backgroundColor: 'rgba(255,255,255,0.4)',
-                            flexDirection:'row',
-                            justifyContent:'space-around'}}>
-                                <Buttons.ButtonDefault 
-                                    iconName="edit"
-                                    iconSize={25}
-                                    containerStyle={{
-                                        width:'50%',
-                                        justifyContent:'center',
-                                        borderRightWidth:1}}
-                                    onPress={()=>setProductFormVisibility(true)}/>  
-                                <Buttons.ButtonDefault 
-                                    iconName="delete"
-                                    iconSize={25}
-                                    containerStyle={{
-                                        width:'50%',
-                                        justifyContent:'center'}}
-                                    onPress={()=> DeleteProduct(productInfo.productId)}/>  
-                    </View>
-                    : 
-                    <View style={{
-                        width:'100%',
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        alignItems:'center'}}>
-                        {/* <Text style={[styles.dateDefault,styles.circle]}>{handleTimeDifference(productInfo.date_listed.seconds)}</Text>  */}
-                        <Text style={styles.titleDefault}> ₪{productInfo.price}</Text> 
-                    </View>
-                }
-                </View>        
-            </TouchableOpacity>
+                    <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text> 
+                    { !props.deleteButtonVisibility ?<Text style={styles.titleDefault}> ₪{productInfo.price}</Text> :null}
+                </View> 
+            </View>
         )
     }
 
+    const CardView = () => {
+        return(
+            <TouchableOpacity   style={styles.ProductCardDefault} 
+                                activeOpacity={0.7} 
+                                onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
+                                disabled={props.deleteButtonVisibility}>
+                <DefaultView/>
+                {/* {getView(props.view)} */}
+                { props.deleteButtonVisibility ?
+                <View style={{
+                        width:'100%',
+                        backgroundColor: '#2C477088',
+                        flexDirection:'row',
+                        justifyContent:'space-around'}}>
+                            <Buttons.ButtonDefault 
+                                iconName="edit"
+                                iconSize={25}
+                                containerStyle={{
+                                    width:'50%',
+                                    justifyContent:'center',
+                                    borderRightWidth:1,
+                                    padding:3}}
+                                onPress={()=>setProductFormVisibility(true)}/>  
+                            <Buttons.ButtonDefault 
+                                iconName="delete"
+                                iconSize={25}
+                                containerStyle={{
+                                    width:'50%',
+                                    justifyContent:'center'}}
+                                onPress={()=> DeleteProduct(productInfo.productId)}/>  
+                </View>
+                : 
+                null
+            }       
+            </TouchableOpacity>
+        )
+    }
+    
     return (
         <>
-        <DefaultView />
+        <CardView />
         <Overlay isVisible={fullProductVisibility} 
                 onBackdropPress={()=>setFullProductVisibility(false)} 
                 fullScreen={true}
@@ -144,10 +162,11 @@ const styles = StyleSheet.create({
         flex:1
     },
     dropShadow:{
-        shadowColor: '#323232',
-        shadowOffset: {width: 2, height: 2},
-        shadowOpacity: 0.7,
+        shadowColor: '#171717',
+        shadowOffset: {width: -2, height: 2},
+        shadowOpacity: 0.6,
         shadowRadius: 1,
+        padding:3
     },
     ProductCard:{
         width:'45%',
@@ -160,7 +179,7 @@ const styles = StyleSheet.create({
     },
     ProductCardDefault:{
         width:'45%',
-        backgroundColor:'#2C4770',
+        //backgroundColor:'#2C4770',
         margin: 10,
         borderRadius:13,
         overflow:'hidden',
@@ -203,8 +222,7 @@ const styles = StyleSheet.create({
     displayImg:{
         width: "100%", 
         height: 120, 
-        //borderTopLeftRadius: 13, 
-        //borderTopRightRadius: 13, 
+        backgroundColor:'#E5EEFF',
         borderRadius:10,
         alignSelf:'center'
     },

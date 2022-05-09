@@ -105,7 +105,7 @@ export default function Zaatar(props) {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index}/>
+                    <ProductCard item={item} key={index} view='Default'/>
                 )}
             />
         </SafeAreaView>

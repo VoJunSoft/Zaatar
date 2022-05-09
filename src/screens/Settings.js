@@ -27,7 +27,7 @@ console.log(route.params)
                 text: "نعم", 
                 onPress: () =>{
                     AsyncStorage.removeItem('userInfoZaatar')
-                    //auth().signOut()
+                    auth().signOut()
                     //close app
                     BackHandler.exitApp()
                     //navigation.navigate('Entry')
@@ -37,8 +37,7 @@ console.log(route.params)
     }
 
     return (
-    <ScrollView style={styles.container}>
-        {/* <Image style={styles.img} source={require('../assets/gallary/Zaatar3.png')} /> */}
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Text style={styles.title}> تم إنشاء هذا التطبيق من أجل ربط البائعين من أماكن مختلفة في جميع أنحاء البلاد. </Text>
         <Text style={styles.title}> تتيح لك هذه المنصة سرد المنتجات التي ترغب في بيعها أو التواصل مع البائعين الذين لديهم منتجات تهمك.</Text>
         <Text style={styles.title}>يمكن أن تكون المنتجات: يدوية الصنع أو مستعملة أو فنية أو أثرية أو مقتنيات أو حتى ورشة عمل أو نوع معين من الخدمات.</Text>
@@ -86,7 +85,7 @@ console.log(route.params)
                         titleLeft="حذف الحساب"
                         iconName="delete"
                         iconSize={35}
-                        containerStyle={styles.button}
+                        containerStyle={[styles.button,{marginBottom:5}]}
                         textStyle={[styles.ButtonText,{textDecorationLine:'line-through'}]}
                         //onPress={{}}
                         />
