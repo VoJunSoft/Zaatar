@@ -114,14 +114,14 @@ const FullProductCard = (props) => {
             null
           }
           <View style={styles.cardBlock}>
-              <Text style={styles.title}>{handleDate(productInfo.date_listed.seconds)}</Text>
-              <Text style={styles.title}>₪{productInfo.price}</Text>
-              <Text style={styles.title}>{productInfo.product_name}</Text> 
+              <Text style={styles.titleProductText}>{handleDate(productInfo.date_listed.seconds)}</Text>
+              <Text style={styles.titleProductText}>{props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text>
+              <Text style={styles.titleProductText}>{productInfo.product_name}</Text> 
           </View> 
 
           <View style={styles.infoBox}>
               <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center'}}>
-                  <Text style={[styles.title,{marginRight:3, marginTop:5}]}>تفاصيل اضافيه </Text>
+                  <Text style={[styles.titleInfoText,{marginRight:3, marginTop:5}]}>تفاصيل اضافيه </Text>
                   <Icon 
                       iconName="info"
                       size={27}
@@ -174,7 +174,13 @@ const styles = StyleSheet.create({
     imgBlock:{
       backgroundColor:'#323232'
     },
-    title: {
+    titleProductText: {
+      fontFamily:'Cairo-Regular',
+      fontSize: 15,
+      textAlign: 'center',
+      color:'#2C4770',
+    },
+    titleInfoText: {
       fontFamily:'Cairo-Bold',
       fontSize: 15,
       textAlign: 'center',

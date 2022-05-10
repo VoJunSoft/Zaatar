@@ -17,6 +17,7 @@ import ProductCard from '../components/ProductCard'
 import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
 import RNRestart from 'react-native-restart'
+import {currencySymbols} from "../scripts/CurrencySymbols.json"
 
 const Profile = (props) => {
     // const {id, name, picture, email, location:{}, phone} = route.params
@@ -213,7 +214,7 @@ const Profile = (props) => {
             keyExtractor={item => item.productId}
             style={styles.ProductsList}
             renderItem={ ({item, index}) => (
-                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility}/>
+                <ProductCard item={item} deleteButtonVisibility={deleteButtonVisibility} currencySymbol={currencySymbols[userInfo.location.flag]}/>
             )}
         />
 

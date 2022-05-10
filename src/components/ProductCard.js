@@ -77,13 +77,13 @@ export default function ProductCard(props) {
 
     const DefaultView = () => {
         return(
-            <View style={{backgroundColor:'#2C4770'}}>
+            <View style={{flex:1, backgroundColor:'#2C4770'}}>
                 <DropShadow style={styles.dropShadow}>
                     <Image style={styles.displayImg} source={productInfo.photos[0] ? {uri : productInfo.photos[0]} : require('../assets/gallary/Zaatar.png')} />
                 </DropShadow >
                 <View style={styles.subDefaultContainer}>    
                     <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text> 
-                    { !props.deleteButtonVisibility ?<Text style={styles.titleDefault}> ₪{productInfo.price}</Text> :null}
+        { !props.deleteButtonVisibility ?<Text style={styles.price}> {props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text> :null}
                 </View> 
             </View>
         )
@@ -139,7 +139,7 @@ export default function ProductCard(props) {
                     height:'100%', 
                     borderRadius:0,
                 }}>
-                <FullProductCard productInfo={productInfo} setFullProductVisibility={setFullProductVisibility} />
+                <FullProductCard productInfo={productInfo} setFullProductVisibility={setFullProductVisibility} currencySymbol={props.currency}/>
         </Overlay>
 
         <Overlay isVisible={productFormVisibility} 
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         //backgroundColor:'#2C4770',
         margin: 10,
         borderRadius:13,
-        overflow:'hidden',
+        overflow:'hidden'
     },
     subDefaultContainer: {
         flex:1,
@@ -193,17 +193,23 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius:13,
         borderBottomRightRadius:13,
         borderColor:'rgba(255,255,255,0.5)',
+        marginTop:2
     },
-    title:{
-        fontFamily:'Cairo-Bold',
-        fontSize: 15,
-        color: '#2C4770',
+    price:{
+        fontFamily:'Cairo-Regular',
+        fontSize: 13,
+        color: '#fff',
+        textAlign:'center',
+        marginTop:5,
+        marginBottom:5
     },
     titleDefault:{
         fontFamily:'Cairo-Regular',
         fontSize: 15,
         color: '#fff',
         textAlign:'center',
+        marginTop:5,
+        marginBottom:5
     },
     dateDefault:{
         fontFamily:'Cairo-Regular',

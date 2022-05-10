@@ -11,6 +11,7 @@ import ProductCard from '../components/ProductCard'
 import ZaatarSearchBar from '../components/ZaatarSearchBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as RNLocalize from "react-native-localize"
+import {currencySymbols} from "../scripts/CurrencySymbols.json"
 
 export default function Zaatar(props) {
     //products fields: productId ... {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -19,6 +20,8 @@ export default function Zaatar(props) {
     const [isLoading, setIsLoading] = useState(true)
     //const [userInfo, setInfoUser] = useState(props.route.params)
     let CountryName
+    //get location currency
+    const [currencyAlphabet, setCurrencyAlphabet] = useState('')
     useEffect(() => {
         //get user location
         CountryName = userLocation()
@@ -26,16 +29,21 @@ export default function Zaatar(props) {
         GetProductsByDate()
     },[])
 
-    // get userLocation
+    
+    // get userLocation & currency
     const userLocation = () =>{
         try{    
-            //get country name from navigation params
-            console.log('PARAMS :', props.route.params)
+            //get country name from navigation params: userInfo
+            //set currency symbol based on country flag TODO ::: get it based on currency code
+            setCurrencyAlphabet(currencySymbols[props.route.params.location.flag])
+            console.log('PARAMS :', props.route.params, currencyAlphabet)
             return props.route.params.location.flag
         }catch(e){
             //in case of error return
             //get location using react-native-localize
-            console.log('LOCALIZE :',RNLocalize.getCountry())
+            //set currency symbol based on country flag TODO ::: get it based on currency code
+            setCurrencyAlphabet(currencySymbols[RNLocalize.getCountry()])
+            console.log('LOCALIZE :',RNLocalize.getCountry(), currencyAlphabet)
             return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
         }   
     }
@@ -105,7 +113,7 @@ export default function Zaatar(props) {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index} view='Default'/>
+                    <ProductCard item={item} key={index} view='Default' currencySymbol={currencyAlphabet}/>
                 )}
             />
         </SafeAreaView>

@@ -188,7 +188,7 @@ export default function AddProductForm(props) {
                 underlineColorAndroid='transparent'
             />
          </View>
-         <Text style={{paddingLeft:5, color: productInfo.product_name.length < 5  ? 'red': 'green'}}>{productInfo.product_name.length}/25</Text>
+         <Text style={{paddingLeft:5, color: productInfo.product_name.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.product_name.length}/25</Text>
          
          <View style={CSS.dateBlock}>
             <TextInput
@@ -224,7 +224,7 @@ export default function AddProductForm(props) {
                 <Picker.Item label="دروس خصوصية" value="دروس خصوصية" />
             </Picker>
         </View>
-        <Text style={{paddingLeft:7, color: productInfo.price.length < 1  ? 'red': 'green'}}>{productInfo.price.length}/7</Text>
+        <Text style={{paddingLeft:7, color: productInfo.price.length < 1  ? '#AF0F02': '#119935'}}>{productInfo.price.length}/7</Text>
         
         <TextInput
             value={productInfo.description}
@@ -238,7 +238,7 @@ export default function AddProductForm(props) {
             numberOfLines={4}
             multiline
          />
-         <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? 'red': 'green'}}>{productInfo.description.length}/125</Text>
+         <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.description.length}/125</Text>
         
         <View style={CSS.imagesContainer}>
             <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.iconBlock}>
@@ -282,8 +282,8 @@ export default function AddProductForm(props) {
         </View> 
 
         <View style={{margin:10}}>
-          {successMsg === '' ? null :  <Text style={{color:'green', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
-          {errMsg === '' ? null :  <Text style={{color:'red', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+          {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
+          {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
         </View>
 
         <View style={CSS.buttonContainer}>

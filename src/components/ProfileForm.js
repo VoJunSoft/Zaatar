@@ -26,8 +26,8 @@ import CountryPicker from 'react-native-country-picker-modal'
 export default function ProfileForm(props) {
     const navigation = useNavigation();
     // user information state
-    //TODO ::: get location:{} of nonusers based on thier location instead of the initial values currently being passed
-    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', name:'', location:{country:'Israel', code:'972', city:'', flag:'IL'}})
+    //TODO ::: get location:{} of nonusers based on thier location instead of the initial values currently being passed 
+    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', name:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}})
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
@@ -223,7 +223,7 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     autoCompleteType
                     onChangeText={value => setUserInfo({...userInfo, name: value })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? 'red': 'green'}}>{userInfo.name.length}/15</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.name.length}/15</Text>
 
                 <Input
                     placeholder="khaled@junglesoft.com"
@@ -236,7 +236,7 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, email: value })}
                     {...props}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? 'green' : 'red'}}>{userInfo.email.length}/25</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935 ' : '#AF0F02'}}>{userInfo.email.length}/25</Text>
 
                 <Input
                     placeholder="*******"
@@ -250,7 +250,7 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setPass(value)}
                     {...props}/> 
-                <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? 'red': 'green'}}>{pass.length}/20</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? '#AF0F02': '#119935'}}>{pass.length}/20</Text>
                 
                 <View style={styles.flexInput}>
                     <View style={styles.countryCodeBox}>
@@ -289,11 +289,11 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     autoCompleteType
                     onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.city.length < 4  ? 'red': 'green'}}>{userInfo.location.city.length}/15</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.city.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.location.city.length}/15</Text>
 
                 { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
-                {successMsg === '' ? null :  <Text style={{color:'green', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
-                {errMsg === '' ? null :  <Text style={{color:'red', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+                {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
+                {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
 
                 <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Buttons.ButtonDefault
