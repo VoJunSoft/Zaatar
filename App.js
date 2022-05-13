@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -5,7 +6,6 @@
  * @format
  * @flow strict-local
  */
-import 'react-native-gesture-handler'
 import React, {useEffect, useState} from 'react'
 import {
   View,
@@ -15,7 +15,7 @@ import {
   Image,
   LogBox,
   TouchableOpacity,
-  Alert
+  BackHandler
 } from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
 import {createDrawerNavigator} from '@react-navigation/drawer'
@@ -31,6 +31,8 @@ import AppStyles from './src/styles/AppStyle'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar } from 'react-native-elements'
 import Buttons from './src/elements/Button'
+//import firestore from '@react-native-firebase/firestore'
+//import * as RNLocalize from "react-native-localize"
 //import NavigationBar from 'react-native-navbar-color'
 //import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
 
@@ -45,6 +47,9 @@ const App = () => {
   // user information state
   const [userInfo, setUserInfo] = useState({})
   const [isUser, setIsUser] = useState(false)
+
+  //const [stores, setStores] = useState([])
+  //const [isLoading, setIsLoading] = useState(true)
   useEffect( ()=>{
     //    const unsubscribe = navigation.addListener('focus', () => {
     //          auth().onAuthStateChanged((user) => {
@@ -52,6 +57,7 @@ const App = () => {
                     getData()
     //          })
     //     })
+
     // const nav = [
     //       NavigationBar.setStatusBarColor("#2C4770",true), 
     //       NavigationBar.setStatusBarTheme('light',true), 
@@ -65,13 +71,37 @@ const App = () => {
            .then((value) => {
                 if(value !== null){
                     setUserInfo(JSON.parse(value))
+                    //fillUpStoresList(JSON.parse(value).location.flag)
                     setIsUser(true)
+                }else{
+                    //fillUpStoresList(RNLocalize.getCountry())
                 }
            })
     } catch(e) {
       // error reading value
+      console.log(e)
     }
   }
+
+  //get stores within location
+  //stores object fields: id, name, location, phone, picture, email
+  // const fillUpStoresList = (locationData) => {
+  // const subscriber = firestore()
+  //     .collection('users')
+  //     .onSnapshot(querySnapshot => {
+  //         setStores([])
+  //         querySnapshot.forEach(documentSnapshot => {
+  //             if(documentSnapshot.data().location.flag === locationData){
+  //                 setStores((prevState) => {
+  //                     return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
+  //                 })
+  //             }
+  //         })
+  //         setIsLoading(false)
+  //     })
+
+  //     return() => subscriber()
+  // }
 
   const ProfileElement = (props) =>{
     return(
@@ -116,7 +146,9 @@ const App = () => {
       <StatusBar barStyle="light-content" hidden={false} backgroundColor='#2C4770'/>
       <Drawer.Navigator 
           initialRouteName='Zaatar'
+          backBehavior='history'
           screenOptions={{
+            swipeEnabled:false,
             headerShown: true,
             drawerType:"front",
             drawerPosition:"left",
@@ -133,7 +165,7 @@ const App = () => {
               letterSpacing: 5,
               color:'white'
             },
-            drawerActiveBackgroundColor:'rgba(0,0,0,0.1)',
+            drawerActiveBackgroundColor:'rgba(0,0,0,0.2)',
             drawerStyle:{
               backgroundColor:'#E5EEFF', //#A3BFF6 , #DEE4EF, #BDD0F6
               width:230,
@@ -169,17 +201,12 @@ const App = () => {
               component={Zaatar}
               options={{
                 title:'زعتر',
-                // drawerIcon:({focused})=>(
-                //   <FontAwesomeIcons 
-                //       name='home'
-                //       color={focused ? '#2C4770' : '#2C4770'}
-                //       size={20}
-                //   />)
                 drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>
               }}/>
            <Drawer.Screen
             name="Stores"
             component={Stores}
+            initialParams={userInfo}
             options={{
               title:'صفحات تجارية',
               drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>

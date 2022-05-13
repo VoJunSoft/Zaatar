@@ -21,6 +21,7 @@ import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient'
+import {currencySymbols} from '../scripts/CurrencySymbols.json'
 
 const ProfileStore = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
@@ -177,7 +178,7 @@ const ProfileStore = (props) => {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index} />
+                    <ProductCard view='Default' item={item} key={index} currencySymbol={currencySymbols[userInfo.location.flag]}/>
                 )}/>
         }
         <Overlay isVisible={profileFormVisibility} 

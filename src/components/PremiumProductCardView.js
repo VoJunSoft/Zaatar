@@ -10,20 +10,21 @@ import {
 import Icon from '../elements/Icon'
 import DropShadow from "react-native-drop-shadow";
 
-const DiscountProductCardView = (props) => {
+const PremiumProductCardView = (props) => {
 
 return (
-    <SafeAreaView style={[styles.block]}>
+    <SafeAreaView style={styles.block}>
         <DropShadow style={{
-                        shadowColor: 'rgba(0,0,0,0.3)',
-                        shadowOffset: {width: -3, height: 5},
-                        shadowOpacity: 0.5,
-                        shadowRadius: 4,
+                        shadowColor: '#2C477055',
+                        shadowOffset: {width: -2, height: 2},
+                        shadowOpacity: 0.9,
+                        shadowRadius: 9,
                          }}>
         
-        <View style={[styles.cardBlock,{backgroundColor: '#34262f'}]}>
+        <View style={[styles.cardBlock,{backgroundColor: '#fff'}]}>
             <Text style={styles.title}>{props.productInfo.product_name}</Text> 
-            <View style={{
+            <Text style={[styles.body]}>{props.currencySymbol?props.currencySymbol:'💰'}{props.productInfo.price}</Text>
+            {/* <View style={{
                         width:'70%',
                         flexDirection:'row',
                         justifyContent:'space-between',
@@ -35,7 +36,7 @@ return (
                     iconName='discount20'
                     size={30}
                 />  
-            </View>
+            </View> */}
             <Image style={styles.img} source={{uri: props.productInfo.photos[0]}} />
         </View> 
         </DropShadow>   
@@ -46,8 +47,8 @@ return (
 const styles = StyleSheet.create({
 
     block:{
-      width:Dimensions.get('window').width/2.5,
-      margin:2,
+      width:Dimensions.get('window').width/3,
+      margin:3,
       marginBottom:10,
       alignSelf:'center',
     },
@@ -55,45 +56,37 @@ const styles = StyleSheet.create({
       width:'100%',
       flexDirection:'column',
       alignItems:'center',
-      marginTop:4,
+      marginTop:5,
       borderBottomRightRadius:90,
       borderBottomLeftRadius: 90,
       borderTopRightRadius:4,
       borderTopLeftRadius: 4,
-      paddingBottom:10,
-      paddingTop:30,
-      borderWidth:1,
-      borderColor:'rgba(0,0,0,0)'
+      padding:5
     },
     title: {
-      fontFamily:'Cairo-Regular',
-      fontSize: 17,
-      color:'white',
+      height:22,
+      fontFamily:'Cairo-Bold',
+      fontSize: 12,
+      color:'#171717',
+      textAlign:'center',
+      letterSpacing:0,
+      overflow:'visible'
     },
     body: {
         fontFamily:'GLA',
-        fontSize: 15,
-        color:'white',
+        fontSize: 13,
+        color:'#2C4770',
         marginTop:2
     },
-    imgBlock: {
-        width:'100%',
-        alignItems:'center',
-        alignSelf:'center',
-        marginTop:5,
-        padding:0,
-        borderRadius: 200,
-        borderWidth: 5
-      },
     img: {
-      height:140,
-      width:'90%',
+      height:125,
+      width:'100%',
       resizeMode:'cover',
       alignItems:'center',
       alignSelf:'center',
       borderRadius:200,
-      marginTop:15
+      marginTop:0
     }
     });
 
-export default DiscountProductCardView;
+export default PremiumProductCardView;

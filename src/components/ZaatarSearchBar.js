@@ -52,9 +52,11 @@ export default function ZaatarSearchBar(props) {
                         key={index}
                         titleRight={item}
                         horizontal={true}
-                        textStyle={styles.title}
+                        textStyle={[styles.title, {color: item === props.category ? '#fac300' : '#fff'}]}
                         containerStyle={[styles.CategoryContainer, {backgroundColor: item === props.category ? 'rgba(255,255,255,0.3)' : null}]}
-                        onPress={()=>props.setCategory(item)}/>
+                        onPress={()=>props.setCategory(item)}
+                        activeOpacity={0.2}
+                        />
                     ])
                  }
         </ScrollView>
@@ -65,13 +67,12 @@ export default function ZaatarSearchBar(props) {
 const styles = StyleSheet.create({
     container:{
         backgroundColor:'#2C4970',
-        marginBottom:10
+        //marginBottom:1
     },
     title:{
         fontFamily:'Cairo-Regular',
         fontSize: 14,
         textAlign:'center',
-        color:'#fff',
     },
     CategoryContainer:{
        //width:100,
@@ -83,10 +84,10 @@ const styles = StyleSheet.create({
         paddingRight: 25
     }, 
     dropShadow: {
-        shadowColor: '#fff',
-        shadowOffset: {width: -2, height: -2},
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
+        shadowColor: '#171717',
+        shadowOffset: {width: 0, height: 1.5},
+        shadowOpacity: 1,
+        shadowRadius: 1,
     },
     SubContainer:{
         backgroundColor:'#2C4970',

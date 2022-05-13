@@ -8,7 +8,7 @@ import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
 //import { handleTimeDifference } from '../scripts/Time';
 import TopProductCardView from './TopProductCardView'
-import DiscountProductCardView from './DiscountProductCardView'
+import PremiumProductCardView from './PremiumProductCardView'
 
 export default function ProductCard(props) {
     //products fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -66,10 +66,10 @@ export default function ProductCard(props) {
     const getView = (view) =>{
         //getView(props.view)
         switch(view){
-            case 'HeaderCards':
-                return <TopProductCardView productInfo={props.item}/>
-            case 'HangerCards':
-                return <DiscountProductCardView productInfo={props.item}/>
+            case 'BodyView':
+                return <TopProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
+            case 'PremiumView':
+                return <PremiumProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
             default:
               return <DefaultView />
         }
@@ -77,13 +77,17 @@ export default function ProductCard(props) {
 
     const DefaultView = () => {
         return(
-            <View style={{flex:1, backgroundColor:'#2C4770'}}>
+            <View style={{flex:1,backgroundColor:'#2C4770'}}>
                 <DropShadow style={styles.dropShadow}>
                     <Image style={styles.displayImg} source={productInfo.photos[0] ? {uri : productInfo.photos[0]} : require('../assets/gallary/Zaatar.png')} />
                 </DropShadow >
                 <View style={styles.subDefaultContainer}>    
                     <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text> 
-        { !props.deleteButtonVisibility ?<Text style={styles.price}> {props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text> :null}
+                    { !props.deleteButtonVisibility ?
+                        <Text style={styles.price}> {props.currencySymbol?props.currencySymbol:'💰'}{productInfo.price}</Text> 
+                        :
+                        null
+                    }
                 </View> 
             </View>
         )
@@ -91,12 +95,12 @@ export default function ProductCard(props) {
 
     const CardView = () => {
         return(
-            <TouchableOpacity   style={styles.ProductCardDefault} 
+            <TouchableOpacity   style={props.view === 'Default' || props.view === 'BodyView' ? styles.ProductCardDefault : styles.ProductCardHeader} 
                                 activeOpacity={0.7} 
                                 onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
                                 disabled={props.deleteButtonVisibility}>
-                <DefaultView/>
-                {/* {getView(props.view)} */}
+                {/* <DefaultView/> */}
+                {getView(props.view)}
                 { props.deleteButtonVisibility ?
                 <View style={{
                         width:'100%',
@@ -181,6 +185,11 @@ const styles = StyleSheet.create({
         width:'45%',
         //backgroundColor:'#2C4770',
         margin: 10,
+        borderRadius:13,
+        overflow:'hidden'
+    },
+    ProductCardHeader:{
+        margin: 1,
         borderRadius:13,
         overflow:'hidden'
     },

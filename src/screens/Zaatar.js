@@ -17,6 +17,7 @@ export default function Zaatar(props) {
     //products fields: productId ... {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
     // userInfo state: {id, name, first_name, picture, email, location, phone}
     const [products, setProducts] = useState([])
+    const [productsPremium, setProductsPremium] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     //const [userInfo, setInfoUser] = useState(props.route.params)
     let CountryName
@@ -34,14 +35,14 @@ export default function Zaatar(props) {
     const userLocation = () =>{
         try{    
             //get country name from navigation params: userInfo
-            //set currency symbol based on country flag TODO ::: get it based on currency code
+            //set currency symbol based on country flag (2-alphabets) NOTE currency symbol is based on on 3-alphabets
             setCurrencyAlphabet(currencySymbols[props.route.params.location.flag])
             console.log('PARAMS :', props.route.params, currencyAlphabet)
             return props.route.params.location.flag
         }catch(e){
             //in case of error return
             //get location using react-native-localize
-            //set currency symbol based on country flag TODO ::: get it based on currency code
+            //set currency symbol based on country flag 
             setCurrencyAlphabet(currencySymbols[RNLocalize.getCountry()])
             console.log('LOCALIZE :',RNLocalize.getCountry(), currencyAlphabet)
             return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
@@ -49,16 +50,24 @@ export default function Zaatar(props) {
     }
 
     const GetProductsByDate = () => {
-        //TODO ::: retrieve users' IDs within the same location [] and retrieve every product that has a matching seller.id 
         //This way we retrieve all products of all of the stores within the area.
         const subscriber = firestore()
             .collection('products')
             .orderBy('date_listed', 'asc')
             .onSnapshot(querySnapshot => {
                 setProducts([])
+                setProductsPremium([])
                 querySnapshot.forEach(documentSnapshot => {
+                    //TODO get stores within location (instead of products within location) and display their products
+                    //retrieve users' IDs within the same location [stores] and retrieve every product that has a matching seller.id 
                     if(documentSnapshot.data().seller.location.flag === CountryName || CountryName==='ALL'){
                         setProducts((prevState) => {
+                            return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+                        })
+                    }
+                    //TODO get premiium stores within location (instead of products within location) and display their products
+                    if(documentSnapshot.data().seller.email === 'elfahmawi@yahoo.com'){
+                        setProductsPremium((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
                     }
@@ -86,34 +95,49 @@ export default function Zaatar(props) {
 
     const [searchInput, setSearchInput] = useState("")
     const [category, setCategory] = useState('الكل')
-    const filterDataByCategory = (category) =>{
+    const filterDataByCategory = (data, category) =>{
         //TODO add search by location: item.seller.location.includes(searchInput)
         if(searchInput===''){
             if(category === 'الكل')
-                return products
+                return data
             else
-                return products.filter(item=> item.category === category)
+                return data.filter(item=> item.category === category)
         }else{
             if(category === 'الكل')            
-                return products.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) 
+                return data.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) 
             else
-                 return products.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) && item.category === category)
+                 return data.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) && item.category === category)
         }
     }
-
+    const PremiumProductsList = () =>{
+        return(
+            category === 'الكل' && searchInput==='' ?
+                <FlatList 
+                    data={productsPremium}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                    keyExtractor={item => item.productId}
+                    style={styles.ProductsPremiumList}
+                    renderItem={ ({item, index}) => (
+                        <ProductCard item={item} key={index} view='PremiumView' currencySymbol={currencyAlphabet}/>
+                    )}/>
+            :
+            null
+        )
+    }
     return (
         <SafeAreaView style={styles.container}>
+            <ZaatarSearchBar category={category} setCategory={setCategory} setSearchInput={setSearchInput} searchInput={searchInput}/>
             <FlatList 
-                data={filterDataByCategory(category)}
-                ListHeaderComponent={ <ZaatarSearchBar category={category} setCategory={setCategory} setSearchInput={setSearchInput} searchInput={searchInput}/>}
-                stickyHeaderIndices={[0]}
-                ListFooterComponent={filterDataByCategory(category).length === 0 ? $renderEmptyOrdersState : null}
+                data={filterDataByCategory(products, category)}
+                ListHeaderComponent={()=><PremiumProductsList/>}
+                ListFooterComponent={filterDataByCategory(products,category).length === 0 ? $renderEmptyOrdersState : null}
                 showsVerticalScrollIndicator={false}
                 numColumns={2}
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index} view='Default' currencySymbol={currencyAlphabet}/>
+                    <ProductCard item={item} key={index} view='BodyView' currencySymbol={currencyAlphabet}/>
                 )}
             />
         </SafeAreaView>
@@ -126,7 +150,10 @@ const styles = StyleSheet.create({
         //backgroundColor: '#FEEBDA'
     },
     ProductsList:{
-
+       // marginTop:0
+    },
+    ProductsPremiumList:{
+        //height:'30%'
     },
     loading: {
         color:'#2C4770', 

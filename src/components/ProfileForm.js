@@ -236,7 +236,7 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, email: value })}
                     {...props}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935 ' : '#AF0F02'}}>{userInfo.email.length}/25</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935' : '#AF0F02'}}>{userInfo.email.length}/25</Text>
 
                 <Input
                     placeholder="*******"
