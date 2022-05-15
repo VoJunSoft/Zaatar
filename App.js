@@ -65,7 +65,7 @@ const App = () => {
     // ]
   }, [])
 
-  const getData =  () => {
+  const getData =  async () => {
     try {
            AsyncStorage.getItem('userInfoZaatar')
            .then((value) => {
@@ -158,7 +158,7 @@ const App = () => {
             headerStyle:{
               backgroundColor: '#2C4770'
             },
-            headerTintColor:'white',
+            headerTintColor:'#fff',
             headerTitleStyle:{
               fontSize:22,
               fontFamily:'Cairo-Bold',
@@ -199,6 +199,7 @@ const App = () => {
           <Drawer.Screen
               name="Zaatar"
               component={Zaatar}
+              initialParams={userInfo}
               options={{
                 title:'زعتر',
                 drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>
@@ -272,7 +273,7 @@ const App = () => {
           <Drawer.Screen
             name="Settings"
             component={Settings}
-            initialParams={{user: isUser}}
+            initialParams={userInfo}
             options={{
               title:'اعدادات',
               drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>

@@ -12,32 +12,38 @@ import ZaatarSearchBar from '../components/ZaatarSearchBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as RNLocalize from "react-native-localize"
 import {currencySymbols} from "../scripts/CurrencySymbols.json"
+import { filterDataByCategory } from '../scripts/Search';
 
 export default function Zaatar(props) {
-    //products fields: productId ... {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
-    // userInfo state: {id, name, first_name, picture, email, location, phone}
-    const [products, setProducts] = useState([])
-    const [productsPremium, setProductsPremium] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
     //const [userInfo, setInfoUser] = useState(props.route.params)
-    let CountryName
+    // userInfo state: {id, name, picture, email, location:{country,code,flag,currency,city}, phone}
+    //products fields: productId ... {seller:{userInfo}, product_name, photos:[], descriptiom, category, price, date_listed}
+    const [products, setProducts] = useState([])
+    //search input and category for filtering data/products
+    const [searchInput, setSearchInput] = useState("")
+    const [category, setCategory] = useState('الكل')
+    //state for top list
+    //currently retrieving random categories
+    //TODO return premium products from premium stores
+    const [productsPremium, setProductsPremium] = useState([])
     //get location currency
     const [currencyAlphabet, setCurrencyAlphabet] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
+    let _CountryName
     useEffect(() => {
         //get user location
-        CountryName = userLocation()
+        _CountryName = userLocation()
         //get Data from asyncstorage on page load and store it to userInfo
         GetProductsByDate()
     },[])
 
-    
     // get userLocation & currency
     const userLocation = () =>{
         try{    
             //get country name from navigation params: userInfo
             //set currency symbol based on country flag (2-alphabets) NOTE currency symbol is based on on 3-alphabets
             setCurrencyAlphabet(currencySymbols[props.route.params.location.flag])
-            console.log('PARAMS :', props.route.params, currencyAlphabet)
+            console.log('PARAMS :', props.route.params.location.flag, currencyAlphabet)
             return props.route.params.location.flag
         }catch(e){
             //in case of error return
@@ -60,13 +66,13 @@ export default function Zaatar(props) {
                 querySnapshot.forEach(documentSnapshot => {
                     //TODO get stores within location (instead of products within location) and display their products
                     //retrieve users' IDs within the same location [stores] and retrieve every product that has a matching seller.id 
-                    if(documentSnapshot.data().seller.location.flag === CountryName || CountryName==='ALL'){
+                    if(documentSnapshot.data().seller.location.flag === _CountryName || _CountryName==='ALL'){
                         setProducts((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
                     }
                     //TODO get premiium stores within location (instead of products within location) and display their products
-                    if(documentSnapshot.data().seller.email === 'elfahmawi@yahoo.com'){
+                    if(documentSnapshot.data().seller.email === "elfahmawi@yahoo.com"){
                         setProductsPremium((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
@@ -74,7 +80,6 @@ export default function Zaatar(props) {
                 })
                 setIsLoading(false)
             })
-
             return() => subscriber()
     }
 
@@ -93,22 +98,6 @@ export default function Zaatar(props) {
         )
     }
 
-    const [searchInput, setSearchInput] = useState("")
-    const [category, setCategory] = useState('الكل')
-    const filterDataByCategory = (data, category) =>{
-        //TODO add search by location: item.seller.location.includes(searchInput)
-        if(searchInput===''){
-            if(category === 'الكل')
-                return data
-            else
-                return data.filter(item=> item.category === category)
-        }else{
-            if(category === 'الكل')            
-                return data.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) 
-            else
-                 return data.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) && item.category === category)
-        }
-    }
     const PremiumProductsList = () =>{
         return(
             category === 'الكل' && searchInput==='' ?
@@ -129,9 +118,9 @@ export default function Zaatar(props) {
         <SafeAreaView style={styles.container}>
             <ZaatarSearchBar category={category} setCategory={setCategory} setSearchInput={setSearchInput} searchInput={searchInput}/>
             <FlatList 
-                data={filterDataByCategory(products, category)}
+                data={filterDataByCategory(products, category, searchInput)}
                 ListHeaderComponent={()=><PremiumProductsList/>}
-                ListFooterComponent={filterDataByCategory(products,category).length === 0 ? $renderEmptyOrdersState : null}
+                ListFooterComponent={filterDataByCategory(products,category, searchInput).length === 0 ? $renderEmptyOrdersState : null}
                 showsVerticalScrollIndicator={false}
                 numColumns={2}
                 keyExtractor={item => item.productId}

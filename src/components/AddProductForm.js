@@ -46,7 +46,7 @@ export default function AddProductForm(props) {
     setErrMsg('')
     ImagePicker.openPicker({
       width: undefined,
-      height: undefined,
+      height: 400,
       multiple: true,
       //cropping: true,
     }).then((image) => {

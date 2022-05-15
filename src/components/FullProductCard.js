@@ -74,7 +74,7 @@ const FullProductCard = (props) => {
          <Buttons.ButtonDefault
                 titleRight={productInfo.seller.location.city} 
                 iconName="location"
-                iconSize={29}
+                iconSize={30}
                 horizontal={true}
                 textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#2C4770'}}
                 activeOpacity={0.9}
@@ -114,9 +114,9 @@ const FullProductCard = (props) => {
             null
           }
           <View style={styles.cardBlock}>
-              <Text style={styles.titleProductText}>{handleDate(productInfo.date_listed.seconds)}</Text>
-              <Text style={styles.titleProductText}>{props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text>
-              <Text style={styles.titleProductText}>{productInfo.product_name}</Text> 
+              <Text style={styles.subHeaderText}>{handleDate(productInfo.date_listed.seconds)}</Text>
+              <Text style={styles.subHeaderText}>{props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text>
+              <Text style={styles.subHeaderText}>{productInfo.product_name}</Text> 
           </View> 
 
           <View style={styles.infoBox}>
@@ -127,9 +127,9 @@ const FullProductCard = (props) => {
                       size={27}
                   />
               </View>
-              <Text style={[styles.body, {marginRight:25}]}>{productInfo.description}</Text>
+              <Text style={[styles.InfoBodyText, {marginRight:25}]}>{productInfo.description}</Text>
           </View>  
-          <Text style={{color: 'red', alignSelf:'center', fontSize:12, fontFamily:'Cairo-Regular'}}>{errMsg ? errMsg : null}</Text>
+          <Text style={{color: '#AF0F02', alignSelf:'center', fontSize:12, fontFamily:'Cairo-Regular'}}>{errMsg ? errMsg : null}</Text>
           <Buttons.ButtonDefault
                 titleLeft="تواصل معنا عبر WhatApp "
                 iconName="whats"
@@ -138,13 +138,12 @@ const FullProductCard = (props) => {
                 containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', margin: 5, padding: 5, alignSelf:'center'}}
                 textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 15, color: '#fff', marginRight:5}}
                 onPress={()=>{productInfo.seller.id === ownerId ? 
-                    setErrMsg('لا يمكنك الشراء من متجرك الخاص') 
+                    setErrMsg("لا يمكنك الشراء من متجرك الخاص") 
                     : 
                     shareToWhatsApp('+' + productInfo.seller.location.code + productInfo.seller.phone, productInfo.product_name, productInfo.description, productInfo.price)
                   }}
           /> 
-
-    </Animatable.View>
+      </Animatable.View>
     </ScrollView>
   </>
 )
@@ -174,12 +173,6 @@ const styles = StyleSheet.create({
     imgBlock:{
       backgroundColor:'#323232'
     },
-    titleProductText: {
-      fontFamily:'Cairo-Regular',
-      fontSize: 15,
-      textAlign: 'center',
-      color:'#2C4770',
-    },
     titleInfoText: {
       fontFamily:'Cairo-Bold',
       fontSize: 15,
@@ -192,15 +185,20 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       color:'#2C4770',
     },
-    body: {
+    InfoBodyText: {
       fontFamily:'Cairo-Regular',
       fontSize: 15,
       textAlign: 'right',
       color:'#171717',
       padding:2
     },
+    subHeaderText:{
+      fontFamily:'Cairo-Regular',
+      fontSize: 13,
+      color:'#171717'
+    },
     imgLarge: {
-      height:320,
+      height:380,
       width:'100%',
       resizeMode:'cover',
     },

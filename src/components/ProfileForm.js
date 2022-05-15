@@ -39,6 +39,7 @@ export default function ProfileForm(props) {
             AsyncStorage.setItem('userInfoZaatar', JSON.stringify(value))
             .then(()=>{
                 // Add a new document in collection "users" with ID if it does not exist
+                //NOTE user id is also stored as snapshot in users. 
                 firestore().collection('users').doc(userInfo.id).set(value)
                 .then(()=>{
                     //immediate update to profile info
@@ -128,7 +129,7 @@ export default function ProfileForm(props) {
 
       const uploadImage =  async () => {
         try {
-            if( image === null ) 
+            if(image === null) 
                 return null 
         
             if(image === props.userInfo.picture)

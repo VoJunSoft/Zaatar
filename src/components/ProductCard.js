@@ -139,7 +139,7 @@ export default function ProductCard(props) {
                 fullScreen={true}
                 overlayStyle={{
                     padding:0, 
-                    width:'94%',
+                    width:'96%',
                     height:'100%', 
                     borderRadius:0,
                 }}>
