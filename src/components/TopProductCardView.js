@@ -67,8 +67,7 @@ const styles = StyleSheet.create({
 
     container:{
       width:Dimensions.get('window').width/2.2,
-      height:200,
-      margin: 0,
+      height:180,
       flexDirection:'column',
       justifyContent:'space-between',
       resizeMode:'cover',
@@ -76,21 +75,23 @@ const styles = StyleSheet.create({
       backgroundColor: '#E5EEFF'
     },
     infoBlock: {
-      width:'96%',
-      height:50,
-      //flexDirection:'row',
-      //alignItems:'center',
-      //justifyContent:'flex-end',
+      width:'97%',
+      height:40,
+      flexDirection:'column',
+      alignItems:'center',
+      justifyContent:'center',
       alignSelf:'flex-end',
       backgroundColor: '#2C4770',
-      borderTopLeftRadius:70,
-      padding: 10
+      borderTopLeftRadius:50,
     },
     title: {
+      width:'100%',
       fontFamily:'Cairo-Regular',
       fontSize: 13,
       color:'#fff',
-      flexWrap:'nowrap'
+      flexWrap:'nowrap',
+      paddingRight: 10,
+      padding:5,
     },
     dropShadow:{
       shadowColor: 'rgba(0,0,0,0.5)',

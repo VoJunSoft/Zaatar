@@ -5,8 +5,8 @@ import {
 import Share from "react-native-share"
 
 //contact zaater's admin by whatsapp
-export const contactUsByWhatsapp = (title, phoneNumber) => {
-    let msg = 'زعتر - ' + title
+export const contactUsByWhatsapp = (phoneNumber) => {
+    let msg = 'زعتر - '
     Linking.openURL(`whatsapp://send?text=${msg}&phone=${phoneNumber}`)
 }
 

@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Image,
     Alert,
-    BackHandler,
+    SafeAreaView,
     View
  } from 'react-native'
 import Buttons from '../elements/Button'
@@ -14,16 +14,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {contactUsByWhatsapp, share} from '../scripts/Communication'
 import firestore from '@react-native-firebase/firestore'
 import { Input } from 'react-native-elements'
+import RNRestart from 'react-native-restart'
 
 const Settings = ({navigation, route}) => {
     const [userInfo, setUserInfo] = useState(route.params)
     const [errMsg, setErrMsg] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
-    console.log(userInfo)
+    //console.log(userInfo)
 
     const logOut = () =>{
         AsyncStorage.removeItem('userInfoZaatar')
         auth().signOut()
+        //restart app
+        RNRestart.Restart()
     }
 
     const handleLogOut = () => {
@@ -38,9 +41,6 @@ const Settings = ({navigation, route}) => {
                 text: "نعم", 
                 onPress: () =>{
                     logOut()
-                    //close app
-                    BackHandler.exitApp()
-                    //navigation.navigate('Entry')
                 }
               }
             ])
@@ -57,24 +57,28 @@ const Settings = ({navigation, route}) => {
               { 
                 text: "نعم", 
                 onPress: () =>{
-                    try{
+                  try{
+                        //TODO ::: FIX delete user from authentication
+                        auth().deleteUser(userInfo.id)
+                        //auth().currentUser.delete()
+                        
                         //delete products with seller.id
-                        firestore().collection('products').onSnapshot(records=>{
-                            records.forEach(record=>{
-                                if(record.data().seller.id === userInfo.id)
-                                    record.delete()
+                        firestore().collection('products').where('seller.id','==',userInfo.id).get()
+                        .then((querySnapshot)=>{
+                            querySnapshot.forEach((doc)=>{
+                                // For each doc, add a delete operation to the batch
+                                doc.delete()
                             })
                         })
+                        .catch((e)=>{
+                            console.log('delete records', e)
+                        })
+
                         //delete user from users database
-                        firestore().collection('users').doc(ruserInfo.id).delete()
-                        //remove user info from async
-                        AsyncStorage.removeItem('userInfoZaatar')
-                        //delete user from authentication
-                        auth().deleteUser(userInfo.id)
-                        //popcorn
-                        auth().signOut()
+                        firestore().collection('users').doc(userInfo.id).delete().then(()=>{})
+
                         //close app
-                        //BackHandler.exitApp()
+                        logOut()
                     }catch(e){
                         //setError msg
                         Alert.alert('الرجاء معاودة المحاولة في وقت لاحق')
@@ -84,19 +88,18 @@ const Settings = ({navigation, route}) => {
             ])
     }
 
+    // email and password input. 
     const [creditsInput, setCreditsInput] = useState({email: route.params ? userInfo.email : '', password:''})
     const [creditsVisibility, setCreditsVisibility] = useState(false)
     const UpdateCreditentials = () =>{
         setErrMsg('')
         setSuccessMsg('')
         try{
-            if(
-                //creditsInput.password.length >=7 && 
-                $VerifyEmail(creditsInput.email)){
+            if(creditsInput.password.length >=7 && $VerifyEmail(creditsInput.email)){
                     //update email
-                    auth().currentUser.UpdateCreditentials(creditsInput.email)
+                    auth().currentUser.updateEmail(creditsInput.email).then(()=>{}).catch((e)=>{console.log('Email: ', e)})
                     //update password
-                    auth().currentUser.updatePassword(creditsInput.password)
+                    auth().currentUser.updatePassword(creditsInput.password).then(()=>{}).catch((e)=>{console.log('Password', e)})
                     //update users database 
                     firestore().collection('users').doc(userInfo.id).update({'email': creditsInput.email})
                     //update userInfo && async storage
@@ -118,13 +121,12 @@ const Settings = ({navigation, route}) => {
     }
 
     return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.container} showsVerticalScrollIndicator={false}>
         <Text style={styles.Zaatar}>زعتر</Text>
         <Text style={styles.title}> تم إنشاء هذا التطبيق من أجل ربط البائعين من أماكن مختلفة في جميع أنحاء البلاد. </Text>
         <Text style={styles.title}> تتيح لك هذه المنصة سرد المنتجات التي ترغب في بيعها أو التواصل مع البائعين الذين لديهم منتجات تهمك.</Text>
         {/* <Text style={styles.title}>يمكن أن تكون المنتجات: يدوية الصنع أو مستعملة أو فنية أو أثرية أو مقتنيات أو حتى ورشة عمل أو نوع معين من الخدمات.</Text> */}
         <Text style={styles.title}>نحن لسنا مسؤولين عن أي متجر أو منشور على هذه المنصة.</Text>
-
     
 
         <Buttons.ButtonDefault
@@ -188,7 +190,7 @@ const Settings = ({navigation, route}) => {
                 iconSize={35}
                 containerStyle={styles.button}
                 textStyle={styles.ButtonText}
-                onPress={()=>contactUsByWhatsapp('+972527919300')}/>
+                onPress={()=>contactUsByWhatsapp('+9720527919300')}/>
         <Buttons.ButtonDefault
                 titleLeft="مشاركه"
                 iconName="share"
@@ -211,18 +213,21 @@ const Settings = ({navigation, route}) => {
                         iconSize={35}
                         containerStyle={[styles.button,{marginBottom:25}]}
                         textStyle={styles.ButtonText}
-                        onPress={()=>DeleteAccount()}/>
+                        onPress={()=>DeleteAccount()}
+                        disabled/>
             </>
         : 
             null
         }
-    </ScrollView>
+    </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
         flex:1,
+        flexDirection:'column',
+        justifyContent:'space-evenly',
        // backgroundColor: '#2C4770',
         paddingTop: 10,
     },
@@ -253,7 +258,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#2C4770',
         alignSelf:'flex-end',
         marginTop:10,
-        paddingRight:8
+        paddingRight:10,
+        marginRight:-5
     },
     ButtonText: {
         fontFamily: 'Cairo-Regular' ,
@@ -262,8 +268,8 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
     creditsBlock:{
-        width:'90%',
-        alignSelf:'flex-end',
+        width:'95%',
+        alignSelf:'center',
         borderWidth:1,
         padding:5,
         margin:10,

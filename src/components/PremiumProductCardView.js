@@ -8,7 +8,8 @@ import {
     Dimensions 
 } from 'react-native'
 import Icon from '../elements/Icon'
-import DropShadow from "react-native-drop-shadow";
+import DropShadow from "react-native-drop-shadow"
+import FastImage from 'react-native-fast-image'
 
 const PremiumProductCardView = (props) => {
 
@@ -37,7 +38,11 @@ return (
                     size={30}
                 />  
             </View> */}
-            <Image style={styles.img} source={{uri: props.productInfo.photos[0]}} />
+            <FastImage  style={styles.img} 
+                        source={{uri: props.productInfo.photos[0]}} 
+                        defaultSource={require('../assets/gallary/Zaatar.png')}
+                        resizeMode={FastImage.resizeMode.cover}
+                        />
         </View> 
         </DropShadow>   
     </SafeAreaView>
@@ -81,7 +86,6 @@ const styles = StyleSheet.create({
     img: {
       height:125,
       width:'100%',
-      resizeMode:'cover',
       alignItems:'center',
       alignSelf:'center',
       borderRadius:200,

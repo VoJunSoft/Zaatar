@@ -72,11 +72,11 @@ export default function Zaatar(props) {
                         })
                     }
                     //TODO get premiium stores within location (instead of products within location) and display their products
-                    if(documentSnapshot.data().seller.email === "elfahmawi@yahoo.com"){
-                        setProductsPremium((prevState) => {
-                            return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
-                        })
-                    }
+                    // if(documentSnapshot.data().seller.email === "elfahmawi@yahoo.com"){
+                    //     setProductsPremium((prevState) => {
+                    //         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
+                    //     })
+                    // }
                 })
                 setIsLoading(false)
             })
@@ -102,7 +102,7 @@ export default function Zaatar(props) {
         return(
             category === 'الكل' && searchInput==='' ?
                 <FlatList 
-                    data={productsPremium}
+                    data={filterDataByCategory(products, 'الكل', 'فحماوي')}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}
                     keyExtractor={item => item.productId}

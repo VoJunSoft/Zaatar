@@ -25,6 +25,7 @@
         "react-native-country-picker-modal": "^2.0.0",
         "react-native-drop-shadow": "0.0.4",
         "react-native-elements": "^3.4.2",
+        "react-native-fast-image": "^8.5.11",
         "react-native-gesture-handler": "^2.4.2",
         "react-native-image-crop-picker": "^0.37.3",
         "react-native-linear-gradient": "^2.5.6",

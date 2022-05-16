@@ -19,6 +19,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Animatable from 'react-native-animatable';
 import {handleDate, handleTimeDifference} from '../scripts/Time'
 import {shareToWhatsApp} from '../scripts/Communication'
+import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient'
 
 const FullProductCard = (props) => {
     const navigation = useNavigation()
@@ -96,7 +98,14 @@ const FullProductCard = (props) => {
           iterationCount={1}
           duration={2000}
           direction="normal">
-          <Image style={styles.imgLarge} source={{uri: productInfo.photos[imgIndex]}} /> 
+          <LinearGradient 
+              colors={['#9D9D9D','#FFFFFF','#FFFFFF','#9D9D9D','#9D9D9D']}  
+              style={styles.largeImgBlock}>
+                    <FastImage style={styles.imgLarge} 
+                          source={{uri: productInfo.photos[imgIndex],  priority: FastImage.priority.high}} 
+                          resizeMode={FastImage.resizeMode.cover}/> 
+          </LinearGradient>
+
           {props.productInfo.photos.length > 0 ?
             <ScrollView style={styles.imgBlock} horizontal={true}>
               {
@@ -105,7 +114,13 @@ const FullProductCard = (props) => {
                           key={index}
                           onPress={() => setImageIndex(index)} 
                           style={{margin:0}}>
-                              <Image style={[styles.imgSmall,{borderColor: imgIndex===index ? '#fac300' : null }]} source={{uri: item}} />  
+                              <FastImage 
+                                  style={[
+                                      styles.imgSmall,
+                                      {borderColor: imgIndex===index ? '#fac300' : null, borderWidth: imgIndex===index ? 4: 2 }
+                                  ]} 
+                                  source={{uri: item}} 
+                                  resizeMode={FastImage.resizeMode.cover}/>  
                       </Pressable>
                   ))
               }
@@ -113,11 +128,16 @@ const FullProductCard = (props) => {
             :
             null
           }
-          <View style={styles.cardBlock}>
-              <Text style={styles.subHeaderText}>{handleDate(productInfo.date_listed.seconds)}</Text>
-              <Text style={styles.subHeaderText}>{props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text>
-              <Text style={styles.subHeaderText}>{productInfo.product_name}</Text> 
-          </View> 
+
+          <LinearGradient 
+                //start={{x: 0, y: 0}} 
+                //end={{x: 1, y: 0}}
+                colors={[ '#ffffff50', '#ffffff','#B2B2B2']} 
+                style={styles.cardBlock}>
+                <Text style={styles.subHeaderText}>{handleDate(productInfo.date_listed.seconds)}</Text>
+                <Text style={styles.subHeaderText}>{props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text>
+                <Text style={styles.subHeaderText}>{productInfo.product_name}</Text> 
+            </LinearGradient>
 
           <View style={styles.infoBox}>
               <View style={{flexDirection:'row', justifyContent:'flex-end', alignItems:'center'}}>
@@ -155,12 +175,14 @@ const styles = StyleSheet.create({
       backgroundColor:'rgba(255,255,255,1)'
     },
     cardBlock: {
-      backgroundColor:'rgba(0,0,0,0.2)',
       width:'100%',
       flexDirection:'row',
       justifyContent:'space-between',
       alignItems:'baseline',
       padding:5
+    },
+    largeImgBlock:{
+      width:'100%'
     },
     ProfileHeader:{
         backgroundColor:'rgba(255,255,255,1)',
@@ -198,15 +220,13 @@ const styles = StyleSheet.create({
       color:'#171717'
     },
     imgLarge: {
-      height:380,
-      width:'100%',
-      resizeMode:'cover',
+      height:370,
+      width:'100%'
     },
     imgSmall: {
       height:120,
       width:Dimensions.get('window').width/3,
       resizeMode:'cover',
-      borderWidth:4,
     },
     infoBox:{
       padding: 5,

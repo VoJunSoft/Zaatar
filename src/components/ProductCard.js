@@ -77,7 +77,7 @@ export default function ProductCard(props) {
 
     const DefaultView = () => {
         return(
-            <View style={{flex:1,backgroundColor:'#2C4770'}}>
+            <View style={{flex:1, backgroundColor:'#2C4770'}}>
                 <DropShadow style={styles.dropShadow}>
                     <Image style={styles.displayImg} source={productInfo.photos[0] ? {uri : productInfo.photos[0]} : require('../assets/gallary/Zaatar.png')} />
                 </DropShadow >
@@ -95,7 +95,7 @@ export default function ProductCard(props) {
 
     const CardView = () => {
         return(
-            <TouchableOpacity   style={props.view === 'Default' || props.view === 'BodyView' ? styles.ProductCardDefault : styles.ProductCardHeader} 
+            <TouchableOpacity   style={props.view !== 'PremiumView'? styles.ProductCardDefault : styles.ProductCardHeader} 
                                 activeOpacity={0.7} 
                                 onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
                                 disabled={props.deleteButtonVisibility}>
@@ -139,7 +139,7 @@ export default function ProductCard(props) {
                 fullScreen={true}
                 overlayStyle={{
                     padding:0, 
-                    width:'96%',
+                    width:'95%',
                     height:'100%', 
                     borderRadius:0,
                 }}>
