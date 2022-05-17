@@ -85,7 +85,7 @@ const Profile = (props) => {
                             letterSpacing:3,
                         }}
                         textStyle={{
-                            fontFamily: 'Cairo-Bold',
+                            fontFamily: 'Cairo-Regular',
                             color:'#fff',
                             fontSize:18,
                             marginRight:5,
@@ -103,7 +103,7 @@ const Profile = (props) => {
                         textStyle={{
                             fontFamily: 'Cairo-Regular',
                             color:'#fff',
-                            fontSize:18,
+                            fontSize:15,
                             letterSpacing:3,
                             marginRight:10,
 
@@ -122,8 +122,7 @@ const Profile = (props) => {
                         textStyle={{
                             fontFamily: 'Cairo-Regular',
                             color:'#fff',
-                            fontSize:18,
-                            letterSpacing:2,
+                            fontSize:15,
                             marginRight:10
                         }}
                         disabled/>

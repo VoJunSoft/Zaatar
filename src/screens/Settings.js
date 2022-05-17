@@ -61,7 +61,7 @@ const Settings = ({navigation, route}) => {
                         //TODO ::: FIX delete user from authentication
                         auth().deleteUser(userInfo.id)
                         //auth().currentUser.delete()
-                        
+
                         //delete products with seller.id
                         firestore().collection('products').where('seller.id','==',userInfo.id).get()
                         .then((querySnapshot)=>{
@@ -190,7 +190,7 @@ const Settings = ({navigation, route}) => {
                 iconSize={35}
                 containerStyle={styles.button}
                 textStyle={styles.ButtonText}
-                onPress={()=>contactUsByWhatsapp('+9720527919300')}/>
+                onPress={()=>contactUsByWhatsapp("سوق المبيعات", '+9720527919300')}/>
         <Buttons.ButtonDefault
                 titleLeft="مشاركه"
                 iconName="share"

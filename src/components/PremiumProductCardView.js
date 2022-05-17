@@ -25,19 +25,6 @@ return (
         <View style={[styles.cardBlock,{backgroundColor: '#fff'}]}>
             <Text style={styles.title}>{props.productInfo.product_name}</Text> 
             <Text style={[styles.body]}>{props.currencySymbol?props.currencySymbol:'💰'}{props.productInfo.price}</Text>
-            {/* <View style={{
-                        width:'70%',
-                        flexDirection:'row',
-                        justifyContent:'space-between',
-                        alignItems:'center'
-                    }}>
-                <Text style={[styles.body]}>₪{props.productInfo.price}</Text>
-                <Text style={[styles.body, {textDecorationLine:'line-through', opacity: 0.5}]}>{Math.round(props.productInfo.price*1.2)}</Text> 
-                <Icon 
-                    iconName='discount20'
-                    size={30}
-                />  
-            </View> */}
             <FastImage  style={styles.img} 
                         source={{uri: props.productInfo.photos[0]}} 
                         defaultSource={require('../assets/gallary/Zaatar.png')}

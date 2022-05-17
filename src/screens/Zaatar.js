@@ -29,10 +29,10 @@ export default function Zaatar(props) {
     //get location currency
     const [currencyAlphabet, setCurrencyAlphabet] = useState('')
     const [isLoading, setIsLoading] = useState(true)
-    let _CountryName
+    let _CountryFlagCode
     useEffect(() => {
         //get user location
-        _CountryName = userLocation()
+        _CountryFlagCode = userLocation()
         //get Data from asyncstorage on page load and store it to userInfo
         GetProductsByDate()
     },[])
@@ -56,6 +56,7 @@ export default function Zaatar(props) {
     }
 
     const GetProductsByDate = () => {
+        setIsLoading(true)
         //This way we retrieve all products of all of the stores within the area.
         const subscriber = firestore()
             .collection('products')
@@ -66,17 +67,11 @@ export default function Zaatar(props) {
                 querySnapshot.forEach(documentSnapshot => {
                     //TODO get stores within location (instead of products within location) and display their products
                     //retrieve users' IDs within the same location [stores] and retrieve every product that has a matching seller.id 
-                    if(documentSnapshot.data().seller.location.flag === _CountryName || _CountryName==='ALL'){
+                    if(documentSnapshot.data().seller.location.flag === _CountryFlagCode || _CountryFlagCode==='ALL'){
                         setProducts((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
                     }
-                    //TODO get premiium stores within location (instead of products within location) and display their products
-                    // if(documentSnapshot.data().seller.email === "elfahmawi@yahoo.com"){
-                    //     setProductsPremium((prevState) => {
-                    //         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
-                    //     })
-                    // }
                 })
                 setIsLoading(false)
             })
@@ -100,9 +95,9 @@ export default function Zaatar(props) {
 
     const PremiumProductsList = () =>{
         return(
-            category === 'الكل' && searchInput==='' ?
+             searchInput==='' ?
                 <FlatList 
-                    data={filterDataByCategory(products, 'الكل', 'فحماوي')}
+                    data={filterDataByCategory(products, 'الكل', 'الفحماوي')}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}
                     keyExtractor={item => item.productId}
@@ -146,7 +141,7 @@ const styles = StyleSheet.create({
     },
     loading: {
         color:'#2C4770', 
-        fontFamily:'Cairo-Bold', 
+        fontFamily:'Cairo-Regular', 
         fontSize: 15,
         alignSelf:'center',
         marginTop:100,

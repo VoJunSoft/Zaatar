@@ -4,7 +4,6 @@ import Buttons from "../elements/Button"
 import DropShadow from "react-native-drop-shadow";
 
 export default function ZaatarSearchBar(props) {
-
     const $Categories = [
                         'الكل'
                         , "سيارات"

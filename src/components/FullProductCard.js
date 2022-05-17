@@ -73,22 +73,21 @@ const FullProductCard = (props) => {
         style={styles.ProfileHeader} 
         activeOpacity={0.7} 
         onPress={GoToSellerProfile}>
-         <Buttons.ButtonDefault
-                titleRight={productInfo.seller.location.city} 
-                iconName="location"
-                iconSize={30}
-                horizontal={true}
-                textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#2C4770'}}
-                activeOpacity={0.9}
-                disabled/> 
-        <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
-        <Avatar
-              size={60}
-              rounded
-              source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/p1.png') }
-              icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-              containerStyle={{ backgroundColor: '#fff', marginLeft:10, borderWidth:1}}
-          />
+          <Buttons.ButtonDefault
+                  titleRight={productInfo.seller.location.city} 
+                  iconName="location"
+                  iconSize={30}
+                  horizontal={true}
+                  textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#2C4770'}}
+                  activeOpacity={0.9}
+                  disabled/> 
+          <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
+          <Avatar
+                size={60}
+                rounded
+                source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/p1.png') }
+                icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
+                containerStyle={{ backgroundColor: '#fff', marginLeft:10, borderWidth:1}}/>
     </TouchableOpacity>  
    
     <ScrollView style={[styles.block]}>
@@ -99,11 +98,12 @@ const FullProductCard = (props) => {
           duration={2000}
           direction="normal">
           <LinearGradient 
-              colors={['#9D9D9D','#FFFFFF','#FFFFFF','#9D9D9D','#9D9D9D']}  
+              start={{x:1,y:0}}
+              colors={[ '#B2B2B2','#FFFFFF', '#9D9D9D','#FFFFFF','#9D9D9D','#FFFFFF','#B2B2B2']}  
               style={styles.largeImgBlock}>
                     <FastImage style={styles.imgLarge} 
                           source={{uri: productInfo.photos[imgIndex],  priority: FastImage.priority.high}} 
-                          resizeMode={FastImage.resizeMode.cover}/> 
+                          resizeMode={FastImage.resizeMode.contain}/> 
           </LinearGradient>
 
           {props.productInfo.photos.length > 0 ?
@@ -130,8 +130,6 @@ const FullProductCard = (props) => {
           }
 
           <LinearGradient 
-                //start={{x: 0, y: 0}} 
-                //end={{x: 1, y: 0}}
                 colors={[ '#ffffff50', '#ffffff','#B2B2B2']} 
                 style={styles.cardBlock}>
                 <Text style={styles.subHeaderText}>{handleDate(productInfo.date_listed.seconds)}</Text>
@@ -155,7 +153,7 @@ const FullProductCard = (props) => {
                 iconName="whats"
                 iconSize={30}
                 horizontal={false}
-                containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', margin: 5, padding: 5, alignSelf:'center'}}
+                containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', backgroundColor: '#2C4770', marginBottom: 5, padding: 3, alignSelf:'center'}}
                 textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 15, color: '#fff', marginRight:5}}
                 onPress={()=>{productInfo.seller.id === ownerId ? 
                     setErrMsg("لا يمكنك الشراء من متجرك الخاص") 
@@ -185,7 +183,6 @@ const styles = StyleSheet.create({
       width:'100%'
     },
     ProfileHeader:{
-        backgroundColor:'rgba(255,255,255,1)',
         width:'100%',
         flexDirection:'row',
         justifyContent:'space-between',
@@ -220,7 +217,7 @@ const styles = StyleSheet.create({
       color:'#171717'
     },
     imgLarge: {
-      height:370,
+      height:380,
       width:'100%'
     },
     imgSmall: {
@@ -229,9 +226,8 @@ const styles = StyleSheet.create({
       resizeMode:'cover',
     },
     infoBox:{
-      padding: 5,
+      paddingRight: 5,
       marginTop:5,
-      //backgroundColor:'yellow'
     },
     });
 

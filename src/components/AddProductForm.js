@@ -46,7 +46,7 @@ export default function AddProductForm(props) {
     setErrMsg('')
     ImagePicker.openPicker({
       width: undefined,
-      height: 400,
+      height: undefined,
       multiple: true,
       //cropping: true,
     }).then((image) => {
@@ -294,10 +294,10 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'45%',
                     justifyContent:'center',
-                    padding: 4
+                    padding: 5
                 }}
                 textStyle={{ 
-                    fontSize: 18, 
+                    fontSize: 16, 
                     color:'#fff',
                     fontFamily:'Cairo-Regular'
                 }}
@@ -311,10 +311,10 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'45%',
                     justifyContent:'center',
-                    padding: 4
+                    padding: 5
                 }}
                 textStyle={{ 
-                    fontSize: 18, 
+                    fontSize: 16, 
                     color:'#fff',
                     fontFamily:'Cairo-Regular'
                 }}
@@ -328,10 +328,10 @@ export default function AddProductForm(props) {
                     backgroundColor: '#2C4770',
                     width:'50%',
                     justifyContent:'center',
-                    padding: 4
+                    padding: 5
                 }}
                 textStyle={{ 
-                    fontSize: 18, 
+                    fontSize: 16, 
                     color:'#fff',
                     fontFamily:'Cairo-Regular'
                 }}

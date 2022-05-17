@@ -21,6 +21,7 @@ import storage from '@react-native-firebase/storage'
 import {useNavigation} from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
+import LinearGradient from 'react-native-linear-gradient'
 //import * as RNLocalize from "react-native-localize"
 
 export default function ProfileForm(props) {
@@ -94,11 +95,11 @@ export default function ProfileForm(props) {
                 && userInfo.location.city.length >=4 ){
                 
                 setIsloading(true)
-                const imageUri = await uploadImage()
                 if(props.Registration === true){
                     //create authenticated user && save to database && save to async
-                    registerUser({...userInfo, picture:imageUri})
+                    registerUser(userInfo)
                 }else{
+                    const imageUri = await uploadImage(userInfo.id)
                     //store data into async & database
                     storeData({...userInfo, picture:imageUri})
                 }
@@ -127,7 +128,7 @@ export default function ProfileForm(props) {
         })
       }
 
-      const uploadImage =  async () => {
+      const uploadImage =  async (idx) => {
         try {
             if(image === null) 
                 return null 
@@ -142,7 +143,7 @@ export default function ProfileForm(props) {
             const extension = filename.split('.').pop(); 
             const name = filename.split('.').slice(0, -1).join('.');
             filename = name + Date.now() + '.' + extension;
-            const storageRef = storage().ref(`users/${filename}`);
+            const storageRef = storage().ref(`users/${idx}/${filename}`);
             const task = storageRef.putFile(uploadUri);
            
             await task;
@@ -181,63 +182,70 @@ export default function ProfileForm(props) {
     return (
         <View style={styles.container}>
             {!props.Registration? 
-             <TouchableOpacity onPress={()=>props.setProfileFormVisibility(false)} 
-                          style={{backgroundColor: '#2C4770', width:'100%'}}
-                          activeOpacity={0.7}>
-                <Text style={{
-                    color:'#fff',
-                    fontSize:27,
-                    textAlign:'center'
-                }}> 
-                ⓧ
-                </Text>
-            </TouchableOpacity>
-            : null}
+                <TouchableOpacity onPress={()=>props.setProfileFormVisibility(false)} 
+                            style={{backgroundColor: '#2C4770', width:'100%'}}
+                            activeOpacity={0.95}>
+                    <Text style={{
+                        color:'#fff',
+                        fontSize:25,
+                        textAlign:'center'
+                    }}> 
+                    ⓧ
+                    </Text>
+                </TouchableOpacity>
+                :
+                null
+            }
+
             <ScrollView style={styles.userInfo} showsVerticalScrollIndicator={false}>
-                { image ? 
-                    <Avatar
+                <LinearGradient 
+                    colors={['#2C4770','#FFFFFF']}  
+                    style={{flexDirection:'column', height:'22%', width:'100%', alignItems:'baseline', borderWidth:0}}>
+                        <Text style={styles.title}>{props.Registration ? "تسجيل صفحه تجاريه" : "تعديل التفاصيل"}</Text>
+                        <Avatar
                         size={150}
                         rounded
-                        source={{uri: image}}
-                        icon={{ name: 'photo', type: 'font-awesome' }}
-                        containerStyle={{ backgroundColor: '#2C4770' , alignSelf:'center', margin:5}}
-                        onPress={()=>choosePhotoFromLibrary()}/>
-                :
-                    <Buttons.ButtonDefault
-                        titleRight='تحميل الصورة'
-                        iconName="photo"
-                        iconSize={100}
-                        horizontal={true}
-                        containerStyle={{ justifyContent:'center', borderRadius: 5, width:'90%', alignSelf:'center', padding: 7, margin: 10}}
-                        textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 15, color: '#2C4770'}}
-                        iconContainer={{backgroundColor: '#2C4770', borderRadius:100, padding:10}}
-                        onPress={()=>choosePhotoFromLibrary()}/>
-                }
+                        source={image ? {uri: image} : require("../assets/gallary/p1.png")}
+                        icon={{ name: 'user', type: 'font-awesome', color:'#2C4770' }}
+                        containerStyle={{ backgroundColor: '#FFFFFF' , alignSelf:'center', borderWidth:2, borderColor:'#2C4770'}}
+                        onPress={()=>{props.Registration ? null : choosePhotoFromLibrary()}}
+                        activeOpacity={0.95}/>
+                        {!props.Registration ?
+                            <Badge
+                                status={image ? "success" : "error"}
+                                value={"+"}
+                                containerStyle={{ position: 'absolute', bottom:-20, alignSelf:'center'}}
+                                textStyle={{fontSize:10, fontWeight:'bold'}} />
+                            :
+                            null
+                        }
+
+                </LinearGradient>
                 <Input
                     placeholder="khaled e.g."
                     value={userInfo.name}
                     label="الاسم"
-                    maxLength={15}
+                    maxLength={19}
                     rightIcon={{ type: 'font-awesome', name: 'user' }}
                     inputContainerStyle={{paddingRight:0}}
-                    containerStyle={{}}
+                    containerStyle={styles.TextInput}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     autoCompleteType
                     onChangeText={value => setUserInfo({...userInfo, name: value })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.name.length}/15</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.name.length}/17</Text>
 
                 <Input
                     placeholder="khaled@junglesoft.com"
                     label="البريد الالكتروني"
                     value={userInfo.email}
-                    maxLength={25}
+                    maxLength={30}
                     rightIcon={{ type: 'font-awesome', name: 'envelope' }}
                     inputContainerStyle={{paddingRight:0}}
-                    containerStyle={{borderWidth:0}}
+                    containerStyle={styles.TextInput}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setUserInfo({...userInfo, email: value })}
                     {...props}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935' : '#AF0F02'}}>{userInfo.email.length}/25</Text>
+                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935' : '#AF0F02'}}>{userInfo.email.length}/30</Text>
 
                 <Input
                     placeholder="*******"
@@ -247,7 +255,7 @@ export default function ProfileForm(props) {
                     maxLength={20}
                     rightIcon={{ type: 'font-awesome', name: 'key' }}
                     inputContainerStyle={{paddingRight:0}}
-                    containerStyle={{borderWidth:0}}
+                    containerStyle={styles.TextInput}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setPass(value)}
                     {...props}/> 
@@ -276,7 +284,7 @@ export default function ProfileForm(props) {
                      <Badge
                         status={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "success" : "error"}
                         value={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "✓" : "✘"}
-                        containerStyle={{ position: 'absolute', bottom: 10, left: 15}}
+                        containerStyle={{ position: 'absolute', bottom: 5, left: 20}}
                         textStyle={{fontSize:10}} />
                 </View>
 
@@ -288,6 +296,7 @@ export default function ProfileForm(props) {
                     maxLength={15}
                     inputContainerStyle={{ alignSelf:'flex-end'}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
+                    containerStyle={styles.TextInput}
                     autoCompleteType
                     onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/>
                 <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.city.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.location.city.length}/15</Text>
@@ -299,8 +308,8 @@ export default function ProfileForm(props) {
                 <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Buttons.ButtonDefault
                     titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 7, margin: 10}}
-                    textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 18, color: '#fff'}}
+                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5, margin: 10}}
+                    textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 17, color: '#fff'}}
                     onPress={SaveUserInfo}/>
                 </View>
             </ScrollView>
@@ -311,10 +320,8 @@ export default function ProfileForm(props) {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        //backgroundColor: '#2C4770',
         backgroundColor: '#fff',
         alignItems:'center',
-        borderRadius: 10,
     },
     dropShadow:{
         shadowColor: '#323232',
@@ -322,32 +329,19 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.7,
         shadowRadius: 1,
     },
-    dropShadowImg:{
-        shadowColor: '#2C4770',
-        shadowOffset: {width: -2, height: 3},
-        shadowOpacity: 0.7,
-        shadowRadius: 3,
-    },
-    profileBox: {
-        width: Dimensions.get('window').width - 35,
-        height: Dimensions.get('window').height - 180,
-        alignSelf:'center',
-        backgroundColor:'white',
-        marginBottom:20,
-    },
     image:{
         alignSelf:'center',
         marginTop:15
     },
     userInfo:{
         flex:1,
-        width: '90%',
-        alignSelf: 'center',
+        width: '100%',
     },
     flexInput:{
         flexDirection:'row',
-        justifyContent:'space-between',
+        justifyContent:'space-around',
         alignItems:'center',
+        marginTop: -5
     },
     countryCode:{
         fontSize:15,
@@ -357,10 +351,21 @@ const styles = StyleSheet.create({
     },
     countryCodeBox:{
         flexDirection:'row', 
-        width: '38%', 
+        width: '35%', 
         alignItems:'center', 
         borderWidth:0.3,
-        borderRadius:15,
+        borderRadius:5,
         overflow:'hidden',
+        marginLeft:7
+    },
+    TextInput:{
+        marginTop:-6,
+    },
+    title:{
+        fontFamily:'Cairo-Regular',
+        alignSelf:'center',
+        fontSize:16,
+        color:'#FFFFFF',
+        marginTop:3
     }
 })

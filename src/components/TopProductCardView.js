@@ -17,10 +17,6 @@ return (
         <ImageBackground style={styles.container} source={{uri: props.productInfo.photos[0]}}>
            <View style={{width:'100%', flexDirection:'row', justifyContent:'space-between'}} >
               <Buttons.ButtonWithShadow 
-                      // titleRight={props.productInfo.seller.location.city}
-                      // iconName="location"
-                      // iconSize={10}
-                      // horizontal
                       containerStyle={{
                           width:10,
                           height:70,
