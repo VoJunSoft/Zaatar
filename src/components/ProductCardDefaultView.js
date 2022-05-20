@@ -11,7 +11,7 @@ import {
 import DropShadow from "react-native-drop-shadow";
 import Buttons from '../elements/Button'
 
-const TopProductCardView = (props) => {
+const ProductCardDefaultView = (props) => {
 
 return (
         <ImageBackground style={styles.container} source={{uri: props.productInfo.photos[0]}}>
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   }
     });
 
-export default TopProductCardView;
+export default ProductCardDefaultView;

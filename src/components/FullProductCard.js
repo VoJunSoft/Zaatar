@@ -87,7 +87,7 @@ const FullProductCard = (props) => {
                 rounded
                 source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/p1.png') }
                 icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-                containerStyle={{ backgroundColor: '#fff', marginLeft:10, borderWidth:1}}/>
+                containerStyle={{ backgroundColor: '#FFFFFF', marginLeft:10, borderWidth:1}}/>
     </TouchableOpacity>  
    
     <ScrollView style={[styles.block]}>

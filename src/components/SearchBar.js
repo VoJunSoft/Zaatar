@@ -10,7 +10,7 @@ export default function SearchBar(props) {
         <View style={[styles.container,{
                     width: searchBarVisibility ? '100%' :'15%',
                     justifyContent: 'space-around',
-                    alignSelf:'flex-end'
+                    alignSelf:'flex-end',
                     }]}>
             {searchBarVisibility ?
                 <>
@@ -45,13 +45,14 @@ const styles = StyleSheet.create({
     container:{
         flexDirection:'row',
         alignItems:'center',
-        padding: 7
+        padding: 7,
+        backgroundColor: '#FFFFFF',
     },
     title:{
         fontFamily:'Cairo-Bold',
         fontSize: 12,
         textAlign:'center',
-        color:'#fff'
+        color:'#FFFFFF'
     },
     textInput:{
         backgroundColor:'#2C4970',

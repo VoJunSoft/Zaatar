@@ -3,10 +3,7 @@ import {
     View, 
     Text, 
     StyleSheet,
-    Dimensions,
-    BackHandler,
     Alert,
-    Keyboard,
     FlatList,
     ActivityIndicator
 } from 'react-native'
@@ -214,8 +211,7 @@ const Profile = (props) => {
             style={styles.ProductsList}
             renderItem={ ({item, index}) => (
                 <ProductCard view='Default' item={item} deleteButtonVisibility={deleteButtonVisibility} currencySymbol={currencySymbols[userInfo.location.flag]}/>
-            )}
-        />
+            )}/>
 
         <Overlay isVisible={profileFormVisibility} 
                 onBackdropPress={()=>setProfileFormVisibility(!profileFormVisibility)} 
@@ -258,7 +254,7 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
     },
     ProductsList:{
-        //backgroundColor: '#2C4770',
+        backgroundColor: '#FFFFFF',
     },
     storeSymbol: {
         width:'7%', 

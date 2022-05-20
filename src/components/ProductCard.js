@@ -7,8 +7,9 @@ import firestore from '@react-native-firebase/firestore';
 import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
 //import { handleTimeDifference } from '../scripts/Time';
-import TopProductCardView from './TopProductCardView'
+import ZaatarProductCardView from './ProductCardDefaultView'
 import PremiumProductCardView from './PremiumProductCardView'
+import ZaatarProductCardViewAltra from './ZaatarProductCardViewAltra'
 
 export default function ProductCard(props) {
     //products fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -67,7 +68,9 @@ export default function ProductCard(props) {
         //getView(props.view)
         switch(view){
             case 'BodyView':
-                return <TopProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
+                return <ZaatarProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
+            case 'BodyAltraView':
+                return <ZaatarProductCardViewAltra productInfo={props.item} currencySymbol={props.currencySymbol}/>
             case 'PremiumView':
                 return <PremiumProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
             default:
@@ -183,7 +186,6 @@ const styles = StyleSheet.create({
     },
     ProductCardDefault:{
         width:'45%',
-        //backgroundColor:'#2C4770',
         margin: 10,
         borderRadius:13,
         overflow:'hidden'

@@ -3,52 +3,35 @@ import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, ActivityIndicato
 import firestore from '@react-native-firebase/firestore'
 import StoreCard from '../components/StoreCard'
 import SearchBar from '../components/SearchBar'
-import * as RNLocalize from "react-native-localize"
+//import * as RNLocalize from "react-native-localize"
 
 export default function Stores(props) {
+    const [countryName, setCountryName] = useState(props.route.params.location.country ? props.route.params.location.country : 'Israel')
     const [stores, setStores] = useState([])
     const [isLoading, setIsLoading] = useState(true)
-    // user's location
-    let CountryName
-
     useEffect(() => {
-        CountryName = userLocation()
         //get Data from users database
+        //TODO get stores based on location if use is not logged in 
         fillUpStoresList()
+        console.log('Stores : ', props.route.params)
     },[])
-
-    // get userLocation
-    const userLocation = () =>{
-        try{    
-            //get country name from navigation params
-            console.log('PARAMS :', props.route.params)
-            return props.route.params.location.flag
-        }catch(e){
-            //in case of error 
-            //get location using react-native-localize
-            console.log('LOCALIZE :',RNLocalize.getCountry())
-            return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
-        }   
-    }
 
     //stores object fields: id, name, location, phone, picture, email
     const fillUpStoresList = () => {
         const subscriber = firestore()
             .collection('users')
-            //.orderBy('date_posted', 'asc')
+            //.where('location.country', "==", countryName)
             .onSnapshot(querySnapshot => {
                 setStores([])
                 querySnapshot.forEach(documentSnapshot => {
-                    if(documentSnapshot.data().location.flag === CountryName || CountryName==='ALL'){
                         setStores((prevState) => {
                             return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
                         })
-                    }
                 })
                 setIsLoading(false)
             })
 
-            return() => subscriber()
+            return() => subscriber
     }
 
     const [searchInput, setSearchInput] = useState("")
@@ -75,27 +58,32 @@ export default function Stores(props) {
     }
 
     return (
-        <>
-        <FlatList 
-            data={filterDataBaseOnSearch()}
-            ListFooterComponent={filterDataBaseOnSearch().length === 0 ? $renderEmptyOrdersState : null}
-            showsHorizontalScrollIndicator={false}
-            numColumns={2}
-            keyExtractor={item => item.id}
-            style={styles.StoreList}
-            renderItem={ ({item, index}) => (
-                <StoreCard item={item}/>
-            )}/>
-        <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>
-        </>
+        <SafeAreaView style={styles.container}>
+            <FlatList 
+                data={filterDataBaseOnSearch()}
+                //ListHeaderComponent={<SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>}
+                ListFooterComponent={filterDataBaseOnSearch().length === 0 ? $renderEmptyOrdersState : null}
+                showsHorizontalScrollIndicator={false}
+                numColumns={2}
+                keyExtractor={item => item.id}
+                style={styles.StoreList}
+                renderItem={ ({item, index}) => (
+                    <StoreCard item={item}/>
+                )}/>
+            <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>
+        </SafeAreaView>
     )
 }
 
 const styles= StyleSheet.create({
+    container:{
+        flex:1,
+        backgroundColor: '#FFFFFF',
+    },
     StoreList:{
        // margin:5
        alignSelf:'center',
-       //backgroundColor:'#FEEBDA'
+       backgroundColor: '#FFFFFF',
     },
     loading: {
         color:'#2C4770', 

@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
     },
     ProductsList:{
-       // backgroundColor: '#2C4770',
+        backgroundColor: '#FFFFFF',
     },
     ProductCard:{
         width:'45%',

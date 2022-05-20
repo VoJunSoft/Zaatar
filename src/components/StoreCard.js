@@ -46,11 +46,11 @@ const StoreCard = (props) => {
         <View style={styles.EntryHeader}>
             <Text style={styles.title}>{store.name}</Text>
             <Avatar
-              size={135}
+              size={110}
               rounded
               source={store.picture ? {uri: store.picture} : require('../assets/gallary/p1.png')}
               icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
-              containerStyle={{backgroundColor:'#fff', margin: 3}}
+              containerStyle={{backgroundColor:'#fff', margin: 5}}
           />
         </View>
         <View style={styles.EntryBox}>
@@ -77,34 +77,35 @@ const StoreCard = (props) => {
 const styles = StyleSheet.create({
     container:{
         width:Dimensions.get('window').width/2.2,
-        height:Dimensions.get('window').height/2.7,
-        backgroundColor: '#fff',
+        height:Dimensions.get('window').height/3.5,
+        backgroundColor: '#2C4770',
         borderRadius:15,
         overflow:'hidden',
         margin: 10,
     },
     EntryHeader:{
-        backgroundColor: '#2C4770',
+        backgroundColor: '#323232',
         justifyContent:'space-evenly',
         alignItems:'center',
-        borderBottomRightRadius:100,
+        borderBottomRightRadius:50,
         padding:5,
-        height:'75%'
+        height:'70%'
     },
     EntryBox:{
-        margin:0,
-        backgroundColor: '#2C4770',
+        marginTop:-1,
+        backgroundColor: '#323232',
     },
     title:{
-        fontSize:15,
+        fontSize:14,
         textAlign:'center',
         color:'#fff',
         fontFamily:'Cairo-Bold',
+        letterSpacing:1
     },
     body:{
         fontFamily: 'Cairo-Bold' ,
         fontSize: 11, 
-        color: '#2C4770',
+        color: '#fff',
         textAlign:'center'
     },
     info:{
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems: 'baseline',
-        backgroundColor: '#fff',
+        backgroundColor: '#2C4770',
         borderTopLeftRadius:50,
         //paddingTop:20,
     }

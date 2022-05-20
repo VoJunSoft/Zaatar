@@ -2,25 +2,9 @@ import React, {useState} from 'react'
 import { View, Text, ScrollView, StyleSheet, TextInput, Dimensions } from 'react-native'
 import Buttons from "../elements/Button"
 import DropShadow from "react-native-drop-shadow";
+import {SearchCategories} from '../scripts/CurrencySymbols.json'
 
 export default function ZaatarSearchBar(props) {
-    const $Categories = [
-                        'الكل'
-                        , "سيارات"
-                        , "الكترونيات"
-                        , "ادوات"
-                        , "الات"
-                        , "مستلزمات"
-                        , "اثاث"
-                        , 'اكسسوارات'
-                        , "ملابس"
-                        , 'خدمات'
-                        ,'ورش عمل'
-                        , "دروس خصوصية"
-                        , "غذاء"
-                        , "فن"  
-                        ,'انتيكا'
-                        ]
     const [searchBarVisibility, setSearchBarVisibility ] = useState(false)
     return (
         <DropShadow style={styles.dropShadow}>
@@ -46,7 +30,7 @@ export default function ZaatarSearchBar(props) {
                 }
                 </View>
                 {
-                $Categories.map((item, index)=>[
+                SearchCategories.map((item, index)=>[
                     <Buttons.ButtonDefault 
                         key={index}
                         titleRight={item}

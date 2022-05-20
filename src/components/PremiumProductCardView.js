@@ -16,15 +16,14 @@ const PremiumProductCardView = (props) => {
 return (
     <SafeAreaView style={styles.block}>
         <DropShadow style={{
-                        shadowColor: '#2C477055',
-                        shadowOffset: {width: -2, height: 2},
-                        shadowOpacity: 0.9,
-                        shadowRadius: 9,
+                        shadowColor: '#2C4770',
+                        shadowOffset: {width: -1, height: 2},
+                        shadowOpacity: 0.7,
+                        shadowRadius: 5,
                          }}>
-        
         <View style={[styles.cardBlock,{backgroundColor: '#fff'}]}>
             <Text style={styles.title}>{props.productInfo.product_name}</Text> 
-            <Text style={[styles.body]}>{props.currencySymbol?props.currencySymbol:'💰'}{props.productInfo.price}</Text>
+            <Text style={[styles.body]}>{props.currencySymbol}{props.productInfo.price}</Text>
             <FastImage  style={styles.img} 
                         source={{uri: props.productInfo.photos[0]}} 
                         defaultSource={require('../assets/gallary/Zaatar.png')}
@@ -39,7 +38,7 @@ return (
 const styles = StyleSheet.create({
 
     block:{
-      width:Dimensions.get('window').width/3,
+      width:Dimensions.get('window').width/2.8,
       margin:3,
       marginBottom:10,
       alignSelf:'center',
@@ -56,19 +55,19 @@ const styles = StyleSheet.create({
       padding:5
     },
     title: {
-      height:22,
       fontFamily:'Cairo-Bold',
       fontSize: 12,
       color:'#171717',
       textAlign:'center',
-      letterSpacing:0,
-      overflow:'visible'
+      overflow:'visible',
+      marginTop:5
     },
     body: {
         fontFamily:'GLA',
         fontSize: 13,
         color:'#2C4770',
-        marginTop:2
+        marginTop:2,
+        letterSpacing:.5
     },
     img: {
       height:125,
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
       alignItems:'center',
       alignSelf:'center',
       borderRadius:200,
-      marginTop:0
+      marginTop:5
     }
     });
 

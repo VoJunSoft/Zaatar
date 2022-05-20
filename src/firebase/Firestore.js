@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 // access workshops database and return values
  //stored object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
 export const getWorkShops = () => {
-    let list
+    let list = {}
      firestore()
         .collection('workshops')
         .orderBy('date_posted', 'asc')

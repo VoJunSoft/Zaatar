@@ -121,7 +121,7 @@ const Settings = ({navigation, route}) => {
     }
 
     return (
-    <SafeAreaView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Text style={styles.Zaatar}>زعتر</Text>
         <Text style={styles.title}> تم إنشاء هذا التطبيق من أجل ربط البائعين من أماكن مختلفة في جميع أنحاء البلاد. </Text>
         <Text style={styles.title}> تتيح لك هذه المنصة سرد المنتجات التي ترغب في بيعها أو التواصل مع البائعين الذين لديهم منتجات تهمك.</Text>
@@ -219,7 +219,7 @@ const Settings = ({navigation, route}) => {
         : 
             null
         }
-    </SafeAreaView>
+    </ScrollView>
     )
 }
 
@@ -227,8 +227,8 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         flexDirection:'column',
-        justifyContent:'space-evenly',
-       // backgroundColor: '#2C4770',
+        //justifyContent:'space-evenly',
+        backgroundColor: '#E5EEFF',
         paddingTop: 10,
     },
     title:{

@@ -7,34 +7,18 @@ import { handleDate } from '../scripts/Time'
 import {contactUsByWhatsapp} from '../scripts/Communication'
 import firestore from '@react-native-firebase/firestore'
 import DropShadow from "react-native-drop-shadow"
-import * as RNLocalize from "react-native-localize"
+//import * as RNLocalize from "react-native-localize"
 //import {getWorkShops} from '../firebase/Firestore'
 
 export default function Workshops(props) {
     const [workshops, setWorkshops] = useState([])
     const [isLoading, setIsLoading] = useState(true) 
-    // user's location
-    let CountryName
 
     useEffect( () => {
-        CountryName = userLocation()
         //get Data from workshop database
         fillUpWorkshops()
+        console.log('workshops : ', props.route.params)
     },[])
-
-    // get userLocation
-    const userLocation = () =>{
-        try{    
-            //get country name from navigation params
-            console.log('PARAMS :', props.route.params)
-            return props.route.params.location.flag
-        }catch(e){
-            //in case of error return
-            //get location using react-native-localize
-            console.log('LOCALIZE :',RNLocalize.getCountry())
-            return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
-        }   
-    }
 
     //stored object fields: id, title, date_posted, from, to, location:{country, code, city}, phone, image, email, seller:{id, email, location,name,phone,picture}
     const fillUpWorkshops = () => {
@@ -44,11 +28,9 @@ export default function Workshops(props) {
             .onSnapshot(querySnapshot => {
                 setWorkshops([])
                 querySnapshot.forEach(documentSnapshot => {
-                    if(documentSnapshot.data().location.flag === CountryName || CountryName==='ALL'){
                         setWorkshops((prevState) => {
                             return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
                         })
-                    }
                 })
                 setIsLoading(false)
             })
@@ -149,6 +131,21 @@ export default function Workshops(props) {
         )
     }
 
+    const WorkShopHeader = () => {
+        return(
+            <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#E5EEFF'}}>
+                <View style={{width:'85%'}}>
+                    <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true} hideSearchIcon={true}/>
+                </View>
+                <Buttons.ButtonWithShadow 
+                    iconName='add' 
+                    iconSize={25} 
+                    onPress={()=>setUserMsg('إضافة ورشة عمل ستكون متاحة قريبا')} 
+                    containerStyle={styles.icon}/>
+            </View>
+        )
+    }
+
     return (
         <>
             <FlatList 
@@ -160,8 +157,8 @@ export default function Workshops(props) {
                 renderItem={ ({item, index}) => (
                     <WorkShopCard2 item={item} />
                 )}/>
-            <View style={{flexDirection:'row', alignItems:'baseline', justifyContent:'center'}}>
-                <View style={{width:'75%'}}>
+            <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#E5EEFF'}}>
+                <View style={{width:'85%'}}>
                     <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true} hideSearchIcon={true}/>
                 </View>
                 <Buttons.ButtonWithShadow 
@@ -178,6 +175,7 @@ export default function Workshops(props) {
 const styles= StyleSheet.create({
     StoreList:{
        //alignSelf:'center',
+       backgroundColor: '#FFFFFF',
     },
     loading: {
         color:'#2C4770', 

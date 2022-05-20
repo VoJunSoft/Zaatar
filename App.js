@@ -45,11 +45,11 @@ LogBox.ignoreLogs([
 const Drawer = createDrawerNavigator()
 const App = () => {
   // user information state
-  const [userInfo, setUserInfo] = useState({})
+  const [userInfo, setUserInfo] = useState({id:'', name: null, picture: null, email: null, location:{country:'Israel',code:'972',flag:'IL',currency:'ILS',city: null}, phone: null})
   const [isUser, setIsUser] = useState(false)
 
-  //const [stores, setStores] = useState([])
-  //const [isLoading, setIsLoading] = useState(true)
+  const [stores, setStores] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   useEffect( ()=>{
     //    const unsubscribe = navigation.addListener('focus', () => {
     //          auth().onAuthStateChanged((user) => {
@@ -59,49 +59,29 @@ const App = () => {
     //     })
 
     // const nav = [
-    //       NavigationBar.setStatusBarColor("#2C4770",true), 
-    //       NavigationBar.setStatusBarTheme('light',true), 
-    //       NavigationBar.setColor("#2C4770")
+    //       NavigationBar.setStatusBarColor("#2C4770",true),
+    //       NavigationBar.setStatusBarTheme('dark',true), 
+    //       NavigationBar.setColor("#FFFFFF")
     // ]
+    // return () => {[
+    //   nav
+    // ]}
   }, [])
 
-  const getData =  async () => {
+  const getData = async () => {
     try {
-           AsyncStorage.getItem('userInfoZaatar')
-           .then((value) => {
-                if(value !== null){
-                    setUserInfo(JSON.parse(value))
-                    //fillUpStoresList(JSON.parse(value).location.flag)
-                    setIsUser(true)
-                }else{
-                    //fillUpStoresList(RNLocalize.getCountry())
-                }
-           })
+          const value = await AsyncStorage.getItem('userInfoZaatar')
+          if(value !== null){
+              setUserInfo(JSON.parse(value))
+              setIsUser(true)
+              console.log('APpJS async : ' , JSON.parse(value))
+          }
+          return () => value    
     } catch(e) {
       // error reading value
       console.log(e)
     }
   }
-
-  //get stores within location
-  //stores object fields: id, name, location, phone, picture, email
-  // const fillUpStoresList = (locationData) => {
-  // const subscriber = firestore()
-  //     .collection('users')
-  //     .onSnapshot(querySnapshot => {
-  //         setStores([])
-  //         querySnapshot.forEach(documentSnapshot => {
-  //             if(documentSnapshot.data().location.flag === locationData){
-  //                 setStores((prevState) => {
-  //                     return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
-  //                 })
-  //             }
-  //         })
-  //         setIsLoading(false)
-  //     })
-
-  //     return() => subscriber()
-  // }
 
   const ProfileElement = (props) =>{
     return(
@@ -135,7 +115,7 @@ const App = () => {
 
   const HeaderRightIcon = () => {
     return(
-      <TouchableOpacity onPress={()=> {}}>
+      <TouchableOpacity onPress={()=> {}} disabled>
         <Image style={{width:40, height:40, resizeMode:'contain', marginRight:7}} source={require('./src/assets/gallary/Zaatar3.png')} />
       </TouchableOpacity>
     )

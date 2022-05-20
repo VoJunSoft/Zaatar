@@ -10,9 +10,9 @@ import firestore from '@react-native-firebase/firestore'
 import ProductCard from '../components/ProductCard'
 import ZaatarSearchBar from '../components/ZaatarSearchBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import * as RNLocalize from "react-native-localize"
 import {currencySymbols} from "../scripts/CurrencySymbols.json"
 import { filterDataByCategory } from '../scripts/Search';
+//import * as RNLocalize from "react-native-localize"
 
 export default function Zaatar(props) {
     //const [userInfo, setInfoUser] = useState(props.route.params)
@@ -22,56 +22,36 @@ export default function Zaatar(props) {
     //search input and category for filtering data/products
     const [searchInput, setSearchInput] = useState("")
     const [category, setCategory] = useState('الكل')
-    //state for top list
-    //currently retrieving random categories
-    //TODO return premium products from premium stores
-    const [productsPremium, setProductsPremium] = useState([])
-    //get location currency
-    const [currencyAlphabet, setCurrencyAlphabet] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
-    let _CountryFlagCode
-    useEffect(() => {
-        //get user location
-        _CountryFlagCode = userLocation()
-        //get Data from asyncstorage on page load and store it to userInfo
-        GetProductsByDate()
-    },[])
 
-    // get userLocation & currency
-    const userLocation = () =>{
-        try{    
-            //get country name from navigation params: userInfo
-            //set currency symbol based on country flag (2-alphabets) NOTE currency symbol is based on on 3-alphabets
-            setCurrencyAlphabet(currencySymbols[props.route.params.location.flag])
-            console.log('PARAMS :', props.route.params.location.flag, currencyAlphabet)
-            return props.route.params.location.flag
-        }catch(e){
-            //in case of error return
-            //get location using react-native-localize
-            //set currency symbol based on country flag 
-            setCurrencyAlphabet(currencySymbols[RNLocalize.getCountry()])
-            console.log('LOCALIZE :',RNLocalize.getCountry(), currencyAlphabet)
-            return RNLocalize.getCountry() ? RNLocalize.getCountry() : 'ALL'
-        }   
-    }
+    //state for top list
+    //currently retrieving ELFAHMAWI search input
+    //TODO return premium products from premium stores
+    //const [productsPremium, setProductsPremium] = useState([])
+    //get location currency
+
+    const [userLocation, setUserLocation] = useState(props.route.params.location.country ? props.route.params.location.country : 'Israel')
+    const [currencySymbol, setCurrencySymbol] = useState(currencySymbols[props.route.params.location.flag] ? currencySymbols[props.route.params.location.flag] : '₪')
+    const [isLoading, setIsLoading] = useState(true)
+    
+    useEffect(() => {
+        //TODO get data based on location and add filter based on town/city
+        GetProductsByDate()
+        console.log('Zattar Params : ' , props.route.params)
+    },[])
 
     const GetProductsByDate = () => {
         setIsLoading(true)
-        //This way we retrieve all products of all of the stores within the area.
         const subscriber = firestore()
             .collection('products')
             .orderBy('date_listed', 'asc')
             .onSnapshot(querySnapshot => {
                 setProducts([])
-                setProductsPremium([])
                 querySnapshot.forEach(documentSnapshot => {
                     //TODO get stores within location (instead of products within location) and display their products
-                    //retrieve users' IDs within the same location [stores] and retrieve every product that has a matching seller.id 
-                    if(documentSnapshot.data().seller.location.flag === _CountryFlagCode || _CountryFlagCode==='ALL'){
+                    //retrieve users' IDs within the same location [stores] and retrieve every product that has a matching seller.id
                         setProducts((prevState) => {
                             return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
-                    }
                 })
                 setIsLoading(false)
             })
@@ -103,7 +83,7 @@ export default function Zaatar(props) {
                     keyExtractor={item => item.productId}
                     style={styles.ProductsPremiumList}
                     renderItem={ ({item, index}) => (
-                        <ProductCard item={item} key={index} view='PremiumView' currencySymbol={currencyAlphabet}/>
+                        <ProductCard item={item} key={index} view='PremiumView' currencySymbol={currencySymbol}/>
                     )}/>
             :
             null
@@ -121,7 +101,7 @@ export default function Zaatar(props) {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index} view='BodyView' currencySymbol={currencyAlphabet}/>
+                    <ProductCard item={item} key={index} view='BodyAltraView' currencySymbol={currencySymbol}/>
                 )}
             />
         </SafeAreaView>
@@ -131,7 +111,7 @@ export default function Zaatar(props) {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        //backgroundColor: '#FEEBDA'
+        backgroundColor: '#FFFFFF',
     },
     ProductsList:{
        // marginTop:0
