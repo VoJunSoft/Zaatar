@@ -3,20 +3,22 @@ import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, ActivityIndicato
 import firestore from '@react-native-firebase/firestore'
 import StoreCard from '../components/StoreCard'
 import SearchBar from '../components/SearchBar'
+import {filterStoresBaseOnSearch} from '../scripts/Search'
 //import * as RNLocalize from "react-native-localize"
 
 export default function Stores(props) {
-    const [countryName, setCountryName] = useState(props.route.params.location.country ? props.route.params.location.country : 'Israel')
+    // const [countryName, setCountryName] = useState(props.route.params.location.country ? props.route.params.location.country : 'Israel')
     const [stores, setStores] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [searchInput, setSearchInput] = useState("")
+
     useEffect(() => {
         //get Data from users database
-        //TODO get stores based on location if use is not logged in 
+        //TODO get stores based on location if user is not logged in 
         fillUpStoresList()
-        console.log('Stores : ', props.route.params)
     },[])
 
-    //stores object fields: id, name, location, phone, picture, email
+    //stores object fields: id, name, location:{}, phone, picture, email
     const fillUpStoresList = () => {
         const subscriber = firestore()
             .collection('users')
@@ -30,39 +32,26 @@ export default function Stores(props) {
                 })
                 setIsLoading(false)
             })
-
             return() => subscriber
-    }
-
-    const [searchInput, setSearchInput] = useState("")
-    const filterDataBaseOnSearch = () =>{
-        if(searchInput==='')
-                return stores
-            else
-                return stores.filter(item=> item.name.includes(searchInput) || item.location.city.includes(searchInput))
     }
 
     const $renderEmptyOrdersState = () => { 
         return(
-            <>
-            {isLoading ?
+            isLoading ?
                 <>
                     <Text style={styles.loading}>جار التحميل</Text>
                     <ActivityIndicator color='#2C4770' size={35}/>
                 </>
             :
                 <Text style={styles.loading}>لم نتمكن من تحديد موقع أي متجر</Text>
-            }
-            </>
         )
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <FlatList 
-                data={filterDataBaseOnSearch()}
-                //ListHeaderComponent={<SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>}
-                ListFooterComponent={filterDataBaseOnSearch().length === 0 ? $renderEmptyOrdersState : null}
+                data={filterStoresBaseOnSearch(stores, searchInput)}
+                ListFooterComponent={filterStoresBaseOnSearch(stores, searchInput).length === 0 ? $renderEmptyOrdersState : null}
                 showsHorizontalScrollIndicator={false}
                 numColumns={2}
                 keyExtractor={item => item.id}
@@ -70,7 +59,11 @@ export default function Stores(props) {
                 renderItem={ ({item, index}) => (
                     <StoreCard item={item}/>
                 )}/>
-            <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>
+            {!props.AdminArea ? 
+                <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true}/>
+                :
+                null
+            }
         </SafeAreaView>
     )
 }

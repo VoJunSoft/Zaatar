@@ -106,7 +106,7 @@ const FullProductCard = (props) => {
                           resizeMode={FastImage.resizeMode.contain}/> 
           </LinearGradient>
 
-          {props.productInfo.photos.length > 0 ?
+          {props.productInfo.photos.length > 1 ?
             <ScrollView style={styles.imgBlock} horizontal={true}>
               {
                   props.productInfo.photos.map( (item, index) => (

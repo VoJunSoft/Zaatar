@@ -21,6 +21,7 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import Zaatar from './src/screens/Zaatar'
 import Profile from './src/screens/Profile'
+import Admin from './src/screens/Admin'
 import SellerProfile from './src/screens/SellerProfile'
 import Settings from './src/screens/Settings'
 import Registration from './src/screens/Registration'
@@ -31,11 +32,12 @@ import AppStyles from './src/styles/AppStyle'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar } from 'react-native-elements'
 import Buttons from './src/elements/Button'
+import {GetRecordsFromDBasc} from './src/firebase/Firestore'
+//import UserData from './src/scripts/UserData'
 //import firestore from '@react-native-firebase/firestore'
 //import * as RNLocalize from "react-native-localize"
 //import NavigationBar from 'react-native-navbar-color'
 //import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
-
 I18nManager.forceRTL(false)
 I18nManager.allowRTL(false)
 LogBox.ignoreLogs([
@@ -43,12 +45,14 @@ LogBox.ignoreLogs([
 ]);
 
 const Drawer = createDrawerNavigator()
+
 const App = () => {
+  //const user = new UserData()
   // user information state
-  const [userInfo, setUserInfo] = useState({id:'', name: null, picture: null, email: null, location:{country:'Israel',code:'972',flag:'IL',currency:'ILS',city: null}, phone: null})
+  const [userInfo, setUserInfo] = useState({id:'', name: null, picture: null, email: null, phone: null, rule : '', location:{country:'Israel',code:'972',flag:'IL',currency:'ILS',city: null}})
   const [isUser, setIsUser] = useState(false)
 
-  const [stores, setStores] = useState([])
+  const [workshops, setWorkshops] = useState(GetRecordsFromDBasc('workshops'))
   const [isLoading, setIsLoading] = useState(true)
   useEffect( ()=>{
     //    const unsubscribe = navigation.addListener('focus', () => {
@@ -167,7 +171,7 @@ const App = () => {
               options={{
                 headerShown: false,
                 drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/Zaatar.png')}/>
-              }}/>
+          }}/>
           <Drawer.Screen
               name="Registration"
               component={Registration}
@@ -175,7 +179,7 @@ const App = () => {
                 headerShown: false,
                 drawerItemStyle: {
                   display: "none",
-                }}}/>
+          }}}/>
           <Drawer.Screen
               name="Zaatar"
               component={Zaatar}
@@ -183,38 +187,38 @@ const App = () => {
               options={{
                 title:'زعتر',
                 drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>
-              }}/>
+          }}/>
            <Drawer.Screen
-            name="Stores"
-            component={Stores}
-            initialParams={userInfo}
-            options={{
-              title:'صفحات تجارية',
-              drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
-            }}/>
-          
+              name="Stores"
+              component={Stores}
+              initialParams={userInfo}
+              options={{
+                title:'صفحات تجارية',
+                drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
+          }}/>
           <Drawer.Screen
-            name="WorkShops"
-            component={WorkShops}
-            options={{
-              title:'ورش عمل',
-              drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
-            }}/>
+              name="WorkShops"
+              component={WorkShops}
+              initialParams={workshops}
+              options={{
+                title:'ورش عمل',
+                drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
+          }}/>
           <Drawer.Screen
-            name="Settings"
-            component={Settings}
-            options={{
-              title:'اعدادات',
-              drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>
-            }}/>
+              name="Settings"
+              component={Settings}
+              options={{
+                title:'اعدادات',
+                drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>
+          }}/>
           <Drawer.Screen
-            name="SellerProfile"
-            component={SellerProfile}
-            options={{
-              title:'متجر',
-              drawerItemStyle: {
-                display: "none",
-            }}}/>
+              name="SellerProfile"
+              component={SellerProfile}
+              options={{
+                title:'متجر',
+                drawerItemStyle: {
+                  display: "none",
+          }}}/>
         </>
         :
         <>
@@ -225,7 +229,7 @@ const App = () => {
             options={{
               title: 'الصفحه الشخصيه',
               drawerLabel: ()=><ProfileElement img={require('./src/assets/gallary/p1.png')}/>
-            }}/>
+          }}/>
           <Drawer.Screen
             name="Zaatar"
             component={Zaatar}
@@ -233,23 +237,23 @@ const App = () => {
             options={{
               title:'زعتر',
               drawerLabel: ()=><MenuItem icon='zaatar' title='الصفحة الرئيسية'/>
-            }}/>
-            <Drawer.Screen
-            name="Stores"
-            component={Stores}
-            initialParams={userInfo}
-            options={{
-              title:'صفحات تجارية',
-              drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
-            }}/>
-            <Drawer.Screen
-            name="WorkShops"
-            component={WorkShops}
-            initialParams={userInfo}
-            options={{
-              title:'ورش عمل',
-              drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
-            }}/>
+          }}/>
+          <Drawer.Screen
+              name="Stores"
+              component={Stores}
+              initialParams={userInfo}
+              options={{
+                title:'صفحات تجارية',
+                drawerLabel: ()=><MenuItem icon='store' title='صفحات تجارية'/>
+          }}/>
+          <Drawer.Screen
+              name="WorkShops"
+              component={WorkShops}
+              initialParams={workshops}
+              options={{
+                title:'ورش عمل',
+                drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
+          }}/>
           <Drawer.Screen
             name="Settings"
             component={Settings}
@@ -257,7 +261,18 @@ const App = () => {
             options={{
               title:'اعدادات',
               drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>
+          }}/>
+          {userInfo.rule !== 'admin' ?
+            <Drawer.Screen
+              name="Admin"
+              component={Admin}
+              options={{
+                title:'منطقة الإدارة',
+                drawerLabel: ()=><MenuItem icon='menu' title='منطقة الإدارة'/>
             }}/>
+            : 
+            null
+          }
           <Drawer.Screen
             name="SellerProfile"
             component={SellerProfile}
@@ -265,7 +280,7 @@ const App = () => {
               title:'متجر',
               drawerItemStyle: {
                 display: "none",
-            }}}/>
+          }}}/>
         </>
         }
       </Drawer.Navigator>

@@ -4,114 +4,42 @@ import { Avatar } from 'react-native-elements'
 import SearchBar from '../components/SearchBar'
 import Buttons from '../elements/Button'
 import { handleDate } from '../scripts/Time'
-import {contactUsByWhatsapp} from '../scripts/Communication'
-import firestore from '@react-native-firebase/firestore'
+import {filterWorkshopsBaseOnSearch} from '../scripts/Search'
 import DropShadow from "react-native-drop-shadow"
 //import * as RNLocalize from "react-native-localize"
-//import {getWorkShops} from '../firebase/Firestore'
 
 export default function Workshops(props) {
     const [workshops, setWorkshops] = useState([])
     const [isLoading, setIsLoading] = useState(true) 
-
-    useEffect( () => {
-        //get Data from workshop database
-        fillUpWorkshops()
-        console.log('workshops : ', props.route.params)
-    },[])
-
-    //stored object fields: id, title, date_posted, from, to, location:{country, code, city}, phone, image, email, seller:{id, email, location,name,phone,picture}
-    const fillUpWorkshops = () => {
-        const subscriber = firestore()
-            .collection('workshops')
-            .orderBy('date_posted', 'asc')
-            .onSnapshot(querySnapshot => {
-                setWorkshops([])
-                querySnapshot.forEach(documentSnapshot => {
-                        setWorkshops((prevState) => {
-                            return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
-                        })
-                })
-                setIsLoading(false)
-            })
-
-            return() => subscriber()
-    }
-
-    //TODO based on seller id get seller info
-
+    const [userMsg, setUserMsg] = useState('')
     const [searchInput, setSearchInput] = useState("")
-    const filterDataBaseOnSearch = () =>{
-        if(searchInput==='')
-                return workshops
-            else
-                return workshops.filter(item=>  item.title.includes(searchInput) || 
-                                                item.location.city.includes(searchInput) || 
-                                                item.seller.name.includes(searchInput)
-                                        )
-    }
+
+    useEffect(()=>{
+        //stores route params are loaded in App.js
+        //TODO: workshop page development
+       setWorkshops([props.route.params[0]])
+       console.log(props.route.params[0])
+    },[])
 
     const $renderEmptyOrdersState = () => { 
         return(
-            <>
-            {isLoading ?
+            workshops.length === 0 ?
                 <>
                     <Text style={styles.loading}>جار التحميل</Text>
                     <ActivityIndicator color='#2C4770' size={35}/>
                 </>
             :
-                <Text style={styles.loading}>لا توجد بيانات متاحة</Text>
-            }
-            </>
+                    <Text style={styles.loading}>لا توجد بيانات متاحة</Text>
         )
     }
 
-    //TODO remove this once workshop editor is ready
-    const [userMsg, setUserMsg] = useState('')
     const WorkShopCard = (props) => {
-        return(
-            <>
-            <View style={styles.card}>
-                <View style={styles.bodyCard}>
-                    <View style={{flexDirection:'row', justifyContent:'center'}}>
-                        <Text style={styles.text}>{props.item.title}</Text>
-                    </View>
-                    <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                        <Buttons.ButtonDefault 
-                            titleLeft={props.item.seller.phone}
-                            iconName='whats'
-                            iconSize={27}
-                            containerStyle={{justifyContent:'center'}}
-                            textStyle={styles.text}
-                            onPress={()=>contactUsByWhatsapp(props.item.title, props.item.seller.phone)} />
-                        <Text style={styles.text}>{props.item.seller.name}</Text>
-                    </View>
-                </View>
-                <View style={styles.headerCard}>
-                    <Avatar
-                        size={60}
-                        rounded
-                        source={{uri: props.item.seller.picture}}
-                        icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
-                        containerStyle={{ backgroundColor: '#fff', margin: 2}}/>
-                </View>
-            </View>
-            <View style={styles.imgBlock}>
-                <Image style={styles.img} source={{uri: props.item.image}}/>
-                <Text style={styles.tempStyle}>{userMsg}</Text>
-            </View>
-
-            </>
-        )
-    }
-
-    const WorkShopCard2 = (props) => {
         return(
             <DropShadow style={styles.dropShadow}>
             <View style={styles.workshopBlock}>
                 <ImageBackground style={styles.imgAlpha} source={{uri: props.item.image}}>
                 <View style={styles.workshopHeader}>
-                    <Text style={styles.title}>{handleDate(props.item.date_posted.seconds)}</Text>
+                    <Text style={styles.title}>{handleDate(props.item.date_listed.seconds)}</Text>
                     <Text style={styles.title}>{props.item.seller.name}</Text>
                     <Avatar
                         size={50}
@@ -131,31 +59,16 @@ export default function Workshops(props) {
         )
     }
 
-    const WorkShopHeader = () => {
-        return(
-            <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#E5EEFF'}}>
-                <View style={{width:'85%'}}>
-                    <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true} hideSearchIcon={true}/>
-                </View>
-                <Buttons.ButtonWithShadow 
-                    iconName='add' 
-                    iconSize={25} 
-                    onPress={()=>setUserMsg('إضافة ورشة عمل ستكون متاحة قريبا')} 
-                    containerStyle={styles.icon}/>
-            </View>
-        )
-    }
-
     return (
         <>
             <FlatList 
-                data={filterDataBaseOnSearch()}
-                ListFooterComponent={filterDataBaseOnSearch().length === 0 ? $renderEmptyOrdersState : null}
+                data={filterWorkshopsBaseOnSearch(workshops, searchInput)}
+                ListFooterComponent={filterWorkshopsBaseOnSearch(workshops, searchInput).length === 0 ? $renderEmptyOrdersState : null}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={item => item.id}
                 style={styles.StoreList}
                 renderItem={ ({item, index}) => (
-                    <WorkShopCard2 item={item} />
+                    <WorkShopCard item={item} />
                 )}/>
             <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#E5EEFF'}}>
                 <View style={{width:'85%'}}>

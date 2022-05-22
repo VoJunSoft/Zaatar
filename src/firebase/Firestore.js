@@ -1,22 +1,19 @@
-import React from 'react'
+import React, {useState} from 'react'
 import firestore from '@react-native-firebase/firestore';
 
-// access workshops database and return values
- //stored object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
-export const getWorkShops = () => {
-    let list = {}
-     firestore()
-        .collection('workshops')
-        .orderBy('date_posted', 'asc')
+// access database and return values based on timestamp
+//WorkShops :  object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
+//
+export const GetRecordsFromDBasc = (DB) => {
+    let list = []
+        firestore()
+        .collection(DB)
+        .orderBy('date_listed', 'asc')
         .onSnapshot(querySnapshot => {
-            list = []
+            list=[]
             querySnapshot.forEach(documentSnapshot => {
-                list = [{...documentSnapshot.data(), id: documentSnapshot.id}, ...list]
-                console.log(list)
+                list.push({...documentSnapshot.data(), id: documentSnapshot.id})
             })
         })
-    
-        console.log('sssssss',list)
-        return list
-        
+        return list 
 }

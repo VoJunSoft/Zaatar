@@ -12,9 +12,12 @@ import ZaatarSearchBar from '../components/ZaatarSearchBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {currencySymbols} from "../scripts/CurrencySymbols.json"
 import { filterDataByCategory } from '../scripts/Search';
+//import UserData from '../scripts/UserData'
 //import * as RNLocalize from "react-native-localize"
 
+
 export default function Zaatar(props) {
+    //const user = new UserData()
     //const [userInfo, setInfoUser] = useState(props.route.params)
     // userInfo state: {id, name, picture, email, location:{country,code,flag,currency,city}, phone}
     //products fields: productId ... {seller:{userInfo}, product_name, photos:[], descriptiom, category, price, date_listed}
@@ -28,8 +31,7 @@ export default function Zaatar(props) {
     //TODO return premium products from premium stores
     //const [productsPremium, setProductsPremium] = useState([])
     //get location currency
-
-    const [userLocation, setUserLocation] = useState(props.route.params.location.country ? props.route.params.location.country : 'Israel')
+    //const [userLocation, setUserLocation] = useState(props.route.params.location.country ? props.route.params.location.country : 'Israel')
     const [currencySymbol, setCurrencySymbol] = useState(currencySymbols[props.route.params.location.flag] ? currencySymbols[props.route.params.location.flag] : '₪')
     const [isLoading, setIsLoading] = useState(true)
     
@@ -60,16 +62,13 @@ export default function Zaatar(props) {
 
     const $renderEmptyOrdersState = () => {
         return(
-            <>
-            {isLoading ?
+            isLoading ?
                 <>
                     <Text style={styles.loading}>جار التحميل</Text>
                     <ActivityIndicator color='#2C4770' size={35}/>
                 </>
             :
-                    <Text style={styles.loading}>لا توجد منتجات متوفرة في الوقت الحالي</Text>
-            }
-            </>
+                <Text style={styles.loading}>لا توجد منتجات متوفرة في الوقت الحالي</Text>
         )
     }
 
