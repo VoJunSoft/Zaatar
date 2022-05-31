@@ -58,10 +58,6 @@ const Settings = ({navigation, route}) => {
                 text: "نعم", 
                 onPress: () =>{
                   try{
-                        //TODO ::: FIX delete user from authentication
-                        auth().deleteUser(userInfo.id)
-                        //auth().currentUser.delete()
-
                         //delete products with seller.id
                         firestore().collection('products').where('seller.id','==',userInfo.id).get()
                         .then((querySnapshot)=>{
@@ -76,6 +72,9 @@ const Settings = ({navigation, route}) => {
 
                         //delete user from users database
                         firestore().collection('users').doc(userInfo.id).delete().then(()=>{})
+
+                        //TODO ::: veryify code and user has to be authenticated recently to be able to commit the following command
+                        auth().currentUser.delete()
 
                         //close app
                         logOut()
@@ -134,7 +133,7 @@ const Settings = ({navigation, route}) => {
                 iconName="bell"
                 iconSize={35}
                 containerStyle={styles.button}
-                textStyle={[styles.ButtonText,{textDecorationLine:'line-through'}]}
+                textStyle={styles.ButtonText}
                 //onPress={{}}
                 />
       {route.params ?
@@ -227,8 +226,7 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         flexDirection:'column',
-        //justifyContent:'space-evenly',
-        backgroundColor: '#E5EEFF',
+        backgroundColor: '#fff',
         paddingTop: 10,
     },
     title:{

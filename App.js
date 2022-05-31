@@ -32,7 +32,8 @@ import AppStyles from './src/styles/AppStyle'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Avatar } from 'react-native-elements'
 import Buttons from './src/elements/Button'
-import {GetRecordsFromDBasc} from './src/firebase/Firestore'
+import auth from '@react-native-firebase/auth'
+//import {GetRecordsFromDBasc} from './src/firebase/Firestore'
 //import UserData from './src/scripts/UserData'
 //import firestore from '@react-native-firebase/firestore'
 //import * as RNLocalize from "react-native-localize"
@@ -44,24 +45,27 @@ LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ]);
 
-const Drawer = createDrawerNavigator()
-
-const App = () => {
-  //const user = new UserData()
+const App = ({useNavigation}) => {
+  const Drawer = createDrawerNavigator()
   // user information state
-  const [userInfo, setUserInfo] = useState({id:'', name: null, picture: null, email: null, phone: null, rule : '', location:{country:'Israel',code:'972',flag:'IL',currency:'ILS',city: null}})
+  const [userInfo, setUserInfo] = useState({
+                                            id:'', 
+                                            name: null, 
+                                            picture: null, 
+                                            email: null, 
+                                            phone: null, 
+                                            rule : null, 
+                                            location:{country:'Israel',code:'972',flag:'IL',currency:'ILS',city: null}
+                                          })
   const [isUser, setIsUser] = useState(false)
 
-  const [workshops, setWorkshops] = useState(GetRecordsFromDBasc('workshops'))
-  const [isLoading, setIsLoading] = useState(true)
+  //const user = new UserData(userInfo)
+  //console.log('OOOOP--->', user.getUserInfo())
   useEffect( ()=>{
-    //    const unsubscribe = navigation.addListener('focus', () => {
-    //          auth().onAuthStateChanged((user) => {
-    //            if(user)
-                    getData()
-    //          })
-    //     })
-
+      auth().onAuthStateChanged((user) => {
+            if(user)
+                getData()
+      })
     // const nav = [
     //       NavigationBar.setStatusBarColor("#2C4770",true),
     //       NavigationBar.setStatusBarTheme('dark',true), 
@@ -78,7 +82,7 @@ const App = () => {
           if(value !== null){
               setUserInfo(JSON.parse(value))
               setIsUser(true)
-              console.log('APpJS async : ' , JSON.parse(value))
+              console.log('APpJS async UserInfo: ' , JSON.parse(value))
           }
           return () => value    
     } catch(e) {
@@ -119,7 +123,7 @@ const App = () => {
 
   const HeaderRightIcon = () => {
     return(
-      <TouchableOpacity onPress={()=> {}} disabled>
+      <TouchableOpacity onPress={()=>{}} disabled>
         <Image style={{width:40, height:40, resizeMode:'contain', marginRight:7}} source={require('./src/assets/gallary/Zaatar3.png')} />
       </TouchableOpacity>
     )
@@ -136,7 +140,7 @@ const App = () => {
             headerShown: true,
             drawerType:"front",
             drawerPosition:"left",
-            overlayColor:'#00000040', //'#E5EEFF10',
+            overlayColor:'#00000040',
             headerTitleAlign:'center',
             headerRight:(()=> <HeaderRightIcon/>),
             headerStyle:{
@@ -144,14 +148,14 @@ const App = () => {
             },
             headerTintColor:'#fff',
             headerTitleStyle:{
-              fontSize:22,
+              fontSize:20,
               fontFamily:'Cairo-Bold',
               letterSpacing: 5,
-              color:'white'
+              color:'white',
             },
             drawerActiveBackgroundColor:'rgba(0,0,0,0.2)',
             drawerStyle:{
-              backgroundColor:'#E5EEFF', //#A3BFF6 , #DEE4EF, #BDD0F6
+              backgroundColor:'#E5EEFF',
               width:230,
               borderTopRightRadius:12,
               borderBottomRightRadius:12,
@@ -199,7 +203,6 @@ const App = () => {
           <Drawer.Screen
               name="WorkShops"
               component={WorkShops}
-              initialParams={workshops}
               options={{
                 title:'ورش عمل',
                 drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
@@ -249,7 +252,6 @@ const App = () => {
           <Drawer.Screen
               name="WorkShops"
               component={WorkShops}
-              initialParams={workshops}
               options={{
                 title:'ورش عمل',
                 drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
@@ -262,16 +264,18 @@ const App = () => {
               title:'اعدادات',
               drawerLabel: ()=><MenuItem icon='settings' title='اعدادات'/>
           }}/>
-          {userInfo.rule !== 'admin' ?
-            <Drawer.Screen
-              name="Admin"
-              component={Admin}
-              options={{
-                title:'منطقة الإدارة',
-                drawerLabel: ()=><MenuItem icon='menu' title='منطقة الإدارة'/>
-            }}/>
-            : 
-            null
+          {
+            //TODO: set rules/admins
+            userInfo.id === 'u0athZ2BeofgXZytwFFLqK8eSCp1' ?
+              <Drawer.Screen
+                name="Admin"
+                component={Admin}
+                options={{
+                  title:'منطقة الإدارة',
+                  drawerLabel: ()=><MenuItem icon='menu' title='منطقة الإدارة'/>
+              }}/>
+              : 
+              null
           }
           <Drawer.Screen
             name="SellerProfile"

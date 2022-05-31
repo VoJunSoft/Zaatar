@@ -6,6 +6,8 @@ import Buttons from '../elements/Button'
 import { handleDate } from '../scripts/Time'
 import {filterWorkshopsBaseOnSearch} from '../scripts/Search'
 import DropShadow from "react-native-drop-shadow"
+import firestore from '@react-native-firebase/firestore'
+//import {GetRecordsFromDBasc} from '../firebase/Firestore'
 //import * as RNLocalize from "react-native-localize"
 
 export default function Workshops(props) {
@@ -14,47 +16,58 @@ export default function Workshops(props) {
     const [userMsg, setUserMsg] = useState('')
     const [searchInput, setSearchInput] = useState("")
 
+    //WorkShops :  object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
+    //TODO : Call this method from external firestore file
     useEffect(()=>{
-        //stores route params are loaded in App.js
-        //TODO: workshop page development
-       setWorkshops([props.route.params[0]])
-       console.log(props.route.params[0])
+        //fillUpStoresList()
     },[])
+    const fillUpStoresList = () => {
+        const subscriber = firestore()
+            .collection('workshops').orderBy('date_listed', 'asc').onSnapshot(querySnapshot => {
+                setWorkshops([])
+                querySnapshot.forEach(documentSnapshot => {
+                    setWorkshops((prevState) => {
+                            return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
+                        })
+                })
+                setIsLoading(false)
+            })
+            return() => subscriber
+    }
+
 
     const $renderEmptyOrdersState = () => { 
         return(
-            workshops.length === 0 ?
                 <>
-                    <Text style={styles.loading}>جار التحميل</Text>
-                    <ActivityIndicator color='#2C4770' size={35}/>
+                    <Image style={styles.img} source={require('../assets/gallary/workshops.png')}/>
+                    <Text style={styles.loading}>لا توجد ورش عمل متاحة</Text>
+                    <Text style={styles.tempStyle}>{userMsg}</Text>
                 </>
-            :
-                    <Text style={styles.loading}>لا توجد بيانات متاحة</Text>
         )
     }
 
     const WorkShopCard = (props) => {
         return(
             <DropShadow style={styles.dropShadow}>
-            <View style={styles.workshopBlock}>
-                <ImageBackground style={styles.imgAlpha} source={{uri: props.item.image}}>
-                <View style={styles.workshopHeader}>
-                    <Text style={styles.title}>{handleDate(props.item.date_listed.seconds)}</Text>
-                    <Text style={styles.title}>{props.item.seller.name}</Text>
-                    <Avatar
-                        size={50}
-                        rounded
-                        source={props.item.seller.picture ? {uri: props.item.seller.picture} : require('../assets/gallary/p1.png')}
-                        icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
-                        containerStyle={{backgroundColor:'#fff', margin: 3}}/>
+                <View style={styles.workshopBlock}>
+                    <ImageBackground style={styles.imgAlpha} source={{uri: props.item.image}}>
+                    <View style={styles.workshopHeader}>
+                        <Text style={styles.title}>{handleDate(props.item.date_listed.seconds)}</Text>
+                        <Text style={styles.title}>{props.item.seller.name}</Text>
+                        <Avatar
+                            size={50}
+                            rounded
+                            source={props.item.seller.picture ? {uri: props.item.seller.picture} : require('../assets/gallary/p1.png')}
+                            icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
+                            containerStyle={{backgroundColor:'#fff', margin: 3}}/>
+                    </View>
+                    </ImageBackground>
+                    {userMsg !== '' ?
+                        <Text style={[styles.tempStyle,{backgroundColor:'rgba(255,255,255,0.5)'}]}>{userMsg}</Text>
+                        : 
+                        null
+                    }
                 </View>
-                </ImageBackground>
-                {userMsg !== '' ?
-                    <Text style={[styles.tempStyle,{backgroundColor:'rgba(255,255,255,0.5)'}]}>{userMsg}</Text>
-                    : 
-                    null
-                }
-            </View>
             </DropShadow>
         )
     }
@@ -70,7 +83,8 @@ export default function Workshops(props) {
                 renderItem={ ({item, index}) => (
                     <WorkShopCard item={item} />
                 )}/>
-            <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#E5EEFF'}}>
+
+            <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#FFFFFF'}}>
                 <View style={{width:'85%'}}>
                     <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true} hideSearchIcon={true}/>
                 </View>
@@ -151,9 +165,6 @@ const styles= StyleSheet.create({
         fontFamily:'Cairo-Bold', 
         fontSize: 12,
         alignSelf:'center',
-        marginTop:10,
-        marginBottom:5,
-        padding:5
     },
     workshopBlock:{
         //flex:1,

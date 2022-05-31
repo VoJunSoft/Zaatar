@@ -28,7 +28,11 @@ export default function ProfileForm(props) {
     const navigation = useNavigation();
     // user information state
     //TODO ::: get location:{} of nonusers based on thier location instead of the initial values currently being passed 
-    const [userInfo, setUserInfo] = useState(props.userInfo ? props.userInfo : {id:'', email:'', phone:'', name:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}})
+    const [userInfo, setUserInfo] = useState(props.userInfo ? 
+                props.userInfo 
+                : 
+                {id:'', email:'', phone:'', name:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}}
+            )
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
@@ -39,19 +43,18 @@ export default function ProfileForm(props) {
         try {
             AsyncStorage.setItem('userInfoZaatar', JSON.stringify(value))
             .then(()=>{
-                // Add a new document in collection "users" with ID if it does not exist
                 //NOTE user id is also stored as snapshot in users. 
                 firestore().collection('users').doc(userInfo.id).set(value)
-                .then(()=>{
-                    //immediate update to profile info
-                    props.setUserInfo(value)
-                    //Hide form
-                    //props.setProfileFormVisibility(false)
-                    setIsloading(false)
-                    setSuccessMsg('تم حفظ المعلومات')
-                    //remove keyboard
-                    //Keyboard.dismiss()
-                })
+                    .then(()=>{
+                        //immediate update to profile info
+                        props.setUserInfo(value)
+                        //Hide form
+                        //props.setProfileFormVisibility(false)
+                        setIsloading(false)
+                        setSuccessMsg('تم حفظ المعلومات')
+                        //remove keyboard
+                        //Keyboard.dismiss()
+                    })
             })
         } catch (e) {
             //err storing data

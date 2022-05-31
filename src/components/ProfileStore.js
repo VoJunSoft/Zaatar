@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import DropShadow from "react-native-drop-shadow"
-import { Avatar, Input, Divider, Overlay } from 'react-native-elements';
+import { Avatar, Overlay } from 'react-native-elements';
 import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import ProductCard from '../components/ProductCard'
@@ -21,7 +21,8 @@ import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient'
-import {currencySymbols} from '../scripts/CurrencySymbols.json'
+import {currencySymbols} from '../scripts/DataValues.json'
+import RollingText from "react-native-rolling-text"
 
 const ProfileStore = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
@@ -94,24 +95,30 @@ const ProfileStore = (props) => {
             <LinearGradient 
                 //start={{x: 0, y: 0}} 
                 //end={{x: 1, y: 0}}
-                colors={['#4b6cb7', '#2C4770','#182848']} 
-                style={styles.linearGradient}>
-
+                colors={[ '#4b6cb7','#2C4770','#182848']} 
+                style={[styles.linearGradientBanner]}>
+                        <RollingText style={styles.TextBanner} durationMsPerWidth={10} force={true}>
+                            {"قم بالتسجيل وابدأ في بيع منتجاتك المستعملة أو الجديدة"}
+                        </RollingText>
             </LinearGradient>
         )
     }
     
     const ProfileHeaderComponent = () =>{
         return(
-            <>
-            <View style={{flexDirection:'row', padding: 5, paddingTop:15, paddingBottom:15, backgroundColor: '#2C4770'}}>
+            <LinearGradient 
+                start={{x: 0, y: 1}} 
+                //end={{x: 1, y: 0}}
+                colors={['#2C4770', '#4b6cb7', '#2C4770']} 
+                style={styles.linearGradient}>
+            <View style={{flexDirection:'row'}}>
                 <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
                     <Avatar
                         size={150}
                         rounded
                         source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/p1.png') }
                         icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:4}}
+                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:20}}
                     />
                 </View>
                 <View style={{width:'60%', justifyContent:'center', paddingLeft: 5}}>
@@ -140,10 +147,10 @@ const ProfileStore = (props) => {
                         disabled/>
                 </View>
             </View>
-            <View style={{flexDirection:'row', justifyContent:'space-around', marginBottom:10}}>
+            <View style={{flexDirection:'row', justifyContent:'space-around', marginTop: 10}}>
                 <StoreShopSymbolBeta />
             </View>
-            </>
+            </LinearGradient>
         )
     }
 
@@ -178,7 +185,7 @@ const ProfileStore = (props) => {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard view='Default' item={item} key={index} currencySymbol={currencySymbols[userInfo.location.flag]}/>
+                    <ProductCard view='Default' productInfo={item} key={index} currencySymbol={currencySymbols[userInfo.location.flag]}/>
                 )}/>
         }
         <Overlay isVisible={profileFormVisibility} 
@@ -242,15 +249,33 @@ const styles = StyleSheet.create({
     SellerInfo: {
         fontFamily: 'Cairo-Regular',
         color:'#fff',
-        fontSize:18,
+        fontSize:17,
         letterSpacing:1,
         marginRight:10,
         textAlign:'center',
-        marginBottom:5
+        marginBottom:2
+    }, 
+    TextBanner: {
+        fontFamily: 'Cairo-Regular',
+        color:'#fac300',
+        fontSize:14,
+        letterSpacing:1,
+        textAlign:'right',
+        width:'180%',
     },
     linearGradient:{
         flex:1,
-        height: 30
+        flexDirection:'column', 
+        paddingTop:15, 
+        marginBottom:8, 
+        backgroundColor: '#2C4770'
+    },
+    linearGradientBanner:{
+        flex:1,
+        backgroundColor: '#2C4770',
+        overflow:'hidden',
+        alignItems:'center',
+        padding: 3
     }
 })
 

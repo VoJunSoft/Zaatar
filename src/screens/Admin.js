@@ -1,32 +1,51 @@
 import React, {useState, useEffect} from 'react'
-import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, FlatList } from 'react-native'
 import AppStyles from '../styles/AppStyle'
 import NavTabs from '../elements/NavTabs'
 import Stores from './Stores'
 import ProductCard from '../components/ProductCard'
-import {GetRecordsFromDBasc} from '../firebase/Firestore'
+import firestore from '@react-native-firebase/firestore'
+//import {GetRecordsFromDBasc} from '../firebase/Firestore'
 
 const Admin = () => {
-    const [screenName, setScreenName] = useState('Stores')
-    const SwitchTab = (props) => {
-        switch(props.screenName){
+    const [screenName, setScreenName] = useState('Products')
+    const [products, setProducts] = useState([])
+    const [isLoading, setIsLoading] = useState(true) 
+
+    //TODO : Call this method from external firestore file OR global state
+    useEffect(()=>{fillUpStoresList()},[])
+    const fillUpStoresList = () => {
+        const subscriber = firestore().collection('products').orderBy('date_listed', 'asc').onSnapshot(querySnapshot => {
+            setProducts([])
+                querySnapshot.forEach(documentSnapshot => {
+                    setProducts((prevState) => {
+                            return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
+                        })
+                })
+                setIsLoading(false)
+            })
+            return() => subscriber
+    }
+
+    const SwitchTab = () => {
+        switch(screenName){
             case 'Stores':
                 return <Stores AdminArea={true} />
             case 'Products':
-                return <ProductsForAdmin AdminArea={true}/>
+                return <ProductsForAdmin />
         }
     }
-    const [products, setProducts] = useState(GetRecordsFromDBasc('products'))
     const ProductsForAdmin = () =>{
         return(
             <FlatList 
                 data={products}
+                ListFooterComponent={products.length === 0 ? <ActivityIndicator color='#2C4770' size={35} style={{marginTop:50}}/> : null}
                 showsVerticalScrollIndicator={false}
-                keyExtractor={item => item.productId}
+                //numColumns={2}
+                keyExtractor={item => item.id}
                 style={styles.ProductsList}
-                numColumns={2}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index} view='AdminView' currencySymbol={'X'}/>
+                    <ProductCard item={item} key={index} view='AdminView' deleteButtonVisibility={true} />
                 )}/>
         )
     }
@@ -34,7 +53,7 @@ const Admin = () => {
     return (
         <View style={styles.container}>
             <NavTabs tabView={screenName} switchTabs={setScreenName}/>
-            <SwitchTab screenName={screenName}/>
+            <SwitchTab />
         </View>
     )}
 
@@ -45,7 +64,7 @@ const styles = StyleSheet.create({
         backgroundColor:"#fff"
     },
     ProductsList:{
-       // marginTop:0
+        width:'100%',
     },
 })
 

@@ -11,7 +11,7 @@ import Icon from '../elements/Icon'
 import DropShadow from "react-native-drop-shadow"
 import FastImage from 'react-native-fast-image'
 
-const PremiumProductCardView = (props) => {
+const ProductCardPremiumView = (props) => {
 
 return (
     <SafeAreaView style={styles.block}>
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
     }
     });
 
-export default PremiumProductCardView;
+export default ProductCardPremiumView;

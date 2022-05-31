@@ -22,6 +22,7 @@ const Entry = ({navigation}) => {
     const [logInInfo, setLogInInfo] = useState({email:'', password:''})
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
+    
     const handleLogIn = () => {
     setErrMsg('')
     if(logInInfo.email==='' || logInInfo.password==='')
@@ -97,7 +98,8 @@ const Entry = ({navigation}) => {
                     animation="zoomIn"
                     iterationCount={1}
                     duration={3000}
-                    direction="normal">
+                    direction="normal"
+                    onPress={()=>navigation.navigate('Zaatar')}>
                     <Image style={{width:300, height:300, resizeMode:'contain'}} source={require('../assets/gallary/Zaatar3.png')} />
             </Animatable.View>
 

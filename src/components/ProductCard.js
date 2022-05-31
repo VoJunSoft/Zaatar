@@ -7,13 +7,16 @@ import firestore from '@react-native-firebase/firestore';
 import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
 //import { handleTimeDifference } from '../scripts/Time';
-import ZaatarProductCardView from './ProductCardDefaultView'
-import PremiumProductCardView from './PremiumProductCardView'
-import ZaatarProductCardViewAltra from './ZaatarProductCardViewAltra'
+import ProductCardDefaultView from './ProductCardDefaultView'
+import ProductCardPremiumView from './ProductCardPremiumView'
+import ProductCardZaatarViewAltra from './ProductCardZaatarViewAltra'
+import ProductCardAdminView from './ProductCardAdminView'
+import FastImage from 'react-native-fast-image'
+import CarouselCardView from './CarouselCardView';
 
 export default function ProductCard(props) {
     //products fields {seller:{userInfo}, product_name, photos[], descriptiom, category, price, date_listed}
-    const [productInfo, setProductInfo] = useState(props.item)
+    const [productInfo, setProductInfo] = useState(props.productInfo)
     //ProfileForm.js visibility
     const [fullProductVisibility, setFullProductVisibility] = useState(false)
     //ProductForm.js visibility
@@ -68,11 +71,15 @@ export default function ProductCard(props) {
         //getView(props.view)
         switch(view){
             case 'BodyView':
-                return <ZaatarProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
+                return <ProductCardDefaultView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
             case 'BodyAltraView':
-                return <ZaatarProductCardViewAltra productInfo={props.item} currencySymbol={props.currencySymbol}/>
+                return <ProductCardZaatarViewAltra productInfo={productInfo} currencySymbol={props.currencySymbol}/>
             case 'PremiumView':
-                return <PremiumProductCardView productInfo={props.item} currencySymbol={props.currencySymbol}/>
+                return <ProductCardPremiumView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+            case 'AdminView':
+                return <ProductCardAdminView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+            case 'Carousel':
+                return <CarouselCardView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
             default:
               return <DefaultView />
         }
@@ -82,10 +89,12 @@ export default function ProductCard(props) {
         return(
             <View style={{flex:1, backgroundColor:'#2C4770'}}>
                 <DropShadow style={styles.dropShadow}>
-                    <Image style={styles.displayImg} source={productInfo.photos[0] ? {uri : productInfo.photos[0]} : require('../assets/gallary/Zaatar.png')} />
+                    <FastImage style={styles.displayImg} 
+                        source={productInfo.photos[0] ? {uri : productInfo.photos[0]} : require('../assets/gallary/Zaatar.png')} 
+                        resizeMode={FastImage.resizeMode.cover}/>
                 </DropShadow >
                 <View style={styles.subDefaultContainer}>    
-                    <Text style={[styles.titleDefault,{marginTop:3}]}> {productInfo.product_name}</Text> 
+                    <Text style={styles.titleDefault}> {productInfo.product_name}</Text> 
                     { !props.deleteButtonVisibility ?
                         <Text style={styles.price}> {props.currencySymbol?props.currencySymbol:'💰'}{productInfo.price}</Text> 
                         :
@@ -96,40 +105,41 @@ export default function ProductCard(props) {
         )
     }
 
+    const EditDelete = () =>{
+        return(
+            <View style={{width:'100%',backgroundColor:props.view === 'AdminView'? '#2C477088' : '#2C477088', flexDirection:'row', justifyContent:'space-around'}}>
+                <Buttons.ButtonDefault 
+                    iconName="edit"
+                    iconSize={25}
+                    containerStyle={{width:'50%',justifyContent:'center',borderRightWidth:1}}
+                    onPress={()=>setProductFormVisibility(true)}/>  
+                <Buttons.ButtonDefault 
+                    iconName="delete"
+                    iconSize={25}
+                    containerStyle={{width:'50%',justifyContent:'center'}}
+                    onPress={()=> DeleteProduct(productInfo.productId)}/>  
+            </View>
+        )
+    }
     const CardView = () => {
         return(
-            <TouchableOpacity   style={props.view !== 'PremiumView'? styles.ProductCardDefault : styles.ProductCardHeader} 
+            <TouchableOpacity   style={props.view === 'PremiumView' ? 
+                                        styles.ProductCardHeader : props.view === 'AdminView' ? 
+                                        styles.ProductCardAdmin : props.view === 'Carousel' ? 
+                                        styles.ProductCardCarousel : styles.ProductCardDefault} 
                                 activeOpacity={0.7} 
                                 onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
                                 disabled={props.deleteButtonVisibility}>
-                {/* <DefaultView/> */}
-                {getView(props.view)}
+
+                {
+                    getView(props.view)
+                }
+
                 { props.deleteButtonVisibility ?
-                <View style={{
-                        width:'100%',
-                        backgroundColor: '#2C477088',
-                        flexDirection:'row',
-                        justifyContent:'space-around'}}>
-                            <Buttons.ButtonDefault 
-                                iconName="edit"
-                                iconSize={25}
-                                containerStyle={{
-                                    width:'50%',
-                                    justifyContent:'center',
-                                    borderRightWidth:1,
-                                    padding:3}}
-                                onPress={()=>setProductFormVisibility(true)}/>  
-                            <Buttons.ButtonDefault 
-                                iconName="delete"
-                                iconSize={25}
-                                containerStyle={{
-                                    width:'50%',
-                                    justifyContent:'center'}}
-                                onPress={()=> DeleteProduct(productInfo.productId)}/>  
-                </View>
+                    <EditDelete/>
                 : 
-                null
-            }       
+                    null
+                }       
             </TouchableOpacity>
         )
     }
@@ -166,7 +176,7 @@ export default function ProductCard(props) {
 }
 const styles = StyleSheet.create({
     container:{
-        flex:1
+        flex:1,
     },
     dropShadow:{
         shadowColor: '#171717',
@@ -185,15 +195,27 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     ProductCardDefault:{
-        width:'45%',
-        margin: 10,
+        width:'48%',
+        margin:4,
+        marginTop:7,
+        marginBottom:7 ,
         borderRadius:13,
         overflow:'hidden'
     },
     ProductCardHeader:{
-        margin: 1,
         borderRadius:13,
         overflow:'hidden'
+    },
+    ProductCardAdmin:{
+        marginTop: 12,
+        width:'98%',
+        alignSelf:'center',
+        borderRadius:5,
+        overflow:'hidden',
+        borderWidth:1
+    },
+    ProductCardCarousel:{
+        
     },
     subDefaultContainer: {
         flex:1,
@@ -216,11 +238,10 @@ const styles = StyleSheet.create({
     },
     titleDefault:{
         fontFamily:'Cairo-Regular',
-        fontSize: 15,
+        fontSize: 14,
         color: '#fff',
         textAlign:'center',
-        marginTop:5,
-        marginBottom:5
+        marginBottom:2
     },
     dateDefault:{
         fontFamily:'Cairo-Regular',
@@ -229,7 +250,7 @@ const styles = StyleSheet.create({
     },
     body:{
         width:'100%',
-        fontSize: 16,
+        fontSize: 14,
         color: '#2C4770',
         backgroundColor:'rgba(255,255,255,0.9)',
         textAlign:'center',
@@ -238,7 +259,7 @@ const styles = StyleSheet.create({
     },
     displayImg:{
         width: "100%", 
-        height: 120, 
+        height: 130, 
         backgroundColor:'#E5EEFF',
         borderRadius:10,
         alignSelf:'center'

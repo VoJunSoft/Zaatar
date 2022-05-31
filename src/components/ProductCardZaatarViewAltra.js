@@ -14,7 +14,7 @@ import FastImage from 'react-native-fast-image'
 import LinearGradient from 'react-native-linear-gradient'
 import Buttons from '../elements/Button'
 
-export default function ZaatarProductCardViewAltra(props) {
+export default function ProductCardZaatarViewAltra(props) {
 
 return (
     <SafeAreaView style={styles.block}>
@@ -48,12 +48,13 @@ return (
 const styles = StyleSheet.create({
     block:{
       flex:1,
-      width:Dimensions.get('window').width/2.2,
+      width:'94%',
       alignSelf:'center',
       backgroundColor:'#4b6cb7',
       borderRadius:15,
       overflow:'hidden',
-      borderColor:'#2C4770'
+      borderColor:'#2C4770',
+      marginTop:9
     },
     infoBlock: {
       flex:1,

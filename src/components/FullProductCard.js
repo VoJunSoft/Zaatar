@@ -103,6 +103,7 @@ const FullProductCard = (props) => {
               style={styles.largeImgBlock}>
                     <FastImage style={styles.imgLarge} 
                           source={{uri: productInfo.photos[imgIndex],  priority: FastImage.priority.high}} 
+                          defaultSource={require('../assets/gallary/Zaatar.png')}
                           resizeMode={FastImage.resizeMode.contain}/> 
           </LinearGradient>
 
