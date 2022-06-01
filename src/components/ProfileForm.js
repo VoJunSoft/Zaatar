@@ -22,6 +22,8 @@ import {useNavigation} from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
 import LinearGradient from 'react-native-linear-gradient'
+import {Picker} from '@react-native-picker/picker'
+import {cities} from "../scripts/DataValues.json"
 //import * as RNLocalize from "react-native-localize"
 
 export default function ProfileForm(props) {
@@ -31,7 +33,7 @@ export default function ProfileForm(props) {
     const [userInfo, setUserInfo] = useState(props.userInfo ? 
                 props.userInfo 
                 : 
-                {id:'', email:'', phone:'', name:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}}
+                {id:'', email:'', phone:'', name:'', rule:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}}
             )
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
@@ -41,10 +43,10 @@ export default function ProfileForm(props) {
     //Edit user profile information
     const storeData = (value) => {
         try {
-            AsyncStorage.setItem('userInfoZaatar', JSON.stringify(value))
+            AsyncStorage.mergeItem('userInfoZaatar', JSON.stringify(value))
             .then(()=>{
                 //NOTE user id is also stored as snapshot in users. 
-                firestore().collection('users').doc(userInfo.id).set(value)
+                firestore().collection('users').doc(userInfo.id).update(value)
                     .then(()=>{
                         //immediate update to profile info
                         props.setUserInfo(value)
@@ -187,7 +189,7 @@ export default function ProfileForm(props) {
             {!props.Registration? 
                 <TouchableOpacity onPress={()=>props.setProfileFormVisibility(false)} 
                             style={{backgroundColor: '#2C4770', width:'100%'}}
-                            activeOpacity={0.95}>
+                            activeOpacity={.99}>
                     <Text style={{
                         color:'#fff',
                         fontSize:25,
@@ -203,10 +205,10 @@ export default function ProfileForm(props) {
             <ScrollView style={styles.userInfo} showsVerticalScrollIndicator={false}>
                 <LinearGradient 
                     colors={['#2C4770','#FFFFFF']}  
-                    style={{flexDirection:'column', height:'22%', width:'100%', alignItems:'baseline', borderWidth:0}}>
+                    style={{flexDirection:'column', height:'20%', width:'100%', borderWidth:0}}>
                         <Text style={styles.title}>{props.Registration ? "تسجيل صفحه تجاريه" : "تعديل التفاصيل"}</Text>
                         <Avatar
-                        size={150}
+                        size={145}
                         rounded
                         source={image ? {uri: image} : require("../assets/gallary/p1.png")}
                         icon={{ name: 'user', type: 'font-awesome', color:'#2C4770' }}
@@ -217,7 +219,7 @@ export default function ProfileForm(props) {
                             <Badge
                                 status={image ? "success" : "error"}
                                 value={"+"}
-                                containerStyle={{ position: 'absolute', bottom:-20, alignSelf:'center'}}
+                                containerStyle={{ position: 'absolute', bottom:"-22%", alignSelf:'center'}}
                                 textStyle={{fontSize:10, fontWeight:'bold'}} />
                             :
                             null
@@ -288,10 +290,10 @@ export default function ProfileForm(props) {
                         status={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "success" : "error"}
                         value={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "✓" : "✘"}
                         containerStyle={{ position: 'absolute', bottom: 5, left: 20}}
-                        textStyle={{fontSize:10}} />
+                        textStyle={{fontSize:9}} />
                 </View>
 
-                <Input
+                {/* <Input
                     placeholder="ام الفحم"
                     label="البلد"
                     value={userInfo.location.city}
@@ -301,17 +303,41 @@ export default function ProfileForm(props) {
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     containerStyle={styles.TextInput}
                     autoCompleteType
-                    onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, marginBottom:10, color: userInfo.location.city.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.location.city.length}/15</Text>
+                    onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/> */}
+                    
+                <View style={styles.cities}>
+                    <Text style={{fontWeight:'bold', fontSize:18, color:'#000', marginRight: 5, marginBottom:-7}}>البلد</Text>
+                    <Picker
+                        selectedValue={userInfo.location.city}
+                        style={styles.TextInput}
+                        onValueChange={(itemValue, itemIndex) => setUserInfo({...userInfo, location: {...userInfo.location, city: itemValue}})}>
+                        <Picker.Item style={{fontSize:15}} label="اختر البلد - " value="" />
+                        {
+                            cities.map((item, index)=>[ 
+                                    <Picker.Item label={item} 
+                                                    value={item} 
+                                                    key={index} />
+                            ])
+                        }
+                    </Picker> 
+                    <Badge
+                        status={userInfo.location.city !=='' ? "success" : "error"}
+                        value={userInfo.location.city !=='' ? "✓" : "✘"}
+                        containerStyle={{ position: 'absolute', bottom: -25, left: 9}}
+                        textStyle={{fontSize:9}} 
+                        />
+                </View>
 
-                { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
-                {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
-                {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+                <View style={{height:50, justifyContent:'center', margin:5}}>
+                    { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
+                    {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
+                    {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+                </View>
 
                 <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Buttons.ButtonDefault
                     titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5, margin: 10}}
+                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5}}
                     textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 17, color: '#fff'}}
                     onPress={SaveUserInfo}/>
                 </View>
@@ -325,12 +351,6 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor: '#fff',
         alignItems:'center',
-    },
-    dropShadow:{
-        shadowColor: '#323232',
-        shadowOffset: {width: -9, height: 8},
-        shadowOpacity: 0.7,
-        shadowRadius: 1,
     },
     image:{
         alignSelf:'center',
@@ -362,7 +382,7 @@ const styles = StyleSheet.create({
         marginLeft:7
     },
     TextInput:{
-        marginTop:-6,
+        marginTop:-5,
     },
     title:{
         fontFamily:'Cairo-Regular',
@@ -370,5 +390,10 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:'#FFFFFF',
         marginTop:3
+    },
+    cities:{
+        borderBottomWidth:0.7,
+        width:'95%',
+        alignSelf:'center',
     }
 })

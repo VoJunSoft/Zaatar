@@ -24,26 +24,26 @@ const Entry = ({navigation}) => {
     const [errMsg, setErrMsg] = useState('')
     
     const handleLogIn = () => {
-    setErrMsg('')
-    if(logInInfo.email==='' || logInInfo.password==='')
-        return setErrMsg('احدى المعلومات غير صحيحه')
+        setErrMsg('')
+        if(logInInfo.email.length < 5 || logInInfo.password.length < 5)
+            return setErrMsg('احدى المعلومات غير صحيحه')
 
-    setIsloading(true)
-    const unsub=  auth()
-        .signInWithEmailAndPassword(logInInfo.email, logInInfo.password)
-        .then((userCreditentials) => {
-            //User account signed in
-            //get uid and pass it to store data
-            const user = userCreditentials.user
-            console.log(user)
-            //get user id, retrieve data from data base then store by id 
-            getUserInfo(user.uid) 
-        })
-        .catch(error => {
-            setIsloading(false)
-            setErrMsg('احدى المعلومات غير صحيحه')
-        })
-        return () => unsub
+        setIsloading(true)
+        const unsub=  auth()
+            .signInWithEmailAndPassword(logInInfo.email, logInInfo.password)
+            .then((userCreditentials) => {
+                //User account signed in
+                //get uid and pass it to store data
+                const user = userCreditentials.user
+                console.log('user ---->' , user)
+                //get user id, retrieve data from data base then store by id 
+                getUserInfo(user.uid) 
+            })
+            .catch(error => {
+                setIsloading(false)
+                setErrMsg('احدى المعلومات غير صحيحه')
+            })
+            return () => unsub
     }
 
     //verify email input
@@ -72,12 +72,10 @@ const Entry = ({navigation}) => {
         .doc(irec)
         .get()
         .then(documentSnapshot => {
-            console.log(documentSnapshot.data())
             setUserInfo({...documentSnapshot.data(), id: irec})
             AsyncStorage.setItem('userInfoZaatar', JSON.stringify({...documentSnapshot.data(), id: irec})) 
         })
         .then(()=>{
-            console.log(userInfo)
             //restart app to update app.js values
             RNRestart.Restart()
             //hide indicator
@@ -122,7 +120,7 @@ const Entry = ({navigation}) => {
                     value={logInInfo.email}
                     rightIcon={{ type: 'font-awesome', name: 'envelope' }}
                     inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{width:'80%'}}
+                    containerStyle={{width:'90%'}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setLogInInfo({...logInInfo, email: value })}
                     />
@@ -134,7 +132,7 @@ const Entry = ({navigation}) => {
                     secureTextEntry={true}
                     rightIcon={{ type: 'font-awesome', name: 'key' }}
                     inputContainerStyle={{ paddingLeft: 5}}
-                    containerStyle={{marginTop:-15, width:'80%', marginBottom:-15}}
+                    containerStyle={{marginTop:-15, width:'90%', marginBottom:-15}}
                     labelStyle={{color:'#171717', textAlign:'right'}}
                     onChangeText={value => setLogInInfo({...logInInfo, password: value })}
                 />

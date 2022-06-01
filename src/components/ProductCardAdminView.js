@@ -8,8 +8,6 @@ import {
     Dimensions,
     ImageBackground 
 } from 'react-native'
-import DropShadow from "react-native-drop-shadow";
-import Buttons from '../elements/Button'
 import FastImage from 'react-native-fast-image'
 
 const ProductCardAdminView = (props) => {

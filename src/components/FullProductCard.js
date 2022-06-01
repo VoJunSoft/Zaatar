@@ -134,7 +134,7 @@ const FullProductCard = (props) => {
                 colors={[ '#ffffff50', '#ffffff','#B2B2B2']} 
                 style={styles.cardBlock}>
                 <Text style={styles.subHeaderText}>{handleDate(productInfo.date_listed.seconds)}</Text>
-                <Text style={styles.subHeaderText}>{props.currencySymbol?props.currencySymbol:'₪'}{productInfo.price}</Text>
+                <Text style={styles.subHeaderText}>{props.productInfo.currency? props.productInfo.currency:'₪'}{productInfo.price}</Text>
                 <Text style={styles.subHeaderText}>{productInfo.product_name}</Text> 
             </LinearGradient>
 

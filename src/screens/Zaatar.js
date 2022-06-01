@@ -40,9 +40,9 @@ export default function Zaatar(props) {
     const [selectedCountry, setSelectedCountry] = useState(userInfo.location.country)
     const [selectedCity, setSelectedCity] = useState('الكل')
     const [selectedCountryIndex, setIndex] = useState(0)
-    const [currencySymbol, setCurrencySymbol] = useState(currencySymbols[userInfo.location.flag])
 
     useEffect(() => {
+        console.log('params ' , props.route.params)
         //fill up products
         GetProductsByDate()
         //get category for header flatlist products randomly 
@@ -72,12 +72,10 @@ export default function Zaatar(props) {
 
                 })
                 console.log('locations : ', locations)
-                //if selected country (passed from APP.js) does not exist setSelectedCountryIndex to zero else get the index of the country
+                //if selected country (passed from APP.js) does not exist setSelectedCountryIndex to zero (Global) else get the index of the country
                 setIndex(locations.findIndex(object => object.country === selectedCountry) === -1 ? 0 : locations.findIndex(object => object.country === selectedCountry))
                 //retrieve country name based on selectedCountryIndex
                 //setSelectedCountry(locations[selectedCountryIndex].country)
-                //get currency symbol based on selectedCountryIndex
-                //setCurrencySymbol(currencySymbols[locations[selectedCountryIndex].flag])
                 setIsLoading(false)
             })
             return() => subscriber()
@@ -100,7 +98,6 @@ export default function Zaatar(props) {
         setSelectedCity('الكل')
         setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')
         //setIndex(locations.findIndex(object => object.country === selectedCountry))
-        //setCurrencySymbol(selectedCountry === 'Global' ? 'C' : currencySymbols[userInfo.location.flag])
     }
 
     const LocationBlock = () =>{
@@ -172,7 +169,7 @@ export default function Zaatar(props) {
                     keyExtractor={item => item.productId}
                     style={styles.HeaderProductsList}
                     renderItem={ ({item, index}) => (
-                        <ProductCard productInfo={item} key={index} view='Carousel' currencySymbol={currencySymbol}/>
+                        <ProductCard productInfo={item} key={index} view='Carousel'/>
                     )}/> 
             </LinearGradient>  
             </>
@@ -191,7 +188,7 @@ export default function Zaatar(props) {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard productInfo={item} key={index} view='BodyAltraView' currencySymbol={currencySymbol}/>
+                    <ProductCard productInfo={item} key={index} view='BodyAltraView'/>
                 )}
             />
         </SafeAreaView>

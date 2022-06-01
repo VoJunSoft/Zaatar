@@ -7,7 +7,6 @@ import {
     Image,
     Dimensions 
 } from 'react-native'
-import Icon from '../elements/Icon'
 import DropShadow from "react-native-drop-shadow"
 import FastImage from 'react-native-fast-image'
 
@@ -23,7 +22,7 @@ return (
                          }}>
         <View style={[styles.cardBlock,{backgroundColor: '#fff'}]}>
             <Text style={styles.title}>{props.productInfo.product_name}</Text> 
-            <Text style={[styles.body]}>{props.currencySymbol}{props.productInfo.price}</Text>
+            <Text style={[styles.body]}>{props.productInfo.currency}{props.productInfo.price}</Text>
             <FastImage  style={styles.img} 
                         source={{uri: props.productInfo.photos[0]}} 
                         defaultSource={require('../assets/gallary/Zaatar.png')}

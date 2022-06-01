@@ -8,8 +8,6 @@ import {
     Image,
     Dimensions 
 } from 'react-native'
-import Icon from '../elements/Icon'
-import DropShadow from "react-native-drop-shadow"
 import FastImage from 'react-native-fast-image'
 import LinearGradient from 'react-native-linear-gradient'
 import Buttons from '../elements/Button'
@@ -32,13 +30,13 @@ return (
         <LinearGradient 
             colors={['#4b6cb7', '#2C4770','#182848']} 
             style={styles.infoBlock}>
-                    <Text style={styles.body}>{props.currencySymbol}{props.productInfo.price}</Text> 
+                    <Text style={styles.body}>{props.productInfo.currency?props.productInfo.currency:'₪'}{props.productInfo.price}</Text> 
                     <Buttons.ButtonDefault 
                             titleLeft={props.productInfo.seller.location.city ? props.productInfo.seller.location.city : 'ام الفحم'}
-                            iconName="location"
-                            iconSize={25}
-                            containerStyle={{justifyContent:'flex-end', width:'65%'}}
-                            textStyle={{fontFamily: 'Cairo-Regular',color:'#fff',fontSize:12, marginRight: 3}}
+                            iconName="locationAlpha"
+                            iconSize={27}
+                            containerStyle={{justifyContent:'flex-end', width:'63%', borderLeftWidth:1, borderColor: '#2C4770', height:'100%'}}
+                            textStyle={{fontFamily: 'Cairo-Regular',color:'#fff',fontSize:12}}
                             disabled/>
         </LinearGradient>
     </SafeAreaView>
@@ -62,29 +60,26 @@ const styles = StyleSheet.create({
       flexDirection:'row',
       justifyContent:'space-between',
       alignItems:'center',
-      paddingTop:5,
-      paddingBottom:5
+      //paddingLeft:3,
+      //paddingBottom:5
     },
     title: {
-      flex:1,
       width:'100%',
       fontFamily:'Cairo-Regular',
       fontSize: 13,
       color:'#fff',
       textAlign:'center',
       flexWrap:'nowrap',
-      marginBottom:2
+      marginTop:5,
+      marginBottom:5
     },
     body: {
         flex:1,
-        width:'100%',
         fontFamily:'GLA',
-        fontSize: 13,
+        fontSize: 12,
         color:'#fff',
         textAlign:'center',
-        flexWrap:'nowrap',
-        alignItems:'center',
-        letterSpacing:.5
+        alignItems:'center'
       },
     HeaderText: {
         fontFamily:'Cairo-Regular',

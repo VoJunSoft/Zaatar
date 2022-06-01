@@ -6,7 +6,6 @@ import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
 import EditProductForm from '../components/AddProductForm'
 import DropShadow from "react-native-drop-shadow";
-//import { handleTimeDifference } from '../scripts/Time';
 import ProductCardDefaultView from './ProductCardDefaultView'
 import ProductCardPremiumView from './ProductCardPremiumView'
 import ProductCardZaatarViewAltra from './ProductCardZaatarViewAltra'
@@ -71,15 +70,15 @@ export default function ProductCard(props) {
         //getView(props.view)
         switch(view){
             case 'BodyView':
-                return <ProductCardDefaultView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+                return <ProductCardDefaultView productInfo={productInfo} />
             case 'BodyAltraView':
-                return <ProductCardZaatarViewAltra productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+                return <ProductCardZaatarViewAltra productInfo={productInfo} />
             case 'PremiumView':
-                return <ProductCardPremiumView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+                return <ProductCardPremiumView productInfo={productInfo} />
             case 'AdminView':
-                return <ProductCardAdminView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+                return <ProductCardAdminView productInfo={productInfo}/>
             case 'Carousel':
-                return <CarouselCardView productInfo={productInfo} currencySymbol={props.currencySymbol}/>
+                return <CarouselCardView productInfo={productInfo} />
             default:
               return <DefaultView />
         }
@@ -96,7 +95,7 @@ export default function ProductCard(props) {
                 <View style={styles.subDefaultContainer}>    
                     <Text style={styles.titleDefault}> {productInfo.product_name}</Text> 
                     { !props.deleteButtonVisibility ?
-                        <Text style={styles.price}> {props.currencySymbol?props.currencySymbol:'💰'}{productInfo.price}</Text> 
+                        <Text style={styles.price}> {props.productInfo.currency?props.productInfo.currency:'₪'}{productInfo.price}</Text> 
                         :
                         null
                     }

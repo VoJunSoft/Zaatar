@@ -19,9 +19,11 @@ import storage from '@react-native-firebase/storage';
 import Icon from '../elements/Icon';
 import Button from '../elements/Button'
 import {Picker} from '@react-native-picker/picker'
+import {SearchCategories, Currencies} from "../scripts/DataValues.json"
+import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient'
 
 export default function AddProductForm(props) {
-
   //props.userInfo
   //HINT for edit purposes call AddProductForm from productCard and pass to it productInfo/Item
   const [productInfo, setProductInfo] = useState(props.EditProduct ? 
@@ -34,7 +36,8 @@ export default function AddProductForm(props) {
       description: '', 
       category: '', 
       price: '', 
-      date_listed: {seconds: Math.floor(Date.now() / 1000)}
+      date_listed: {seconds: Math.floor(Date.now() / 1000)},
+      currency:'₪'
   })
   //Handle image upload: the path from phone to show the chosen picture on screen (before upload)
   const [images, setImages] = useState(productInfo.photos)
@@ -48,7 +51,6 @@ export default function AddProductForm(props) {
       width: undefined,
       height: undefined,
       multiple: true,
-      //cropping: true,
     }).then((image) => {
         if((image.length + images.length)<=5){
           image.map(item => {
@@ -109,7 +111,8 @@ export default function AddProductForm(props) {
                   description: '', 
                   category: '', 
                   price: '', 
-                  date_listed: {seconds: Math.floor(Date.now() / 1000)} //firestore.FieldValue.serverTimestamp(),
+                  date_listed: {seconds: Math.floor(Date.now() / 1000)}, //firestore.FieldValue.serverTimestamp(),
+                  currency:'₪'
                 })
                 setImages([])
                 setVisible(false)
@@ -170,30 +173,45 @@ export default function AddProductForm(props) {
 
   return(
         <>
-        { props.EditProduct ?
-            <Text style={CSS.title}>تعديل المنتج</Text> 
-            : 
-            <Text style={CSS.title}>إضافة منتج</Text> 
-        }
+         <LinearGradient 
+                    colors={['#2C4770','#2C477099','#2C477090','#2C477099','#2C4770']}  
+                    style={{flexDirection:'column', width:'100%', alignItems:'baseline', borderWidth:0}}>
+            { props.EditProduct ?
+                <Text style={CSS.title}>تعديل المنتج</Text> 
+                : 
+                <Text style={CSS.title}>إضافة منتج</Text> 
+            }
+        </LinearGradient>
         <ScrollView style={CSS.container} showsVerticalScrollIndicator={false}>
-        <View style={[CSS.dateBlock, {marginTop:0}]}>
-            <TextInput
-                value={productInfo.product_name}
-                style={[CSS.postInput,{width: '100%'}]}
-                onChangeText={text=> setProductInfo({...productInfo,product_name: text})}
-                maxLength={25}
-                selectionColor="white"
-                placeholderTextColor='#2C4770'
-                placeholder="اسم المنتجات"
-                underlineColorAndroid='transparent'
-            />
-         </View>
+        <TextInput
+            value={productInfo.product_name}
+            style={[CSS.postInputDate,{width: '100%'}]}
+            onChangeText={text=> setProductInfo({...productInfo,product_name: text})}
+            maxLength={25}
+            selectionColor="white"
+            placeholderTextColor='#2C4770'
+            placeholder="اسم المنتجات"
+            underlineColorAndroid='transparent'
+        />
          <Text style={{paddingLeft:5, color: productInfo.product_name.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.product_name.length}/25</Text>
          
          <View style={CSS.dateBlock}>
+            <Picker
+                selectedValue={productInfo.currency}
+                style={[CSS.postInputDate, {width:'27%'}]}
+                containerStyle={{width:200}}
+                onValueChange={(itemValue, itemIndex) => [setProductInfo({...productInfo, currency:itemValue}), console.log('currrrency' , currency)]}>
+                  {
+                      Currencies.map((item, index)=>[ 
+                              <Picker.Item label={item} 
+                                            value={item} 
+                                            key={index} />
+                      ])
+                  }
+            </Picker>
             <TextInput
                 value={productInfo.price}
-                style={CSS.postInputDate}
+                style={[CSS.postInputDate, {width:'30%'}]}
                 onChangeText={text=> setProductInfo({...productInfo,price: text})}
                 numberOfLines={1}
                 maxLength={7}
@@ -205,30 +223,36 @@ export default function AddProductForm(props) {
             />
             <Picker
                 selectedValue={productInfo.category}
-                style={CSS.postInputDate}
+                style={[CSS.postInputDate, {width:'40%'}]}
                 onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, category:itemValue})}>
-                <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
-                <Picker.Item label="سيارات" value="سيارات" />
-                <Picker.Item label="الكترونيات" value="الكترونيات" />
-                <Picker.Item label="ادوات" value="ادوات" />
-                <Picker.Item label="الات" value="الات" />
-                <Picker.Item label="اثاث" value="اثاث" />
-                <Picker.Item label="انتيكا" value="انتيكا" />
-                <Picker.Item label="ورش عمل" value="ورش عمل" />
-                <Picker.Item label="ملابس" value="ملابس" />
-                <Picker.Item label="مستلزمات" value="مستلزمات" />
-                <Picker.Item label="اكسسوارات" value="اكسسوارات" />
-                <Picker.Item label="خدمات" value="خدمات" />
-                <Picker.Item label="فن" value="فن" />
-                <Picker.Item label="غذاء" value="غذاء" />
-                <Picker.Item label="دروس خصوصية" value="دروس خصوصية" />
+                  <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
+                  {
+                      SearchCategories.map((item, index)=>[ 
+                              <Picker.Item label={item} 
+                                            value={item} 
+                                            key={index} />
+                      ])
+                  }
             </Picker>
         </View>
-        <Text style={{paddingLeft:7, color: productInfo.price.length < 1  ? '#AF0F02': '#119935'}}>{productInfo.price.length}/7</Text>
-        
+        <View>
+            <Badge
+              status={"success"}
+              value={"✓"}
+              containerStyle={{ position: 'absolute', bottom: 0, left: 7}}
+              textStyle={{fontSize:10}} 
+              />
+          <Text style={{marginLeft:'30%', marginTop:-4, color: productInfo.price.length < 1  ? '#AF0F02': '#119935'}}>{productInfo.price.length}/7</Text>
+          <Badge
+                status={productInfo.category !=='' ? "success" : "error"}
+                value={productInfo.category !=='' ? "✓" : "✘"}
+                containerStyle={{ position: 'absolute', bottom: 0, right: '33%'}}
+                textStyle={{fontSize:10}} 
+                />
+        </View>
         <TextInput
             value={productInfo.description}
-            style={[CSS.postInput,{marginTop:10, textAlignVertical:'top'}]}
+            style={[CSS.postInput,{marginTop:18, textAlignVertical:'top'}]}
             onChangeText={text=> setProductInfo({...productInfo,description: text})}
             maxLength={125}
             selectionColor="white"
@@ -253,7 +277,10 @@ export default function AddProductForm(props) {
                     {
                     images.map( (item, index) => (
                         <View style={CSS.imgBlock} key={index}>
-                            <Image style={CSS.img} source={{uri: item}} />
+                            <FastImage  
+                                style={CSS.img} 
+                                source={{uri: item}} 
+                                resizeMode={FastImage.resizeMode.cover}/>
                             <Button.ButtonDefault
                                 iconName='delete' 
                                 iconSize={30}
@@ -275,7 +302,7 @@ export default function AddProductForm(props) {
           <Badge
             status={images.length > 0 ? "success" : "error"}
             value={images.length > 0 ? "✓" : "✘"}
-            containerStyle={{ position: 'absolute', bottom: 3, left: 5}}
+            containerStyle={{ position: 'absolute', bottom: 3, left: 7}}
             textStyle={{fontSize:10}} 
             />
        
@@ -360,50 +387,47 @@ export default function AddProductForm(props) {
 const CSS = StyleSheet.create({
   container:{
     flex:1,
-    padding:7,
+    padding:8,
+    paddingTop:17,
+    backgroundColor:'#fff'
   },
   title: {
     width:'100%',
     fontSize: 25,
     textAlign: 'center',
     color:'#fff',
-    backgroundColor:'#2C4770',
     fontFamily:'Cairo-Regular',
-    padding: 5,
-    //borderTopLeftRadius: 10,
-    //borderTopRightRadius: 10,
+    padding: 10,
     letterSpacing:5
   },
   postInput: {
-    fontSize: 15,
+    fontSize: 14,
     borderBottomColor:'#2C4770',
-    borderBottomWidth:3,
     marginTop:5,
     fontFamily: "Cairo-Regular",
     textAlign:'right',
     color: '#2C4770',
-    borderRadius:5,
     paddingRight:10,
-    backgroundColor:'#ACC6F8'
+    backgroundColor:'#ACC6F8',
+    borderRadius:5,
   },
   postInputDate: {
-    width:'48%',
-    //textAlignVertical:'top',
-    fontSize: 15,
+    fontSize: 14,
     borderBottomColor:'#2C4770',
-    borderBottomWidth:3,
-    margin:0,
-    borderRadius:5,
     fontFamily: "Cairo-Regular",
     textAlign:'center',
     backgroundColor:'#ACC6F8',
     color: '#2C4770',
+    borderRadius:5,
   },
   dateBlock: {
     flexDirection:'row',
     justifyContent:'space-between',
-    marginTop:10,
-    marginBottom:5
+    marginTop:15,
+    marginBottom:3,
+    borderRadius:5,
+    height:50,
+    overflow:'hidden'
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -420,7 +444,7 @@ const CSS = StyleSheet.create({
     backgroundColor:'#fff',
     alignSelf:'center',
     borderRadius:100,
-    marginTop:-70,
+    marginTop:-60,
     borderWidth:2,
     borderColor:'#2C4770',
     overflow:'hidden',
@@ -433,11 +457,12 @@ const CSS = StyleSheet.create({
   },
   imgBlock:{
     alignItems:'center', 
-    borderWidth:0.2, 
-    borderColor:'rgba(255,255,255,0.5)', 
+    borderWidth:0.3, 
+    borderColor:'#2C4770', 
     margin:5,
     borderRadius: 5,
-    overflow:'hidden'
+    overflow:'hidden',
+    backgroundColor:'#2C477070'
   },
   loading: {
     textAlign:'center',
@@ -448,12 +473,11 @@ const CSS = StyleSheet.create({
   imagesContainer:{
     fontSize: 15,
     borderBottomColor:'#2C4770',
-    borderBottomWidth:3,
-    marginTop:60,
+    marginTop:55,
     backgroundColor:'#ACC6F8',
     paddingBottom: 5,
-    height: 260,
-    borderRadius: 5,
+    height: 265,
+    borderRadius:5,
   }
 });
 

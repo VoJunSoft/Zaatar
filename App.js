@@ -80,8 +80,8 @@ const App = ({useNavigation}) => {
     try {
           const value = await AsyncStorage.getItem('userInfoZaatar')
           if(value !== null){
-              setUserInfo(JSON.parse(value))
-              setIsUser(true)
+              await setUserInfo(JSON.parse(value))
+              await setIsUser(true)
               console.log('APpJS async UserInfo: ' , JSON.parse(value))
           }
           return () => value    
@@ -205,7 +205,7 @@ const App = ({useNavigation}) => {
               component={WorkShops}
               options={{
                 title:'ورش عمل',
-                drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
+                drawerLabel: ()=><MenuItem icon='speakers' title='ورش عمل'/>
           }}/>
           <Drawer.Screen
               name="Settings"
@@ -254,7 +254,7 @@ const App = ({useNavigation}) => {
               component={WorkShops}
               options={{
                 title:'ورش عمل',
-                drawerLabel: ()=><MenuItem icon='gear' title='ورش عمل'/>
+                drawerLabel: ()=><MenuItem icon='speakers' title='ورش عمل'/>
           }}/>
           <Drawer.Screen
             name="Settings"
@@ -266,13 +266,13 @@ const App = ({useNavigation}) => {
           }}/>
           {
             //TODO: set rules/admins
-            userInfo.id === 'u0athZ2BeofgXZytwFFLqK8eSCp1' ?
+            userInfo.rule === 'admin' ?
               <Drawer.Screen
                 name="Admin"
                 component={Admin}
                 options={{
                   title:'منطقة الإدارة',
-                  drawerLabel: ()=><MenuItem icon='menu' title='منطقة الإدارة'/>
+                  drawerLabel: ()=><MenuItem icon='admin' title='منطقة الإدارة'/>
               }}/>
               : 
               null

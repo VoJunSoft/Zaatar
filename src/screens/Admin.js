@@ -41,11 +41,10 @@ const Admin = () => {
                 data={products}
                 ListFooterComponent={products.length === 0 ? <ActivityIndicator color='#2C4770' size={35} style={{marginTop:50}}/> : null}
                 showsVerticalScrollIndicator={false}
-                //numColumns={2}
                 keyExtractor={item => item.id}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard item={item} key={index} view='AdminView' deleteButtonVisibility={true} />
+                    <ProductCard productInfo={item} key={index} view='AdminView' deleteButtonVisibility={true} />
                 )}/>
         )
     }
