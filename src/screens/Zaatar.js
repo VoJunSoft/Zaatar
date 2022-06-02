@@ -62,7 +62,7 @@ export default function Zaatar(props) {
                     setProducts((prevState) => {
                         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                     })
-
+                    
                     indexCountry = locations.findIndex(object => object.country === documentSnapshot.data().seller.location.country)
                     indexCity = indexCountry === -1 ? -1 : locations[indexCountry].cities.indexOf(documentSnapshot.data().seller.location.city)
                     if(indexCountry === -1)

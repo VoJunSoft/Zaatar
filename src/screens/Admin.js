@@ -31,15 +31,30 @@ const Admin = () => {
         switch(screenName){
             case 'Stores':
                 return <Stores AdminArea={true} />
+                break
             case 'Products':
                 return <ProductsForAdmin />
+                break
         }
     }
+
+    const $renderEmptyOrdersState = () => { 
+        return(
+            isLoading ?
+                <>
+                    <Text style={styles.loading}>جار التحميل</Text>
+                    <ActivityIndicator color='#2C4770' size={35}/>
+                </>
+            :
+                <Text style={styles.loading}>لم نتمكن من تحديد موقع أي متجر</Text>
+        )
+    }
+    
     const ProductsForAdmin = () =>{
         return(
             <FlatList 
                 data={products}
-                ListFooterComponent={products.length === 0 ? <ActivityIndicator color='#2C4770' size={35} style={{marginTop:50}}/> : null}
+                ListFooterComponent={products.length === 0 ? $renderEmptyOrdersState : null}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={item => item.id}
                 style={styles.ProductsList}
@@ -65,6 +80,14 @@ const styles = StyleSheet.create({
     ProductsList:{
         width:'100%',
     },
+    loading: {
+        color:'#2C4770', 
+        fontFamily:'Cairo-Bold', 
+        fontSize: 15,
+        alignSelf:'center',
+        marginTop:100,
+        marginBottom:5
+    }
 })
 
 export default Admin

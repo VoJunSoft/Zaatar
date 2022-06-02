@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     },
     title:{
         color:'#fff',
-        fontFamily:'Cairo-Regular',
+        fontFamily:'Almarai-Bold',
         fontSize:15,
         padding: 2,
         textAlign:'center'
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#00000060',
         borderBottomLeftRadius:10,
         borderBottomRightRadius:10,
-        borderTopLeftRadius:30,
+        borderTopLeftRadius:170,
         overflow:'hidden',
     }
 })

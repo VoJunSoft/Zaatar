@@ -22,6 +22,7 @@ import {Picker} from '@react-native-picker/picker'
 import {SearchCategories, Currencies} from "../scripts/DataValues.json"
 import FastImage from 'react-native-fast-image'
 import LinearGradient from 'react-native-linear-gradient'
+import * as Animatable from 'react-native-animatable'
 
 export default function AddProductForm(props) {
   //props.userInfo
@@ -183,191 +184,198 @@ export default function AddProductForm(props) {
             }
         </LinearGradient>
         <ScrollView style={CSS.container} showsVerticalScrollIndicator={false}>
-        <TextInput
-            value={productInfo.product_name}
-            style={[CSS.postInputDate,{width: '100%'}]}
-            onChangeText={text=> setProductInfo({...productInfo,product_name: text})}
-            maxLength={25}
-            selectionColor="white"
-            placeholderTextColor='#2C4770'
-            placeholder="اسم المنتجات"
-            underlineColorAndroid='transparent'
-        />
-         <Text style={{paddingLeft:5, color: productInfo.product_name.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.product_name.length}/25</Text>
-         
-         <View style={CSS.dateBlock}>
-            <Picker
-                selectedValue={productInfo.currency}
-                style={[CSS.postInputDate, {width:'27%'}]}
-                containerStyle={{width:200}}
-                onValueChange={(itemValue, itemIndex) => [setProductInfo({...productInfo, currency:itemValue}), console.log('currrrency' , currency)]}>
-                  {
-                      Currencies.map((item, index)=>[ 
-                              <Picker.Item label={item} 
-                                            value={item} 
-                                            key={index} />
-                      ])
-                  }
-            </Picker>
-            <TextInput
-                value={productInfo.price}
-                style={[CSS.postInputDate, {width:'30%'}]}
-                onChangeText={text=> setProductInfo({...productInfo,price: text})}
-                numberOfLines={1}
-                maxLength={7}
-                selectionColor="white"
-                placeholderTextColor='#2C4770'
-                placeholder="السعر"
-                keyboardType='numeric'
-                underlineColorAndroid='transparent'
-            />
-            <Picker
-                selectedValue={productInfo.category}
-                style={[CSS.postInputDate, {width:'40%'}]}
-                onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, category:itemValue})}>
-                  <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
-                  {
-                      SearchCategories.map((item, index)=>[ 
-                              <Picker.Item label={item} 
-                                            value={item} 
-                                            key={index} />
-                      ])
-                  }
-            </Picker>
-        </View>
-        <View>
-            <Badge
-              status={"success"}
-              value={"✓"}
-              containerStyle={{ position: 'absolute', bottom: 0, left: 7}}
-              textStyle={{fontSize:10}} 
+            <Animatable.View    
+                animation="bounceInDown"
+                easing="ease"
+                iterationCount={1}
+                duration={2000}
+                direction="normal">
+                <TextInput
+                    value={productInfo.product_name}
+                    style={[CSS.postInputDate,{width: '100%'}]}
+                    onChangeText={text=> setProductInfo({...productInfo,product_name: text})}
+                    maxLength={25}
+                    selectionColor="white"
+                    placeholderTextColor='#2C4770'
+                    placeholder="اسم المنتجات"
+                    underlineColorAndroid='transparent'
+                />
+                <Text style={{paddingLeft:5, color: productInfo.product_name.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.product_name.length}/25</Text>
+                
+                <View style={CSS.dateBlock}>
+                    <Picker
+                        selectedValue={productInfo.currency}
+                        style={[CSS.postInputDate, {width:'27%'}]}
+                        containerStyle={{width:200}}
+                        onValueChange={(itemValue, itemIndex) => [setProductInfo({...productInfo, currency:itemValue}), console.log('currrrency' , currency)]}>
+                          {
+                              Currencies.map((item, index)=>[ 
+                                      <Picker.Item label={item} 
+                                                    value={item} 
+                                                    key={index} />
+                              ])
+                          }
+                    </Picker>
+                    <TextInput
+                        value={productInfo.price}
+                        style={[CSS.postInputDate, {width:'30%'}]}
+                        onChangeText={text=> setProductInfo({...productInfo,price: text})}
+                        numberOfLines={1}
+                        maxLength={7}
+                        selectionColor="white"
+                        placeholderTextColor='#2C4770'
+                        placeholder="السعر"
+                        keyboardType='numeric'
+                        underlineColorAndroid='transparent'
+                    />
+                  <Picker
+                      selectedValue={productInfo.category}
+                      style={[CSS.postInputDate, {width:'40%'}]}
+                      onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, category:itemValue})}>
+                        <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
+                        {
+                            SearchCategories.map((item, index)=>[ 
+                                    <Picker.Item label={item} 
+                                                  value={item} 
+                                                  key={index} />
+                            ])
+                        }
+                  </Picker>
+              </View>
+              <View>
+                  <Badge
+                    status={"success"}
+                    value={"✓"}
+                    containerStyle={{ position: 'absolute', bottom: 0, left: 7}}
+                    textStyle={{fontSize:10}} 
+                    />
+                <Text style={{marginLeft:'30%', marginTop:-4, color: productInfo.price.length < 1  ? '#AF0F02': '#119935'}}>{productInfo.price.length}/7</Text>
+                <Badge
+                      status={productInfo.category !=='' ? "success" : "error"}
+                      value={productInfo.category !=='' ? "✓" : "✘"}
+                      containerStyle={{ position: 'absolute', bottom: 0, right: '33%'}}
+                      textStyle={{fontSize:10}} 
+                      />
+              </View>
+              <TextInput
+                  value={productInfo.description}
+                  style={[CSS.postInput,{marginTop:18, textAlignVertical:'top'}]}
+                  onChangeText={text=> setProductInfo({...productInfo,description: text})}
+                  maxLength={125}
+                  selectionColor="white"
+                  placeholderTextColor='#2C4770'
+                  placeholder="معلومات اضافية"
+                  underlineColorAndroid='transparent'
+                  numberOfLines={4}
+                  multiline
               />
-          <Text style={{marginLeft:'30%', marginTop:-4, color: productInfo.price.length < 1  ? '#AF0F02': '#119935'}}>{productInfo.price.length}/7</Text>
-          <Badge
-                status={productInfo.category !=='' ? "success" : "error"}
-                value={productInfo.category !=='' ? "✓" : "✘"}
-                containerStyle={{ position: 'absolute', bottom: 0, right: '33%'}}
+              <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.description.length}/125</Text>
+              
+            <View style={CSS.imagesContainer}>
+                <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.iconBlock}>
+                        <Text style={{color:'#2C4770', fontFamily:'Cairo-Regular', fontSize:12}}>تحميل الصور</Text>
+                        <Icon iconName='photo' size={50} />
+                        {loadingImg ? <ActivityIndicator size={20} color='#2C4770'/> : null}
+                </TouchableOpacity>
+            
+              
+                { images.length !== 0 ?
+                    <ScrollView  style={{height:170}} horizontal={true}>
+                        {
+                        images.map( (item, index) => (
+                            <View style={CSS.imgBlock} key={index}>
+                                <FastImage  
+                                    style={CSS.img} 
+                                    source={{uri: item}} 
+                                    resizeMode={FastImage.resizeMode.cover}/>
+                                <Button.ButtonDefault
+                                    iconName='delete' 
+                                    iconSize={30}
+                                    onPress={()=>deletePhoto(index)}
+                                    containerStyle={{
+                                          backgroundColor:'rgba(255,255,255,0.5)',
+                                          borderRadius: 50,
+                                          padding:2,
+                                          margin:5
+                                      }}/>
+                            </View>
+                        ))
+                        } 
+                    </ScrollView>
+                    : 
+                    null
+                }
+
+              <Badge
+                status={images.length > 0 ? "success" : "error"}
+                value={images.length > 0 ? "✓" : "✘"}
+                containerStyle={{ position: 'absolute', bottom: 3, left: 7}}
                 textStyle={{fontSize:10}} 
                 />
-        </View>
-        <TextInput
-            value={productInfo.description}
-            style={[CSS.postInput,{marginTop:18, textAlignVertical:'top'}]}
-            onChangeText={text=> setProductInfo({...productInfo,description: text})}
-            maxLength={125}
-            selectionColor="white"
-            placeholderTextColor='#2C4770'
-            placeholder="معلومات اضافية"
-            underlineColorAndroid='transparent'
-            numberOfLines={4}
-            multiline
-         />
-         <Text style={{paddingLeft:7, color: productInfo.description.length < 5  ? '#AF0F02': '#119935'}}>{productInfo.description.length}/125</Text>
-        
-        <View style={CSS.imagesContainer}>
-            <TouchableOpacity onPress={() => choosePhotoFromLibrary()} style={CSS.iconBlock}>
-                    <Text style={{color:'#2C4770', fontFamily:'Cairo-Regular', fontSize:12}}>تحميل الصور</Text>
-                    <Icon iconName='photo' size={50} />
-                    {loadingImg ? <ActivityIndicator size={20} color='#2C4770'/> : null}
-            </TouchableOpacity>
-        
-           
-            { images.length !== 0 ?
-                 <ScrollView  style={{height:170}} horizontal={true}>
-                    {
-                    images.map( (item, index) => (
-                        <View style={CSS.imgBlock} key={index}>
-                            <FastImage  
-                                style={CSS.img} 
-                                source={{uri: item}} 
-                                resizeMode={FastImage.resizeMode.cover}/>
-                            <Button.ButtonDefault
-                                iconName='delete' 
-                                iconSize={30}
-                                onPress={()=>deletePhoto(index)}
-                                containerStyle={{
-                                      backgroundColor:'rgba(255,255,255,0.5)',
-                                      borderRadius: 50,
-                                      padding:2,
-                                      margin:5
-                                  }}/>
-                        </View>
-                    ))
-                    } 
-                </ScrollView>
-                : 
-                null
-            }
+          
+            </View> 
 
-          <Badge
-            status={images.length > 0 ? "success" : "error"}
-            value={images.length > 0 ? "✓" : "✘"}
-            containerStyle={{ position: 'absolute', bottom: 3, left: 7}}
-            textStyle={{fontSize:10}} 
-            />
-       
-        </View> 
+            <View style={{margin:10}}>
+              {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
+              {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+            </View>
 
-        <View style={{margin:10}}>
-          {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
-          {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
-        </View>
-
-        <View style={CSS.buttonContainer}>
-            <Button.ButtonDefault
-                titleLeft="أغلق"
-                containerStyle={{
-                    borderRadius: 5,
-                    backgroundColor: '#2C4770',
-                    width:'45%',
-                    justifyContent:'center',
-                    padding: 5
-                }}
-                textStyle={{ 
-                    fontSize: 16, 
-                    color:'#fff',
-                    fontFamily:'Cairo-Regular'
-                }}
-                onPress={()=>props.setProductFormVisibility(false)}
-            /> 
-        { props.EditProduct  ?
-            <Button.ButtonDefault
-                titleLeft="تعديل"
-                containerStyle={{
-                    borderRadius: 5,
-                    backgroundColor: '#2C4770',
-                    width:'45%',
-                    justifyContent:'center',
-                    padding: 5
-                }}
-                textStyle={{ 
-                    fontSize: 16, 
-                    color:'#fff',
-                    fontFamily:'Cairo-Regular'
-                }}
-                onPress={() => handleEdit()}
-            />
-        :
-            <Button.ButtonDefault
-                titleLeft="حفظ"
-                containerStyle={{
-                    borderRadius: 5,
-                    backgroundColor: '#2C4770',
-                    width:'50%',
-                    justifyContent:'center',
-                    padding: 5
-                }}
-                textStyle={{ 
-                    fontSize: 16, 
-                    color:'#fff',
-                    fontFamily:'Cairo-Regular'
-                }}
-                onPress={() => handleSubmit()}
+            <View style={CSS.buttonContainer}>
+                <Button.ButtonDefault
+                    titleLeft="أغلق"
+                    containerStyle={{
+                        borderRadius: 5,
+                        backgroundColor: '#2C4770',
+                        width:'45%',
+                        justifyContent:'center',
+                        padding: 5
+                    }}
+                    textStyle={{ 
+                        fontSize: 16, 
+                        color:'#fff',
+                        fontFamily:'Cairo-Regular'
+                    }}
+                    onPress={()=>props.setProductFormVisibility(false)}
+                /> 
+            { props.EditProduct  ?
+                <Button.ButtonDefault
+                    titleLeft="تعديل"
+                    containerStyle={{
+                        borderRadius: 5,
+                        backgroundColor: '#2C4770',
+                        width:'45%',
+                        justifyContent:'center',
+                        padding: 5
+                    }}
+                    textStyle={{ 
+                        fontSize: 16, 
+                        color:'#fff',
+                        fontFamily:'Cairo-Regular'
+                    }}
+                    onPress={() => handleEdit()}
                 />
-        }
-        </View>
-
-        <Overlay isVisible={visible} 
+            :
+                <Button.ButtonDefault
+                    titleLeft="حفظ"
+                    containerStyle={{
+                        borderRadius: 5,
+                        backgroundColor: '#2C4770',
+                        width:'50%',
+                        justifyContent:'center',
+                        padding: 5
+                    }}
+                    textStyle={{ 
+                        fontSize: 16, 
+                        color:'#fff',
+                        fontFamily:'Cairo-Regular'
+                    }}
+                    onPress={() => handleSubmit()}
+                    />
+            }
+            </View>
+        </Animatable.View>
+    </ScrollView>
+    <Overlay isVisible={visible} 
                 onBackdropPress={toggleOverlay} 
                 fullScreen={true}
                 overlayStyle={{
@@ -378,8 +386,7 @@ export default function AddProductForm(props) {
                     }}>
                 <ActivityIndicator size={100} color="#2C4770" marginTop={'50%'} />
                 <Text style={CSS.loading}>يرجى الانتظار أثناء التحميل</Text>
-        </Overlay>
-    </ScrollView>
+    </Overlay>
     </>
     )
  }

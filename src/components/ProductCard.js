@@ -32,7 +32,13 @@ export default function ProductCard(props) {
                 .then(documentSnapshot => {
                     //update seller info from users database
                     setProductInfo({...productInfo, seller: {...documentSnapshot.data(), id: documentSnapshot.id}})
+
+                    //TODO 1. don't use global veriable, find other solutions 
+                    //     2. store only sellerid into products and reference it to users collection for user info @ Zaatar.js : seller: db.doc('users/' + user_key),
+                    //set global.sellerState veriable to the updated userInfo instead of the ones stored within the product object
                     global.sellerState = {...documentSnapshot.data(), id: documentSnapshot.id}
+
+                    //open up FullProductCard.js
                     setFullProductVisibility(true)
                 })
                 .catch((e) => {
@@ -80,7 +86,7 @@ export default function ProductCard(props) {
             case 'Carousel':
                 return <CarouselCardView productInfo={productInfo} />
             default:
-              return <DefaultView />
+                return <DefaultView />
         }
     }
 

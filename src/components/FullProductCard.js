@@ -13,10 +13,10 @@ import {
 } from 'react-native'
 import Icon from '../elements/Icon'
 import Buttons from '../elements/Button'
-import { Avatar } from 'react-native-elements';
+import { Avatar } from 'react-native-elements'
 import {useNavigation} from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as Animatable from 'react-native-animatable';
+import * as Animatable from 'react-native-animatable'
 import {handleDate, handleTimeDifference} from '../scripts/Time'
 import {shareToWhatsApp} from '../scripts/Communication'
 import FastImage from 'react-native-fast-image'
@@ -69,6 +69,9 @@ const FullProductCard = (props) => {
 
     return (
     <>
+    <LinearGradient 
+                colors={['#2C4770','#2C477099','#2C477090','#2C477099','#2C4770']}  
+                style={{flexDirection:'column', width:'100%', alignItems:'baseline', borderWidth:0}}>
     <TouchableOpacity 
         style={styles.ProfileHeader} 
         activeOpacity={0.7} 
@@ -76,9 +79,9 @@ const FullProductCard = (props) => {
           <Buttons.ButtonDefault
                   titleRight={productInfo.seller.location.city} 
                   iconName="location"
-                  iconSize={30}
+                  iconSize={32}
                   horizontal={true}
-                  textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#2C4770'}}
+                  textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#000', marginTop:-8, backgroundColor:'#ffffff09', borderRadius:50}}
                   activeOpacity={0.9}
                   disabled/> 
           <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
@@ -89,7 +92,7 @@ const FullProductCard = (props) => {
                 icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
                 containerStyle={{ backgroundColor: '#FFFFFF', marginLeft:10, borderWidth:1}}/>
     </TouchableOpacity>  
-   
+    </LinearGradient>
     <ScrollView style={[styles.block]}>
       <Animatable.View    
           animation="bounceInDown"
@@ -98,8 +101,8 @@ const FullProductCard = (props) => {
           duration={2000}
           direction="normal">
           <LinearGradient 
-              start={{x:1,y:0}}
-              colors={[ '#B2B2B2','#FFFFFF', '#9D9D9D','#FFFFFF','#9D9D9D','#FFFFFF','#B2B2B2']}  
+              //start={{x:1,y:0}}
+              colors={[ '#2C477070', '#2C477050','#2C477030']}  
               style={styles.largeImgBlock}>
                     <FastImage style={styles.imgLarge} 
                           source={{uri: productInfo.photos[imgIndex],  priority: FastImage.priority.high}} 
@@ -200,8 +203,8 @@ const styles = StyleSheet.create({
       color:'#2C4770',
     },
     headerText:{
-      fontFamily:'Cairo-Bold',
-      fontSize: 20,
+      fontFamily:'ArefRuqaa-Bold',
+      fontSize: 24,
       textAlign: 'center',
       color:'#2C4770',
     },

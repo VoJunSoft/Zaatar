@@ -23,18 +23,23 @@ import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
 import LinearGradient from 'react-native-linear-gradient'
 import {Picker} from '@react-native-picker/picker'
-import {cities} from "../scripts/DataValues.json"
+import {CitiesWithinCountry} from "../scripts/DataValues.json"
+import * as Animatable from 'react-native-animatable'
 //import * as RNLocalize from "react-native-localize"
 
 export default function ProfileForm(props) {
     const navigation = useNavigation();
+    
     // user information state
-    //TODO ::: get location:{} of nonusers based on thier location instead of the initial values currently being passed 
+    //TODO ::: get location:{} of nonusers based on thier location instead of the initial values currently being passed
     const [userInfo, setUserInfo] = useState(props.userInfo ? 
                 props.userInfo 
                 : 
                 {id:'', email:'', phone:'', name:'', rule:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}}
             )
+    //find the index of the user's country within the CitiesWithinCountry array
+    const [indexOfCountry, setCountryIndex] = useState(CitiesWithinCountry.findIndex(object => object.Country === userInfo.location.country))
+    console.log('index -', indexOfCountry)
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')
@@ -45,7 +50,7 @@ export default function ProfileForm(props) {
         try {
             AsyncStorage.mergeItem('userInfoZaatar', JSON.stringify(value))
             .then(()=>{
-                //NOTE user id is also stored as snapshot in users. 
+                //NOTE user id is also stored as snapshot in users!
                 firestore().collection('users').doc(userInfo.id).update(value)
                     .then(()=>{
                         //immediate update to profile info
@@ -97,7 +102,7 @@ export default function ProfileForm(props) {
             if(userInfo.name.length >=4 && pass.length >=7
                 && userInfo.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) 
                 && userInfo.phone.match(/\d/g)
-                && userInfo.location.city.length >=4 ){
+                && userInfo.location.city!=='' ){
                 
                 setIsloading(true)
                 if(props.Registration === true){
@@ -178,7 +183,8 @@ export default function ProfileForm(props) {
                 withCallingCode
                 containerButtonStyle={{paddingLeft: 10, padding:8, borderRightWidth:0.5, backgroundColor:'#2C4770'}}
                 onSelect={country=>{
-                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2, currency: country.currency[0]} })
+                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2, currency: country.currency[0]}})
+                    setCountryIndex(CitiesWithinCountry.findIndex(object => object.Country === country.name))
                 }}
                 />
         )
@@ -226,122 +232,131 @@ export default function ProfileForm(props) {
                         }
 
                 </LinearGradient>
-                <Input
-                    placeholder="khaled e.g."
-                    value={userInfo.name}
-                    label="الاسم"
-                    maxLength={19}
-                    rightIcon={{ type: 'font-awesome', name: 'user' }}
-                    inputContainerStyle={{paddingRight:0}}
-                    containerStyle={styles.TextInput}
-                    labelStyle={{color:'#171717', textAlign:'right'}}
-                    autoCompleteType
-                    onChangeText={value => setUserInfo({...userInfo, name: value })}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.name.length}/17</Text>
-
-                <Input
-                    placeholder="khaled@junglesoft.com"
-                    label="البريد الالكتروني"
-                    value={userInfo.email}
-                    maxLength={30}
-                    rightIcon={{ type: 'font-awesome', name: 'envelope' }}
-                    inputContainerStyle={{paddingRight:0}}
-                    containerStyle={styles.TextInput}
-                    labelStyle={{color:'#171717', textAlign:'right'}}
-                    onChangeText={value => setUserInfo({...userInfo, email: value })}
-                    {...props}/>
-                <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935' : '#AF0F02'}}>{userInfo.email.length}/30</Text>
-
-                <Input
-                    placeholder="*******"
-                    label="كلمة المرور"
-                    value={pass}
-                    secureTextEntry={true}
-                    maxLength={20}
-                    rightIcon={{ type: 'font-awesome', name: 'key' }}
-                    inputContainerStyle={{paddingRight:0}}
-                    containerStyle={styles.TextInput}
-                    labelStyle={{color:'#171717', textAlign:'right'}}
-                    onChangeText={value => setPass(value)}
-                    {...props}/> 
-                <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? '#AF0F02': '#119935'}}>{pass.length}/20</Text>
-                
-                <View style={styles.flexInput}>
-                    <View style={styles.countryCodeBox}>
-                        <$countryPicker />
-                        <Text style={styles.countryCode}>(+{userInfo.location.code})</Text>
-                    </View>  
+                <Animatable.View    
+                    animation="bounceInDown"
+                    easing="ease"
+                    iterationCount={1}
+                    duration={2000}
+                    direction="normal">
                     <Input
-                        placeholder="0123456789"
-                        label="الهاتف"
-                        value={userInfo.phone}
-                        rightIcon={{ type: 'font-awesome', name: 'mobile' }}
-                        maxLength={10}
-                        keyboardType='numeric'
-                        inputContainerStyle={{ alignSelf:'flex-end'}}
-                        containerStyle={{width:'61%'}}
+                        placeholder="khaled e.g."
+                        value={userInfo.name}
+                        label="الاسم"
+                        maxLength={19}
+                        rightIcon={{ type: 'font-awesome', name: 'user' }}
+                        inputContainerStyle={{paddingRight:0}}
+                        containerStyle={styles.TextInput}
                         labelStyle={{color:'#171717', textAlign:'right'}}
                         autoCompleteType
-                        onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
-                </View>
-             
-                <View style={styles.flexInput}>
-                     <Badge
-                        status={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "success" : "error"}
-                        value={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "✓" : "✘"}
-                        containerStyle={{ position: 'absolute', bottom: 5, left: 20}}
-                        textStyle={{fontSize:9}} />
-                </View>
+                        onChangeText={value => setUserInfo({...userInfo, name: value })}/>
+                    <Text style={{paddingLeft:20, marginTop:-25, color: userInfo.name.length < 4  ? '#AF0F02': '#119935'}}>{userInfo.name.length}/17</Text>
 
-                {/* <Input
-                    placeholder="ام الفحم"
-                    label="البلد"
-                    value={userInfo.location.city}
-                    rightIcon={{ type: 'font-awesome', name: 'map' }}
-                    maxLength={15}
-                    inputContainerStyle={{ alignSelf:'flex-end'}}
-                    labelStyle={{color:'#171717', textAlign:'right'}}
-                    containerStyle={styles.TextInput}
-                    autoCompleteType
-                    onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/> */}
+                    <Input
+                        placeholder="khaled@junglesoft.com"
+                        label="البريد الالكتروني"
+                        value={userInfo.email}
+                        maxLength={30}
+                        rightIcon={{ type: 'font-awesome', name: 'envelope' }}
+                        inputContainerStyle={{paddingRight:0}}
+                        containerStyle={styles.TextInput}
+                        labelStyle={{color:'#171717', textAlign:'right'}}
+                        onChangeText={value => setUserInfo({...userInfo, email: value })}
+                        {...props}/>
+                    <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(userInfo.email)  ? '#119935' : '#AF0F02'}}>{userInfo.email.length}/30</Text>
+
+                    <Input
+                        placeholder="*******"
+                        label="كلمة المرور"
+                        value={pass}
+                        secureTextEntry={true}
+                        maxLength={20}
+                        rightIcon={{ type: 'font-awesome', name: 'key' }}
+                        inputContainerStyle={{paddingRight:0}}
+                        containerStyle={styles.TextInput}
+                        labelStyle={{color:'#171717', textAlign:'right'}}
+                        onChangeText={value => setPass(value)}
+                        {...props}/> 
+                    <Text style={{paddingLeft:20, marginTop:-25, color: pass.length < 8  ? '#AF0F02': '#119935'}}>{pass.length}/20</Text>
                     
-                <View style={styles.cities}>
-                    <Text style={{fontWeight:'bold', fontSize:18, color:'#000', marginRight: 5, marginBottom:-7}}>البلد</Text>
-                    <Picker
-                        selectedValue={userInfo.location.city}
-                        style={styles.TextInput}
-                        onValueChange={(itemValue, itemIndex) => setUserInfo({...userInfo, location: {...userInfo.location, city: itemValue}})}>
-                        <Picker.Item style={{fontSize:15}} label="اختر البلد - " value="" />
-                        {
-                            cities.map((item, index)=>[ 
-                                    <Picker.Item label={item} 
-                                                    value={item} 
-                                                    key={index} />
-                            ])
-                        }
-                    </Picker> 
-                    <Badge
-                        status={userInfo.location.city !=='' ? "success" : "error"}
-                        value={userInfo.location.city !=='' ? "✓" : "✘"}
-                        containerStyle={{ position: 'absolute', bottom: -25, left: 9}}
-                        textStyle={{fontSize:9}} 
-                        />
-                </View>
+                    <View style={styles.flexInput}>
+                        <View style={styles.countryCodeBox}>
+                            <$countryPicker />
+                            <Text style={styles.countryCode}>(+{userInfo.location.code})</Text>
+                        </View>  
+                        <Input
+                            placeholder="0123456789"
+                            label="الهاتف"
+                            value={userInfo.phone}
+                            rightIcon={{ type: 'font-awesome', name: 'mobile' }}
+                            maxLength={10}
+                            keyboardType='numeric'
+                            inputContainerStyle={{ alignSelf:'flex-end'}}
+                            containerStyle={{width:'61%'}}
+                            labelStyle={{color:'#171717', textAlign:'right'}}
+                            autoCompleteType
+                            onChangeText={value => setUserInfo({...userInfo, phone: value })}/>
+                    </View>
+             
+                    <View style={styles.flexInput}>
+                        <Badge
+                            status={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "success" : "error"}
+                            value={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "✓" : "✘"}
+                            containerStyle={{ position: 'absolute', bottom: 5, left: 20}}
+                            textStyle={{fontSize:9}} />
+                    </View>
 
-                <View style={{height:50, justifyContent:'center', margin:5}}>
-                    { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
-                    {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
-                    {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
-                </View>
+                    {/* <Input
+                        placeholder="ام الفحم"
+                        label="البلد"
+                        value={userInfo.location.city}
+                        rightIcon={{ type: 'font-awesome', name: 'map' }}
+                        maxLength={15}
+                        inputContainerStyle={{ alignSelf:'flex-end'}}
+                        labelStyle={{color:'#171717', textAlign:'right'}}
+                        containerStyle={styles.TextInput}
+                        autoCompleteType
+                        onChangeText={value => setUserInfo({...userInfo, location: {...userInfo.location, city: value} })}/> */}
+                        
+                    <View style={styles.cities}>
+                        <Text style={{fontWeight:'bold', fontSize:18, color:'#000', marginRight: 5, marginBottom:-7}}>البلد</Text>
+                        <Picker
+                            selectedValue={userInfo.location.city}
+                            style={styles.TextInput}
+                            onValueChange={(itemValue, itemIndex) => setUserInfo({...userInfo, location: {...userInfo.location, city: itemValue}})}>
+                            <Picker.Item style={{fontSize:15, color:indexOfCountry === -1 ? '#FF0000' : '#000000'}} label={indexOfCountry === -1 ? "سنكون متاحين في بلدك قريبًا" : "اختر البلد - "} value="" />
+                            {indexOfCountry !== -1 ?
+                                CitiesWithinCountry[indexOfCountry].Cities.map((item, index)=>[ 
+                                        <Picker.Item label={item} 
+                                                        value={item} 
+                                                        key={index} />
+                                ])
+                                :
+                                null
+                            }
+                        </Picker> 
+                        <Badge
+                            status={userInfo.location.city !=='' &&  indexOfCountry !== -1 ? "success" : "error"}
+                            value={userInfo.location.city !=='' &&  indexOfCountry !== -1 ? "✓" : "✘"}
+                            containerStyle={{ position: 'absolute', bottom: -25, left: 9}}
+                            textStyle={{fontSize:9}} 
+                            />
+                    </View>
 
-                <View style={{flexDirection:'row', justifyContent:'center'}}>
-                <Buttons.ButtonDefault
-                    titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
-                    containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5}}
-                    textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 17, color: '#fff'}}
-                    onPress={SaveUserInfo}/>
-                </View>
-            </ScrollView>
+                    <View style={{height:50, justifyContent:'center', margin:5}}>
+                        { isLoading ? <ActivityIndicator color='#2C4770' size={40}/> : null }
+                        {successMsg === '' ? null :  <Text style={{color:'#119935', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{successMsg}</Text>}
+                        {errMsg === '' ? null :  <Text style={{color:'#AF0F02', alignSelf:'center', fontFamily:'Cairo-Regular'}}>{errMsg}</Text>}
+                    </View>
+
+                    <View style={{flexDirection:'row', justifyContent:'center'}}>
+                    <Buttons.ButtonDefault
+                        titleLeft={props.Registration? 'تسجيل مستخدم' : "حفظ التفاصيل"}
+                        containerStyle={{ justifyContent:'center', borderRadius: 5, width:'70%', backgroundColor: '#2C4770', alignSelf:'center', padding: 5}}
+                        textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 17, color: '#fff'}}
+                        onPress={SaveUserInfo}/>
+                    </View>
+                </Animatable.View>
+                </ScrollView>
         </View>
     )
 }
