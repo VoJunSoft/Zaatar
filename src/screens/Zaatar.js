@@ -11,13 +11,11 @@ import firestore from '@react-native-firebase/firestore'
 import ProductCard from '../components/ProductCard'
 import ZaatarSearchBar from '../components/ZaatarSearchBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import {currencySymbols, SearchCategories} from "../scripts/DataValues.json"
+import {SearchCategories} from "../scripts/DataValues.json"
 import { filterDataByCategory, filterDataByCategoryInLocation } from '../scripts/Search'
 import LinearGradient from 'react-native-linear-gradient'
 import Buttons from '../elements/Button'
-import {Picker} from '@react-native-picker/picker'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
-import {CitiesWithinCountry} from "../scripts/DataValues.json"
 //import * as RNLocalize from "react-native-localize"
 //import UserData from '../scripts/UserData'
 
@@ -26,7 +24,6 @@ export default function Zaatar(props) {
     // userInfo state: {id, name, picture, email, phone, rule, location:{country,code,flag,currency,city}}
     //products fields: {productId, seller:{userInfo}, product_name, photos:[], descriptiom, category, price, date_listed}
     const [products, setProducts] = useState([])
-    const [productsByCountry, setProductsByCountry] = useState([])
 
     //search input and category for filtering data/products
     const [searchInput, setSearchInput] = useState("")
@@ -44,6 +41,8 @@ export default function Zaatar(props) {
 
     useEffect(() => {
         console.log('params ' , props.route.params)
+        //TODO: get user data: country 
+
         //fill up products
         GetProductsByDate()
         //get category for header flatlist products randomly 
@@ -75,6 +74,7 @@ export default function Zaatar(props) {
                 console.log('locations : ', locations)
                 //if selected country (passed from APP.js) does not exist setSelectedCountryIndex to zero (Global) else get the index of the country
                 setIndex(locations.findIndex(object => object.country === selectedCountry) === -1 ? 0 : locations.findIndex(object => object.country === selectedCountry))
+                setSelectedCountry(locations.findIndex(object => object.country === selectedCountry) === -1 ? 'Global' : userInfo.location.country)
                 //retrieve country name based on selectedCountryIndex
                 //setSelectedCountry(locations[selectedCountryIndex].country)
                 setIsLoading(false)
@@ -99,11 +99,11 @@ export default function Zaatar(props) {
         return(
             <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
                 <FontAwesomeIcons 
-                    name={selectedCountry === 'Global' ? 'arrow-circle-left' : 'map'}
+                    name={'map'}
                     size={22}
-                    style={{paddingLeft:10, paddingRight:12, alignSelf:'center', color:'#2C4770'}}
-                    //onPress={()=>setCountriesListVisibility(!countriesListVisibility)}
-                    onPress={()=> setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')}
+                    style={{paddingLeft:10, paddingRight:12, alignSelf:'center', color:'#2C4770', borderRightWidth:.4}}
+                    onPress={()=>setCountriesListVisibility(!countriesListVisibility)}
+                    //onPress={()=> setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')}
                 />
                 { !isLoading ?
                     selectedCountry !== 'Global' ?
@@ -129,7 +129,7 @@ export default function Zaatar(props) {
                                 /> 
                         ])
                         :
-                        <Text style={styles.title}>ارجع لدولتك من اجل تصنيف المنتجات حسب البلد</Text>
+                        <Text style={styles.title}>أختار دولتك من اجل تصنيف المنتجات حسب البلد</Text>
                     :
                     <ActivityIndicator color='#2C4770' size={25} style={{marginLeft: Dimensions.get('window').width/3.1}}/>
                 }
@@ -144,7 +144,7 @@ export default function Zaatar(props) {
                     locations.map((item, index)=>[ 
                             <Buttons.ButtonDefault
                                 key={index}
-                                titleRight={item.country === 'Global' ? '🌐' : item.country} 
+                                titleRight={item.country === 'Global' ? 'Global' : item.country} 
                                 horizontal={true}
                                 textStyle={{
                                     fontFamily: 'Cairo-Regular' ,
@@ -177,18 +177,19 @@ export default function Zaatar(props) {
     const HeaderProductsList = () =>{
         return(
             <>
-            <LinearGradient 
-                colors={['#2C477090', '#ffffff', '#2C477090']} style={{marginTop: .5}}>
-                 <CitiesBlock />
-            </LinearGradient> 
             {countriesListVisibility ? 
                 <LinearGradient 
-                    colors={['#2C477090', '#ffffff', '#2C477090']} style={{marginTop: -.5}}>
+                    colors={['#ffffff', '#ffffff']} style={{marginTop: 0}}>
                     <CountriesBlock />
                 </LinearGradient> 
             :
             null
             }
+            <LinearGradient 
+                colors={['#2C477080', '#ffffff', '#2C477080']} style={{marginTop: 0}}>
+                 <CitiesBlock />
+            </LinearGradient> 
+
              <LinearGradient 
              colors={['#ffffff' ,'#2C477030','#2C477050','#2C477030' , '#ffffff']}>
                 <FlatList 

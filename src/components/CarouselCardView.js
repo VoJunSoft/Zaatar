@@ -8,12 +8,11 @@ export default function CarouselCardView(props) {
     return (
         <DropShadow style={{
             shadowColor: '#323232',
-            shadowOffset: {width: 0, height: 3},
+            shadowOffset: {width: -2, height: 3},
             shadowOpacity: 1,
             shadowRadius: 1,
             marginTop:15,
             margin:9,
-            borderRadius:5
              }}>
                 <FastImage  style={styles.img} 
                         source={{uri: props.productInfo.photos[0]}} 
@@ -48,16 +47,16 @@ const styles = StyleSheet.create({
         width:'65%'
     },
     infoBlock:{
-        width:'100%',
+        width : Dimensions.get('window').width - 70 ,
         flexDirection:'row',
         justifyContent:'space-evenly',
         alignItems:'center',
         marginTop:-40,
         height:40,
         backgroundColor:'#00000060',
-        borderBottomLeftRadius:10,
-        borderBottomRightRadius:10,
-        borderTopLeftRadius:170,
+        borderBottomLeftRadius:30,
+        borderBottomRightRadius:30,
+        borderTopLeftRadius:100,
         overflow:'hidden',
     }
 })
