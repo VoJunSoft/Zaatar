@@ -20,7 +20,7 @@ const Profile = (props) => {
     // const {id, name, picture, email, location:{}, phone} = route.params
     // user information state: {id, name, picture, email, location:{}, phone}
     const [userInfo, setUserInfo] = useState(props.route.params)
-    
+
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
     const [productsBySellerId, setProductsBySellerId] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -110,7 +110,7 @@ const Profile = (props) => {
 
                     <Buttons.ButtonDefault 
                         titleLeft={userInfo.phone ? userInfo.phone: 'رقم التليفون'}
-                        iconName="mic"
+                        iconName="speakers"
                         iconSize={25}
                         containerStyle={{
                             justifyContent:'flex-end',

@@ -12,7 +12,6 @@ import {
     ActivityIndicator
 } from 'react-native'
 import AppStyles from '../styles/AppStyle'
-import DropShadow from "react-native-drop-shadow"
 import { Avatar, Overlay } from 'react-native-elements';
 import Buttons from '../elements/Button'
 import firestore from '@react-native-firebase/firestore';
@@ -23,10 +22,11 @@ import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient'
 import {currencySymbols} from '../scripts/DataValues.json'
 import RollingText from "react-native-rolling-text"
+import {contactUsByWhatsapp} from '../scripts/Communication'
 
 const ProfileStore = (props) => {
     // const {id, name, first_name, picture, email, location, phone} = route.params
-    // user information state: {id, name, first_name, picture, email, location, phone}
+    // user information state: {id, name, first_name, picture, email, location, phone}...
     const [userInfo, setUserInfo] = useState(global.sellerState)
 
     //products fields: productId ... {seller{}, product_name, photos[], descriptiom, category, price, date_listed}
@@ -111,22 +111,21 @@ const ProfileStore = (props) => {
                 //end={{x: 1, y: 0}}
                 colors={['#2C4770', '#4b6cb7', '#2C4770']} 
                 style={styles.linearGradient}>
-            <View style={{flexDirection:'row'}}>
-                <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
-                    <Avatar
-                        size={150}
-                        rounded
-                        source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/p1.png') }
-                        icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-                        containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:20}}
-                    />
-                </View>
+                <View style={{flexDirection:'row'}}>
+                    <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
+                        <Avatar
+                            size={150}
+                            rounded
+                            source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/p1.png') }
+                            icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
+                            containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:20}}/>
+                    </View>
                 <View style={{width:'60%', justifyContent:'center', paddingLeft: 5}}>
                     <Buttons.ButtonDefault 
                         titleLeft={userInfo.name ? userInfo.name : 'مستخدم'}
                         iconName="profile"
                         iconSize={25}
-                        containerStyle={{justifyContent:'flex-end'}}
+                        containerStyle={{justifyContent:'flex-end',marginBottom:8}}
                         textStyle={styles.SellerInfo}
                         disabled/>
 
@@ -134,17 +133,17 @@ const ProfileStore = (props) => {
                         titleLeft={userInfo.location.city ? userInfo.location.city : 'موقعك'}
                         iconName="location"
                         iconSize={25}
-                        containerStyle={{justifyContent:'flex-end'}}
+                        containerStyle={{justifyContent:'flex-end',marginBottom:8}}
                         textStyle={styles.SellerInfo}
                         disabled/>
 
                     <Buttons.ButtonDefault 
                         titleLeft={userInfo.phone ? userInfo.phone: 'رقم التليفون'}
-                        iconName="mic"
+                        iconName="whats"
                         iconSize={25}
                         containerStyle={{justifyContent:'flex-end'}}
                         textStyle={styles.SellerInfo}
-                        disabled/>
+                        onPress={()=>contactUsByWhatsapp('',userInfo.phone)}/>
                 </View>
             </View>
             <View style={{flexDirection:'row', justifyContent:'space-around', marginTop: 10}}>
@@ -252,8 +251,7 @@ const styles = StyleSheet.create({
         fontSize:17,
         letterSpacing:1,
         marginRight:10,
-        textAlign:'center',
-        marginBottom:2
+        textAlign:'center'
     }, 
     TextBanner: {
         fontFamily: 'Cairo-Regular',

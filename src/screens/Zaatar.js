@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import Buttons from '../elements/Button'
 import {Picker} from '@react-native-picker/picker'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
+import {CitiesWithinCountry} from "../scripts/DataValues.json"
 //import * as RNLocalize from "react-native-localize"
 //import UserData from '../scripts/UserData'
 
@@ -93,34 +94,17 @@ export default function Zaatar(props) {
         )
     }
 
-    const GoGlobal = () => {
-        setIsLoading(false)
-        setSelectedCity('الكل')
-        setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')
-        //setIndex(locations.findIndex(object => object.country === selectedCountry))
-    }
-
-    const LocationBlock = () =>{
+    const [countriesListVisibility, setCountriesListVisibility] = useState(false)
+    const CitiesBlock = () =>{
         return(
             <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
                 <FontAwesomeIcons 
                     name={selectedCountry === 'Global' ? 'arrow-circle-left' : 'map'}
                     size={22}
                     style={{paddingLeft:10, paddingRight:12, alignSelf:'center', color:'#2C4770'}}
-                    onPress={()=>GoGlobal()}
+                    //onPress={()=>setCountriesListVisibility(!countriesListVisibility)}
+                    onPress={()=> setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')}
                 />
-                {/* <Picker
-                    selectedValue={locations[selectedCountryIndex].country}
-                    style={{width:110, height:30, alignSelf:'center', alignItems:'center', alignContent:'center'}}
-                    onValueChange={(itemValue, itemIndex) => dropDownValueChange(itemValue)}>
-                    {
-                        locations.map((item, index)=>[ 
-                                <Picker.Item label={index === 0 ? `${currencySymbols['GLB']}` : `${currencySymbols[item.flag]}`} 
-                                             value={item.country} 
-                                             key={index} />
-                        ])
-                    }
-                </Picker> */}
                 { !isLoading ?
                     selectedCountry !== 'Global' ?
                         locations[selectedCountryIndex].cities.map((item, index)=>[ 
@@ -153,17 +137,62 @@ export default function Zaatar(props) {
         )
     }
 
+    const CountriesBlock = () =>{
+        return(
+            <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
+                { 
+                    locations.map((item, index)=>[ 
+                            <Buttons.ButtonDefault
+                                key={index}
+                                titleRight={item.country === 'Global' ? '🌐' : item.country} 
+                                horizontal={true}
+                                textStyle={{
+                                    fontFamily: 'Cairo-Regular' ,
+                                    fontSize: 13, 
+                                    color: '#2C4770'
+                                }}
+                                containerStyle={{
+                                    paddingLeft : 20, 
+                                    paddingRight: 20, 
+                                    borderRightWidth: .2,
+                                    borderLeftWidth:.2,
+                                    backgroundColor: selectedCountry === item.country ? '#2C477060' : null
+                                }}
+                                activeOpacity={0.5}
+                                onPress={()=>GoGlobal(item.country)}
+                                /> 
+                        ])
+                }
+            </ScrollView>
+        )
+    }
+
+    const GoGlobal = (country) => {
+        setIsLoading(false)
+        setSelectedCity('الكل')
+        setSelectedCountry(country)
+        setIndex(locations.findIndex(object => object.country === country))
+    }
+
     const HeaderProductsList = () =>{
         return(
             <>
             <LinearGradient 
                 colors={['#2C477090', '#ffffff', '#2C477090']} style={{marginTop: .5}}>
-                 <LocationBlock />
+                 <CitiesBlock />
             </LinearGradient> 
+            {countriesListVisibility ? 
+                <LinearGradient 
+                    colors={['#2C477090', '#ffffff', '#2C477090']} style={{marginTop: -.5}}>
+                    <CountriesBlock />
+                </LinearGradient> 
+            :
+            null
+            }
              <LinearGradient 
              colors={['#ffffff' ,'#2C477030','#2C477050','#2C477030' , '#ffffff']}>
                 <FlatList 
-                    data={searchInput==='' && category === 'الكل' ? filterDataByCategory(products, 'الكل', headerCategory) : null}
+                    data={searchInput==='' && category === 'الكل' ? filterDataByCategoryInLocation(products,selectedCountry, headerCategory, '', 'الكل') : null}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}
                     keyExtractor={item => item.productId}

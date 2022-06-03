@@ -171,7 +171,7 @@ export default function ProfileForm(props) {
     }
 
     const $VerifyPhone = (data) => {
-        return data.match(/\d/g)
+        return !data.match(/[^0-9]/g)
     }
 
     const $countryPicker = () => {
@@ -183,7 +183,7 @@ export default function ProfileForm(props) {
                 withCallingCode
                 containerButtonStyle={{paddingLeft: 10, padding:8, borderRightWidth:0.5, backgroundColor:'#2C4770'}}
                 onSelect={country=>{
-                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2, currency: country.currency[0]}})
+                    setUserInfo({...userInfo, location: {...userInfo.location, country: country.name, code: country.callingCode[0], flag: country.cca2, currency: country.currency[0], city:''}})
                     setCountryIndex(CitiesWithinCountry.findIndex(object => object.Country === country.name))
                 }}
                 />

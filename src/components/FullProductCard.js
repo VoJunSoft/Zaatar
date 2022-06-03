@@ -72,26 +72,26 @@ const FullProductCard = (props) => {
     <LinearGradient 
                 colors={['#2C4770','#2C477099','#2C477090','#2C477099','#2C4770']}  
                 style={{flexDirection:'column', width:'100%', alignItems:'baseline', borderWidth:0}}>
-    <TouchableOpacity 
-        style={styles.ProfileHeader} 
-        activeOpacity={0.7} 
-        onPress={GoToSellerProfile}>
-          <Buttons.ButtonDefault
-                  titleRight={productInfo.seller.location.city} 
-                  iconName="location"
-                  iconSize={32}
-                  horizontal={true}
-                  textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#000', marginTop:-8, backgroundColor:'#ffffff09', borderRadius:50}}
-                  activeOpacity={0.9}
-                  disabled/> 
-          <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
-          <Avatar
-                size={60}
-                rounded
-                source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/p1.png') }
-                icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-                containerStyle={{ backgroundColor: '#FFFFFF', marginLeft:10, borderWidth:1}}/>
-    </TouchableOpacity>  
+        <TouchableOpacity 
+            style={styles.ProfileHeader} 
+            activeOpacity={0.7} 
+            onPress={GoToSellerProfile}>
+                <Buttons.ButtonDefault
+                        titleRight={productInfo.seller.location.city} 
+                        iconName="location"
+                        iconSize={32}
+                        horizontal={true}
+                        textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#000', marginTop:-8, backgroundColor:'#ffffff09', borderRadius:50}}
+                        activeOpacity={0.9}
+                        disabled/> 
+                <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
+                <Avatar
+                      size={60}
+                      rounded
+                      source={productInfo.seller.picture ? {uri: productInfo.seller.picture} : require('../assets/gallary/p1.png') }
+                      icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
+                      containerStyle={{ backgroundColor: '#FFFFFF', marginLeft:10, borderWidth:1}}/>
+        </TouchableOpacity>  
     </LinearGradient>
     <ScrollView style={[styles.block]}>
       <Animatable.View    
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        padding:5
+        padding:7,
     },
     imgBlock:{
       backgroundColor:'#323232'
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
       color:'#2C4770',
     },
     headerText:{
-      fontFamily:'ArefRuqaa-Bold',
+      fontFamily:'Almarai-Bold',
       fontSize: 24,
       textAlign: 'center',
       color:'#2C4770',

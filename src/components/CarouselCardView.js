@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, Dimensions} from 'react-native'
 import FastImage from 'react-native-fast-image'
 import DropShadow from "react-native-drop-shadow"
+import Buttons from '../elements/Button'
 
 export default function CarouselCardView(props) {
     return (
@@ -19,6 +20,13 @@ export default function CarouselCardView(props) {
                         defaultSource={require('../assets/gallary/Zaatar.png')}
                         resizeMode={FastImage.resizeMode.cover}/>
                 <View style={styles.infoBlock}>
+                    <Buttons.ButtonDefault 
+                            titleLeft={props.productInfo.seller.location.city ? props.productInfo.seller.location.city : 'ام الفحم'}
+                            iconName="locationAlpha"
+                            iconSize={27}
+                            containerStyle={{justifyContent:'flex-end', width:'30%', height:'100%'}}
+                            textStyle={{fontFamily: 'Cairo-Regular',color:'#fff',fontSize:12}}
+                            disabled/>
                     <Text style={styles.title}>{props.productInfo.product_name}</Text>
                 </View>
         </DropShadow>
@@ -36,11 +44,13 @@ const styles = StyleSheet.create({
         fontFamily:'Almarai-Bold',
         fontSize:15,
         padding: 2,
-        textAlign:'center'
+        textAlign:'right',
+        width:'65%'
     },
     infoBlock:{
+        width:'100%',
         flexDirection:'row',
-        justifyContent:'center',
+        justifyContent:'space-evenly',
         alignItems:'center',
         marginTop:-40,
         height:40,
