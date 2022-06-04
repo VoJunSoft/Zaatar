@@ -19,7 +19,7 @@ import storage from '@react-native-firebase/storage';
 import Icon from '../elements/Icon';
 import Button from '../elements/Button'
 import {Picker} from '@react-native-picker/picker'
-import {SearchCategories, Currencies} from "../scripts/DataValues.json"
+import {SearchCategories, Currencies} from "../scripts/CategoriesCountries.json"
 import FastImage from 'react-native-fast-image'
 import LinearGradient from 'react-native-linear-gradient'
 import * as Animatable from 'react-native-animatable'
@@ -422,10 +422,11 @@ const CSS = StyleSheet.create({
     fontSize: 14,
     borderBottomColor:'#2C4770',
     fontFamily: "Cairo-Regular",
-    textAlign:'center',
+    textAlign:'right',
     backgroundColor:'#ACC6F8',
     color: '#2C4770',
     borderRadius:5,
+    paddingRight:10
   },
   dateBlock: {
     flexDirection:'row',
@@ -441,7 +442,7 @@ const CSS = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
     alignSelf:'center',
-    marginBottom:10
+    marginBottom:20
   },
   iconBlock:{
     width:130,

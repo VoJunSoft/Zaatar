@@ -20,7 +20,6 @@ import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient'
-import {currencySymbols} from '../scripts/DataValues.json'
 import RollingText from "react-native-rolling-text"
 import {contactUsByWhatsapp} from '../scripts/Communication'
 
@@ -184,7 +183,7 @@ const ProfileStore = (props) => {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard view='Default' productInfo={item} key={index} currencySymbol={currencySymbols[userInfo.location.flag]}/>
+                    <ProductCard view='Default' productInfo={item} key={index}/>
                 )}/>
         }
         <Overlay isVisible={profileFormVisibility} 

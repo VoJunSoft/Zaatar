@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { View, Text, ScrollView, StyleSheet, TextInput, Pressable, TouchableOpacity } from 'react-native'
 import Buttons from "../elements/Button"
 import DropShadow from "react-native-drop-shadow";
-import {SearchCategories} from '../scripts/DataValues.json'
+import {SearchCategories} from '../scripts/CategoriesCountries.json'
 import LinearGradient from 'react-native-linear-gradient'
 
 export default function ZaatarSearchBar(props) {

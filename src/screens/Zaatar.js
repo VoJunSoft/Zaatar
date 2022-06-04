@@ -11,8 +11,9 @@ import firestore from '@react-native-firebase/firestore'
 import ProductCard from '../components/ProductCard'
 import ZaatarSearchBar from '../components/ZaatarSearchBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import {SearchCategories} from "../scripts/DataValues.json"
-import { filterDataByCategory, filterDataByCategoryInLocation } from '../scripts/Search'
+import {SearchCategories} from "../scripts/CategoriesCountries.json"
+import {Flags} from "../scripts/Flags.json"
+import {filterDataByCategoryInLocation } from '../scripts/Search'
 import LinearGradient from 'react-native-linear-gradient'
 import Buttons from '../elements/Button'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
@@ -39,6 +40,8 @@ export default function Zaatar(props) {
     const [selectedCity, setSelectedCity] = useState('الكل')
     const [selectedCountryIndex, setIndex] = useState(0)
 
+    const [countriesListVisibility, setCountriesListVisibility] = useState(true)
+    
     useEffect(() => {
         console.log('params ' , props.route.params)
         //TODO: get user data: country 
@@ -75,8 +78,6 @@ export default function Zaatar(props) {
                 //if selected country (passed from APP.js) does not exist setSelectedCountryIndex to zero (Global) else get the index of the country
                 setIndex(locations.findIndex(object => object.country === selectedCountry) === -1 ? 0 : locations.findIndex(object => object.country === selectedCountry))
                 setSelectedCountry(locations.findIndex(object => object.country === selectedCountry) === -1 ? 'Global' : userInfo.location.country)
-                //retrieve country name based on selectedCountryIndex
-                //setSelectedCountry(locations[selectedCountryIndex].country)
                 setIsLoading(false)
             })
             return() => subscriber()
@@ -94,14 +95,13 @@ export default function Zaatar(props) {
         )
     }
 
-    const [countriesListVisibility, setCountriesListVisibility] = useState(false)
     const CitiesBlock = () =>{
         return(
             <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
                 <FontAwesomeIcons 
                     name={'map'}
                     size={22}
-                    style={{paddingLeft:10, paddingRight:12, alignSelf:'center', color:'#2C4770', borderRightWidth:.4}}
+                    style={{paddingLeft:10, paddingRight:12, alignSelf:'center', color:'#2C4770'}}
                     onPress={()=>setCountriesListVisibility(!countriesListVisibility)}
                     //onPress={()=> setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')}
                 />
@@ -120,8 +120,9 @@ export default function Zaatar(props) {
                                 containerStyle={{
                                     paddingLeft : 20, 
                                     paddingRight: 20, 
-                                    borderRightWidth:index === 0 ? 0 : .2,
+                                    borderRightWidth:.2,
                                     borderLeftWidth:.2,
+                                    borderColor:"#2C477040",
                                     backgroundColor: selectedCity === item ? '#2C477060' : null
                                 }}
                                 activeOpacity={0.5}
@@ -140,11 +141,11 @@ export default function Zaatar(props) {
     const CountriesBlock = () =>{
         return(
             <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
-                { 
-                    locations.map((item, index)=>[ 
+                { !isLoading ?
+                        locations.map((item, index)=>[ 
                             <Buttons.ButtonDefault
                                 key={index}
-                                titleRight={item.country === 'Global' ? 'Global' : item.country} 
+                                titleRight={Flags[item.country]} 
                                 horizontal={true}
                                 textStyle={{
                                     fontFamily: 'Cairo-Regular' ,
@@ -156,12 +157,15 @@ export default function Zaatar(props) {
                                     paddingRight: 20, 
                                     borderRightWidth: .2,
                                     borderLeftWidth:.2,
-                                    backgroundColor: selectedCountry === item.country ? '#2C477060' : null
+                                    borderColor:"#2C477040",
+                                    backgroundColor: selectedCountry === item.country ? '#2C477040' : null
                                 }}
                                 activeOpacity={0.5}
                                 onPress={()=>GoGlobal(item.country)}
                                 /> 
-                        ])
+                            ])
+                        :
+                        <ActivityIndicator color='#2C4770' size={22} style={{marginLeft: Dimensions.get('window').width/2.3}}/>
                 }
             </ScrollView>
         )
@@ -177,18 +181,19 @@ export default function Zaatar(props) {
     const HeaderProductsList = () =>{
         return(
             <>
+            <LinearGradient 
+                colors={['#2C477080', '#ffffff', '#ffffff', '#2C477080']} style={{marginTop: 0}}>
+                 <CitiesBlock />
+            </LinearGradient> 
+            
             {countriesListVisibility ? 
                 <LinearGradient 
-                    colors={['#ffffff', '#ffffff']} style={{marginTop: 0}}>
+                    colors={['#2C477040','#ffffff','#ffffff','#ffffff', '#2C477040']} style={{marginTop: -.5}}>
                     <CountriesBlock />
                 </LinearGradient> 
             :
             null
             }
-            <LinearGradient 
-                colors={['#2C477080', '#ffffff', '#2C477080']} style={{marginTop: 0}}>
-                 <CitiesBlock />
-            </LinearGradient> 
 
              <LinearGradient 
              colors={['#ffffff' ,'#2C477030','#2C477050','#2C477030' , '#ffffff']}>

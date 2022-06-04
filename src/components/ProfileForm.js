@@ -23,7 +23,7 @@ import RNRestart from 'react-native-restart'
 import CountryPicker from 'react-native-country-picker-modal'
 import LinearGradient from 'react-native-linear-gradient'
 import {Picker} from '@react-native-picker/picker'
-import {CitiesWithinCountry} from "../scripts/DataValues.json"
+import {CitiesWithinCountry} from "../scripts/CategoriesCountries.json"
 import * as Animatable from 'react-native-animatable'
 //import * as RNLocalize from "react-native-localize"
 

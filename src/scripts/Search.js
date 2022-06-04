@@ -1,3 +1,11 @@
+//search by location: item.seller.location.city.includes(searchInput)
+export const filterDataByCategoryInLocation = (products,country, category, searchInput, city) =>{
+    const productsTemp = filterDataByCategoryInCountry(products,country, category, searchInput)
+    if(city === 'الكل' || city === '')
+        return productsTemp
+    else 
+        return productsTemp.filter(item=> item.seller.location.city === city)
+}
 
 //Filter data based on country, category, searchInput
 export const filterDataByCategoryInCountry = (products, country, category, searchInput) =>{
@@ -9,9 +17,9 @@ export const filterDataByCategoryInCountry = (products, country, category, searc
             return productsByCountry.filter(item=> item.category === category)
     }else{
         if(category === 'الكل')            
-            return productsByCountry.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput || item.seller.location.city.includes(searchInput)))
+            return productsByCountry.filter(item=> item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput))
         else
-             return productsByCountry.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput) || item.seller.location.city.includes(searchInput)) && item.category === category)
+             return productsByCountry.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput)) && item.category === category)
     }
 }
 
@@ -28,15 +36,6 @@ export const filterDataByCategory = (products, category, searchInput) =>{
         else
              return products.filter(item=> (item.category.includes(searchInput) || item.product_name.includes(searchInput) || item.seller.name.includes(searchInput) || item.seller.location.city.includes(searchInput)) && item.category === category)
     }
-}
-
-//search by location: item.seller.location.city.includes(searchInput)
-export const filterDataByCategoryInLocation = (products,country, category, searchInput, city) =>{
-    const productsTemp = filterDataByCategoryInCountry(products,country, category, searchInput)
-    if(city === 'الكل' || city === '')
-        return productsTemp
-    else 
-        return productsTemp.filter(item=> item.seller.location.city === city)
 }
 
 //Filter data based on search input value 

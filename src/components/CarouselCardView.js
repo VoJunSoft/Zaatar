@@ -23,7 +23,7 @@ export default function CarouselCardView(props) {
                             titleLeft={props.productInfo.seller.location.city ? props.productInfo.seller.location.city : 'ام الفحم'}
                             iconName="locationAlpha"
                             iconSize={27}
-                            containerStyle={{justifyContent:'flex-end', width:'30%', height:'100%'}}
+                            containerStyle={{justifyContent:'flex-end', width:'30%', height:'100%', borderRightWidth:0.5, borderColor:"#32323290"}}
                             textStyle={{fontFamily: 'Cairo-Regular',color:'#fff',fontSize:12}}
                             disabled/>
                     <Text style={styles.title}>{props.productInfo.product_name}</Text>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     title:{
         color:'#fff',
         fontFamily:'Almarai-Bold',
-        fontSize:15,
+        fontSize:13,
         padding: 2,
         textAlign:'right',
         width:'65%'

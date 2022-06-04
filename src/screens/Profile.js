@@ -14,7 +14,6 @@ import ProductCard from '../components/ProductCard'
 import ProfileForm from '../components/ProfileForm'
 import AddProductForm from '../components/AddProductForm'
 import RNRestart from 'react-native-restart'
-import {currencySymbols} from "../scripts/DataValues.json"
 
 const Profile = (props) => {
     // const {id, name, picture, email, location:{}, phone} = route.params
@@ -210,7 +209,7 @@ const Profile = (props) => {
             keyExtractor={item => item.productId}
             style={styles.ProductsList}
             renderItem={ ({item, index}) => (
-                <ProductCard view='Default' productInfo={item} deleteButtonVisibility={deleteButtonVisibility} currencySymbol={currencySymbols[userInfo.location.flag]}/>
+                <ProductCard view='Default' productInfo={item} deleteButtonVisibility={deleteButtonVisibility} />
             )}/>
 
         <Overlay isVisible={profileFormVisibility} 
