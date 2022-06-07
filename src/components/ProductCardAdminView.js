@@ -1,29 +1,27 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { 
     Text, 
     View,
     SafeAreaView,
     StyleSheet,
-    Image,
-    Dimensions,
-    ImageBackground 
 } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import {Flags} from "../scripts/Flags.json"
 
 const ProductCardAdminView = (props) => {
-
-return (
-      <View style={styles.container} >
-         <View style={styles.infoBlock}>
-            <Text style={styles.title}>{props.productInfo.seller.name}</Text> 
-            <Text style={styles.title}>{props.productInfo.product_name}</Text> 
-        </View> 
-         <FastImage  style={styles.img} 
-                    source={{uri: props.productInfo.photos[0]}} 
-                    defaultSource={require('../assets/gallary/Zaatar.png')}
-                    resizeMode={FastImage.resizeMode.cover}/>
-      </View>
-)
+  return (
+        <SafeAreaView style={styles.container} >
+          <View style={styles.infoBlock}>
+              <Text style={styles.title}>{props.productInfo.seller.name}</Text> 
+              <Text style={styles.title}>{props.productInfo.product_name}</Text> 
+              <Text style={styles.title}>{`${props.productInfo.seller.location.city} ${Flags[props.productInfo.seller.location.country]}`}</Text> 
+          </View> 
+          <FastImage  style={styles.img} 
+                      source={{uri: props.productInfo.photos[0]}} 
+                      defaultSource={require('../assets/gallary/Zaatar.png')}
+                      resizeMode={FastImage.resizeMode.cover}/>
+        </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -35,8 +33,9 @@ const styles = StyleSheet.create({
       alignItems:'center'
     },
     infoBlock: {
-      width:'70%',
+      width:'50%',
       flexDirection:'column',
+      paddingRight:5,
     },
     title: {
       width:'100%',
@@ -45,13 +44,14 @@ const styles = StyleSheet.create({
       color:'#fff',
       flexWrap:'nowrap',
       padding:5,
-      textAlign:'center'
+      textAlign:'right'
     },
     img:{
-      width:'28%',
-      height:70,
-      margin:3
+      width:185,
+      height:120,
+      borderTopRightRadius:5,
+      margin:3,
   }
-    });
+})
 
 export default ProductCardAdminView;

@@ -50,9 +50,17 @@ export const filterWorkshopsBaseOnSearch = (workshops, searchInput) =>{
 }
 
 //Filter data based on search input value 
-export const filterStoresBaseOnSearch = (stores, searchInput) =>{
-    if(searchInput==='')
+export const filterStoresBaseOnSearch = (stores, country, searchInput) =>{
+    if(country === 'Global'){
+        if(searchInput==='')
             return stores
         else
-            return stores.filter(item=> item.name.includes(searchInput) || item.location.city.includes(searchInput))
+            return stores.filter((item.location.city.includes(searchInput) || item.name.includes(searchInput)))
+    }else{
+        if(searchInput==='')
+            return stores.filter(item=> item.location.country === country)
+        else
+            return stores.filter(item=> item.location.country === country && (item.location.city.includes(searchInput) || item.name.includes(searchInput)))
 }
+    }
+   

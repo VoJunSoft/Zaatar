@@ -15,32 +15,37 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const StoreCard = (props) => {
-   const nav = useNavigation()
-    const [store, setStoreInfo] = useState(props.item)
+    const nav = useNavigation()
+    const [store, setStoreInfo] = useState(props.StoreInfo)
+    //get owner (logged in user) to compare with other sellers ids
+    const [ownerId, setOwnerId] = useState('')
+
     useEffect( ()=>{
         getData()
-      }, [])
-    
-      //get owner (logged in user) to compare with other sellers ids
-      const [ownerId, setOwnerId] = useState('')
-      const getData =  () => {
-            AsyncStorage.getItem('userInfoZaatar')
-               .then((value) => {
-                    if(value !== null)
-                      setOwnerId(JSON.parse(value).id)
-               })
-      }
-  
-      //TODO retrieve data from firebase based on id and pass it instead of productInfo.seller (which is stored with product info)
-      const GoToSellerProfile = () => {
-       // if user is owner then go to his/her page
-        if(store.id === ownerId){
-             nav.navigate('Profile')
-        }else{
-            global.sellerState = store
-            nav.navigate('SellerProfile')
-        }
-      }
+    }, [])
+
+    const getData =  () => {
+        AsyncStorage.getItem('userInfoZaatar')
+            .then((value) => {
+                if(value !== null)
+                    setOwnerId(JSON.parse(value).id)
+            })
+            .catch((e)=>{
+                console.log('failure rtrieving store id')
+            })
+    }
+
+    //TODO retrieve data from firebase based on id and pass it instead of productInfo.seller (which is stored with product info)
+    const GoToSellerProfile = () => {
+    // if user is owner then go to his/her page
+    if(store.id === ownerId){
+            nav.navigate('Profile')
+    }else{
+        global.sellerState = store
+        nav.navigate('SellerProfile')
+    }
+    }
+
     return (
     <TouchableOpacity style={styles.container} onPress={GoToSellerProfile} activeOpacity={0.8}>
         <View style={styles.EntryHeader}>

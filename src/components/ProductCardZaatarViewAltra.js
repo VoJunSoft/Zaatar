@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
       height:130,
       width:'100%',
       //borderRadius:200,
-      //margin:5
+      marginTop:-.2
     }
 })

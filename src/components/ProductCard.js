@@ -128,10 +128,10 @@ export default function ProductCard(props) {
     }
     const CardView = () => {
         return(
-            <TouchableOpacity   style={props.view === 'PremiumView' ? 
-                                        styles.ProductCardHeader : props.view === 'AdminView' ? 
+            <TouchableOpacity   style={props.view === 'BodyAltraView' ? 
+                                        styles.ProductCardDefault : props.view === 'AdminView' ? 
                                         styles.ProductCardAdmin : props.view === 'Carousel' ? 
-                                        styles.ProductCardCarousel : styles.ProductCardDefault} 
+                                        styles.ProductCardCarousel : styles.ProductCardAltra} 
                                 activeOpacity={0.7} 
                                 onPress={()=>UpdateShowSellerInfo(productInfo.seller.id)}
                                 disabled={props.deleteButtonVisibility}>
@@ -157,7 +157,7 @@ export default function ProductCard(props) {
                 fullScreen={true}
                 overlayStyle={{
                     padding:0, 
-                    width:'95%',
+                    width:'96%',
                     height:'100%', 
                     borderRadius:0,
                 }}>
@@ -185,10 +185,10 @@ const styles = StyleSheet.create({
     },
     dropShadow:{
         shadowColor: '#171717',
-        shadowOffset: {width: -2, height: 2},
-        shadowOpacity: 0.6,
+        shadowOffset: {width: -2, height: 3},
+        shadowOpacity: 1,
         shadowRadius: 1,
-        padding:3
+        padding:2
     },
     ProductCard:{
         width:'45%',
@@ -200,16 +200,21 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     ProductCardDefault:{
-        width:'48%',
-        margin:4,
-        marginTop:7,
-        marginBottom:7 ,
+        //flex:1,
+        width:'49%',
+        marginTop:8,
+        margin:2,
         borderRadius:13,
         overflow:'hidden'
     },
-    ProductCardHeader:{
+    ProductCardAltra:{
+        //flex:1,
+        width:'46%',
+        margin:8,
+        marginTop:10,
         borderRadius:13,
-        overflow:'hidden'
+        overflow:'hidden',
+        alignSelf:'center',
     },
     ProductCardAdmin:{
         marginTop: 12,

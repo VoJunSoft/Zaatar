@@ -123,7 +123,7 @@ export default function AddProductForm(props) {
             .catch((e)=>{
               setErrMsg("الرجاء معاودة المحاولة في وقت لاحق")
             })
-            return () => subscriber();
+            return () => subscriber
     }else{
       setErrMsg("املأ جميع البيانات")
     }
@@ -152,7 +152,7 @@ export default function AddProductForm(props) {
             .catch((e)=>{
               setErrMsg("الرجاء معاودة المحاولة في وقت لاحق")
           })
-          return () => subscriber();
+          return () => subscriber
     }else{
       setErrMsg("املأ جميع البيانات")
     }
@@ -206,8 +206,7 @@ export default function AddProductForm(props) {
                     <Picker
                         selectedValue={productInfo.currency}
                         style={[CSS.postInputDate, {width:'27%'}]}
-                        containerStyle={{width:200}}
-                        onValueChange={(itemValue, itemIndex) => [setProductInfo({...productInfo, currency:itemValue}), console.log('currrrency' , currency)]}>
+                        onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, currency:itemValue})}>
                           {
                               Currencies.map((item, index)=>[ 
                                       <Picker.Item label={item} 
@@ -384,7 +383,7 @@ export default function AddProductForm(props) {
                     height:'100%', 
                     backgroundColor:'rgba(255,255,255,0.7)',
                     }}>
-                <ActivityIndicator size={100} color="#2C4770" marginTop={'50%'} />
+                <ActivityIndicator size={100} color="#2C4770" style={{marginTop:'50%'}} />
                 <Text style={CSS.loading}>يرجى الانتظار أثناء التحميل</Text>
     </Overlay>
     </>

@@ -55,7 +55,7 @@ const App = ({useNavigation}) => {
                                             email: null, 
                                             phone: null, 
                                             rule : null, 
-                                            location:{country:'Israel',code:'972',flag:'IL',currency:'ILS',city: null}
+                                            location:{country:'Global',code:null,flag:null,currency:null,city: null}
                                           })
   const [isUser, setIsUser] = useState(false)
 

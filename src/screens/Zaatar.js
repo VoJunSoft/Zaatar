@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { 
     ScrollView, 
     Text, 
     StyleSheet,
     FlatList,
-    ActivityIndicator,
-    Dimensions
+    ActivityIndicator
 } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
 import ProductCard from '../components/ProductCard'
@@ -17,6 +16,8 @@ import {filterDataByCategoryInLocation } from '../scripts/Search'
 import LinearGradient from 'react-native-linear-gradient'
 import Buttons from '../elements/Button'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
+import * as Animatable from 'react-native-animatable'
+import LinearProgress from 'react-native-elements/dist/linearProgress/LinearProgress'
 //import * as RNLocalize from "react-native-localize"
 //import UserData from '../scripts/UserData'
 
@@ -35,11 +36,13 @@ export default function Zaatar(props) {
     const [userInfo, setUserInfo] = useState(props.route.params)
     const [isLoading, setIsLoading] = useState(true)
     //state for unique locations (cities)
-    const [locations, setLocation] = useState([{country:'Global', flag: 'GLB', cities:[]}])
+    const [locations, setLocation] = useState([{country:'Global', 
+                                                flag: 'GLB', 
+                                                cities:[]
+                                            }])
     const [selectedCountry, setSelectedCountry] = useState(userInfo.location.country)
     const [selectedCity, setSelectedCity] = useState('الكل')
     const [selectedCountryIndex, setIndex] = useState(0)
-
     const [countriesListVisibility, setCountriesListVisibility] = useState(true)
     
     useEffect(() => {
@@ -49,7 +52,7 @@ export default function Zaatar(props) {
         //fill up products
         GetProductsByDate()
         //get category for header flatlist products randomly 
-        setHeaderCategory(SearchCategories[Math.floor(Math.random() * (SearchCategories.length -1))])
+        setHeaderCategory(SearchCategories[Math.floor(Math.random() * (SearchCategories.length -2) + 1)])
     },[])
 
     const GetProductsByDate = () => {
@@ -97,42 +100,35 @@ export default function Zaatar(props) {
 
     const CitiesBlock = () =>{
         return(
-            <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
                 <FontAwesomeIcons 
-                    name={'map'}
-                    size={22}
-                    style={{paddingLeft:10, paddingRight:12, alignSelf:'center', color:'#2C4770'}}
+                    name={countriesListVisibility !== true ? 'caret-right' : 'caret-down'}
+                    size={35}
+                    style={{paddingLeft:15, paddingRight:15, alignSelf:'center', color:'#2C4770'}}
                     onPress={()=>setCountriesListVisibility(!countriesListVisibility)}
-                    //onPress={()=> setSelectedCountry(selectedCountry === 'Global' ? userInfo.location.country : 'Global')}
                 />
-                { !isLoading ?
-                    selectedCountry !== 'Global' ?
-                        locations[selectedCountryIndex].cities.map((item, index)=>[ 
-                            <Buttons.ButtonDefault
-                                key={index}
-                                titleRight={item} 
-                                horizontal={true}
-                                textStyle={{
-                                    fontFamily: 'Cairo-Regular' ,
-                                    fontSize: 13, 
-                                    color: '#2C4770'
-                                }}
-                                containerStyle={{
-                                    paddingLeft : 20, 
-                                    paddingRight: 20, 
-                                    borderRightWidth:.2,
-                                    borderLeftWidth:.2,
-                                    borderColor:"#2C477040",
-                                    backgroundColor: selectedCity === item ? '#2C477060' : null
-                                }}
-                                activeOpacity={0.5}
-                                onPress={()=>setSelectedCity(item)}
-                                /> 
-                        ])
-                        :
-                        <Text style={styles.title}>أختار دولتك من اجل تصنيف المنتجات حسب البلد</Text>
+                { selectedCountry !== 'Global' ?
+                    locations[selectedCountryIndex].cities.map((item, index)=>[ 
+                        <Buttons.ButtonDefault
+                            key={index}
+                            titleRight={item} 
+                            horizontal={true}
+                            textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 14, color: '#2C4770'}}
+                            containerStyle={{
+                                paddingLeft : 20, 
+                                paddingRight: 20, 
+                                borderRightWidth:.2,
+                                borderLeftWidth:.2,
+                                borderColor:"#2C477040",
+                                padding:5,
+                                backgroundColor: selectedCity === item ? '#2C477060' : null
+                            }}
+                            activeOpacity={0.5}
+                            onPress={()=>setSelectedCity(item)}
+                            /> 
+                    ])
                     :
-                    <ActivityIndicator color='#2C4770' size={25} style={{marginLeft: Dimensions.get('window').width/3.1}}/>
+                    <Text style={[styles.title,{padding:5, borderLeftWidth:0.5, borderColor:"#2C477040"}]}>أختار دولتك من اجل تصنيف المنتجات حسب البلد</Text>
                 }
             </ScrollView>
         )
@@ -140,32 +136,26 @@ export default function Zaatar(props) {
 
     const CountriesBlock = () =>{
         return(
-            <ScrollView horizontal={true} style={{ height:35}} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
-                { !isLoading ?
-                        locations.map((item, index)=>[ 
-                            <Buttons.ButtonDefault
-                                key={index}
-                                titleRight={Flags[item.country]} 
-                                horizontal={true}
-                                textStyle={{
-                                    fontFamily: 'Cairo-Regular' ,
-                                    fontSize: 13, 
-                                    color: '#2C4770'
-                                }}
-                                containerStyle={{
-                                    paddingLeft : 20, 
-                                    paddingRight: 20, 
-                                    borderRightWidth: .2,
-                                    borderLeftWidth:.2,
-                                    borderColor:"#2C477040",
-                                    backgroundColor: selectedCountry === item.country ? '#2C477040' : null
-                                }}
-                                activeOpacity={0.5}
-                                onPress={()=>GoGlobal(item.country)}
-                                /> 
-                            ])
-                        :
-                        <ActivityIndicator color='#2C4770' size={22} style={{marginLeft: Dimensions.get('window').width/2.3}}/>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} invertStickyHeaders={true}> 
+                {locations.map((item, index)=>[ 
+                    <Buttons.ButtonDefault
+                        key={index}
+                        titleRight={Flags[item.country]} 
+                        horizontal={true}
+                        textStyle={{fontSize: 15, color: '#2C4770', fontFamily: 'Marlboro'}}
+                        containerStyle={{
+                            paddingLeft : item.country === 'Israel' ? 14 : 20, 
+                            paddingRight: item.country === 'Israel' ? 14 : 20,  
+                            padding:5,
+                            borderRightWidth: .2,
+                            borderLeftWidth:.2,
+                            borderColor:"#2C477040",
+                            backgroundColor: selectedCountry === item.country ? '#2C477040' : null
+                        }}
+                        activeOpacity={0.5}
+                        onPress={()=>GoGlobal(item.country)}
+                        /> 
+                    ])
                 }
             </ScrollView>
         )
@@ -178,23 +168,30 @@ export default function Zaatar(props) {
         setIndex(locations.findIndex(object => object.country === country))
     }
 
+   
     const HeaderProductsList = () =>{
         return(
             <>
-            <LinearGradient 
-                colors={['#2C477080', '#ffffff', '#ffffff', '#2C477080']} style={{marginTop: 0}}>
-                 <CitiesBlock />
-            </LinearGradient> 
-            
-            {countriesListVisibility ? 
-                <LinearGradient 
-                    colors={['#2C477040','#ffffff','#ffffff','#ffffff', '#2C477040']} style={{marginTop: -.5}}>
-                    <CountriesBlock />
-                </LinearGradient> 
+            {!isLoading ?
+                <>
+                        <LinearGradient 
+                            colors={['#2C477080', '#ffffff', '#ffffff', '#2C477080']} style={{marginTop: 0}}>
+                            <CitiesBlock />
+                        </LinearGradient> 
+                        
+                        {countriesListVisibility ? 
+                            <LinearGradient 
+                                colors={['#2C477040','#ffffff','#ffffff','#ffffff', '#2C477040']} style={{marginTop: -.5}}>
+                                <CountriesBlock />
+                            </LinearGradient> 
+                        :
+                        null
+                        }
+                </>
             :
-            null
+                 <LinearProgress color="#fac300" style={{marginTop:15, width:"96%", alignSelf:'center'}} trackColor='#2C4770' />
             }
-
+            
              <LinearGradient 
              colors={['#ffffff' ,'#2C477030','#2C477050','#2C477030' , '#ffffff']}>
                 <FlatList 
@@ -260,8 +257,7 @@ const styles = StyleSheet.create({
     title:{
         color:'#2C4770', 
         fontFamily:'Cairo-Regular', 
-        fontSize: 13,
+        fontSize: 14,
         alignSelf:'center',
-        marginLeft: 15
     }
 })

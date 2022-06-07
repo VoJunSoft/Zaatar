@@ -31,10 +31,8 @@ const Admin = () => {
         switch(screenName){
             case 'Stores':
                 return <Stores AdminArea={true} />
-                break
             case 'Products':
                 return <ProductsForAdmin />
-                break
         }
     }
 

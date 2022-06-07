@@ -35,11 +35,10 @@ export default function ProfileForm(props) {
     const [userInfo, setUserInfo] = useState(props.userInfo ? 
                 props.userInfo 
                 : 
-                {id:'', email:'', phone:'', name:'', rule:'', location:{country:'Israel', code:'972', flag:'IL', currency: 'ILS', city:''}}
+                {id:'', email:'', phone:'', name:'', rule:'', location:{country:'Palestine', code:'970', flag:'PS', currency: 'ILS', city:''}}
             )
     //find the index of the user's country within the CitiesWithinCountry array
     const [indexOfCountry, setCountryIndex] = useState(CitiesWithinCountry.findIndex(object => object.Country === userInfo.location.country))
-    console.log('index -', indexOfCountry)
     const [image, setImage] = useState(props.userInfo ? props.userInfo.picture : null)
     const [isLoading, setIsloading] = useState(false)
     const [errMsg, setErrMsg] = useState('')

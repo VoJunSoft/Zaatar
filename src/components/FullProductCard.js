@@ -70,7 +70,8 @@ const FullProductCard = (props) => {
     return (
     <>
     <LinearGradient 
-                colors={['#2C4770','#2C477099','#2C477090','#2C477099','#2C4770']}  
+                //colors={['#2C4770','#2C477099','#2C477090','#2C477099','#2C4770']}  
+                colors={[ '#4b6cb7','#2C4770' , '#182848']} 
                 style={{flexDirection:'column', width:'100%', alignItems:'baseline', borderWidth:0}}>
         <TouchableOpacity 
             style={styles.ProfileHeader} 
@@ -81,7 +82,7 @@ const FullProductCard = (props) => {
                         iconName="location"
                         iconSize={32}
                         horizontal={true}
-                        textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#000', marginTop:-8, backgroundColor:'#ffffff09', borderRadius:50}}
+                        textStyle={{fontFamily: 'Cairo-Regular' ,fontSize: 10, color: '#fff', marginTop:-8, backgroundColor:'#ffffff09', borderRadius:50}}
                         activeOpacity={0.9}
                         disabled/> 
                 <Text style={styles.headerText}>{productInfo.seller.name}</Text> 
@@ -101,8 +102,7 @@ const FullProductCard = (props) => {
           duration={2000}
           direction="normal">
           <LinearGradient 
-              //start={{x:1,y:0}}
-              colors={[ '#2C477070', '#2C477050','#2C477030']}  
+              colors={[ '#2C477070', '#2C477020','#fff']}  
               style={styles.largeImgBlock}>
                     <FastImage style={styles.imgLarge} 
                           source={{uri: productInfo.photos[imgIndex],  priority: FastImage.priority.high}} 
@@ -204,9 +204,9 @@ const styles = StyleSheet.create({
     },
     headerText:{
       fontFamily:'Almarai-Bold',
-      fontSize: 24,
+      fontSize: 21,
       textAlign: 'center',
-      color:'#2C4770',
+      color:'#fff',
     },
     InfoBodyText: {
       fontFamily:'Cairo-Regular',

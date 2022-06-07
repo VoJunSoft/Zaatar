@@ -65,7 +65,7 @@ const ProfileStore = (props) => {
                                         setIsloading(false)
                                     })
 
-            return () => subscriber();
+            return () => subscriber
         }catch(err){
             //TODO forward to error page
             //RNRestart.Restart()
@@ -89,13 +89,13 @@ const ProfileStore = (props) => {
     }
 
     //store umbrella bar
-    const StoreShopSymbolBeta = () => {
+    const StoreShopSymbolBeta = (props) => {
         return (
             <LinearGradient 
                 //start={{x: 0, y: 0}} 
                 //end={{x: 1, y: 0}}
-                colors={[ '#4b6cb7','#2C4770','#182848']} 
-                style={[styles.linearGradientBanner]}>
+                colors={['#4b6cb7','#2C4770','#182848']} 
+                style={[styles.linearGradientBanner,{marginTop:props.marginTop}]}>
                         <RollingText style={styles.TextBanner} durationMsPerWidth={10} force={true}>
                             {"قم بالتسجيل وابدأ في بيع منتجاتك المستعملة أو الجديدة"}
                         </RollingText>
@@ -106,47 +106,50 @@ const ProfileStore = (props) => {
     const ProfileHeaderComponent = () =>{
         return(
             <LinearGradient 
-                start={{x: 0, y: 1}} 
-                //end={{x: 1, y: 0}}
-                colors={['#2C4770', '#4b6cb7', '#2C4770']} 
+                //start={{x: 0, y: 1}} 
+                colors={['#2C4770', '#2C4770','#ffffff50', '#ffffff']} 
                 style={styles.linearGradient}>
-                <View style={{flexDirection:'row'}}>
-                    <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
+                <View style={{flexDirection:'row', height:Dimensions.get('window').height/4,borderRadius:10, overflow:'hidden'}}>
+                    <LinearGradient 
+                            colors={[ '#4b6cb7','#2C4770' , '#182848']} 
+                            style={{ width:'39%',borderRadius:0, padding: 5, borderRightWidth:0, borderColor:'#2C4770', overflow:'hidden', justifyContent:'center'}}>
                         <Avatar
-                            size={150}
+                            size={140}
                             rounded
                             source={userInfo.picture ? {uri: userInfo.picture} : require('../assets/gallary/p1.png') }
                             icon={{ name: 'user', type: 'font-awesome', color: '#2C4770'}}
-                            containerStyle={{ backgroundColor: '#fff' , alignSelf:'center', marginLeft:20}}/>
-                    </View>
-                <View style={{width:'60%', justifyContent:'center', paddingLeft: 5}}>
-                    <Buttons.ButtonDefault 
-                        titleLeft={userInfo.name ? userInfo.name : 'مستخدم'}
-                        iconName="profile"
-                        iconSize={25}
-                        containerStyle={{justifyContent:'flex-end',marginBottom:8}}
-                        textStyle={styles.SellerInfo}
-                        disabled/>
+                            containerStyle={{ backgroundColor: '#fff' , alignSelf:'center'}}/>
+                    </LinearGradient >
+                    <LinearGradient 
+                        colors={[ '#4b6cb7','#2C4770', '#182848']} 
+                        style={{ width:'57%',borderRadius:0, justifyContent:'center', padding: 5, overflow:'hidden'}}>
+                        <Buttons.ButtonDefault 
+                            titleLeft={userInfo.name ? userInfo.name : 'مستخدم'}
+                            iconName="profile"
+                            iconSize={25}
+                            containerStyle={{justifyContent:'flex-end',marginBottom:8}}
+                            textStyle={styles.SellerInfo}
+                            disabled/>
 
-                     <Buttons.ButtonDefault 
-                        titleLeft={userInfo.location.city ? userInfo.location.city : 'موقعك'}
-                        iconName="location"
-                        iconSize={25}
-                        containerStyle={{justifyContent:'flex-end',marginBottom:8}}
-                        textStyle={styles.SellerInfo}
-                        disabled/>
+                        <Buttons.ButtonDefault 
+                            titleLeft={userInfo.location.city ? userInfo.location.city : 'موقعك'}
+                            iconName="location"
+                            iconSize={25}
+                            containerStyle={{justifyContent:'flex-end',marginBottom:8}}
+                            textStyle={styles.SellerInfo}
+                            disabled/>
 
-                    <Buttons.ButtonDefault 
-                        titleLeft={userInfo.phone ? userInfo.phone: 'رقم التليفون'}
-                        iconName="whats"
-                        iconSize={25}
-                        containerStyle={{justifyContent:'flex-end'}}
-                        textStyle={styles.SellerInfo}
-                        onPress={()=>contactUsByWhatsapp('',userInfo.phone)}/>
-                </View>
+                        <Buttons.ButtonDefault 
+                            titleLeft={userInfo.phone ? userInfo.phone: 'رقم التليفون'}
+                            iconName="envelope"
+                            iconSize={25}
+                            containerStyle={{justifyContent:'flex-end'}}
+                            textStyle={styles.SellerInfo}
+                            onPress={()=>contactUsByWhatsapp('',userInfo.phone)}/>
+                    </LinearGradient>
             </View>
-            <View style={{flexDirection:'row', justifyContent:'space-around', marginTop: 10}}>
-                <StoreShopSymbolBeta />
+            <View style={{flexDirection:'row', justifyContent:'space-around'}}>
+                {/* <StoreShopSymbolBeta marginTop={10}/> */}
             </View>
             </LinearGradient>
         )
@@ -178,7 +181,7 @@ const ProfileStore = (props) => {
                 ListHeaderComponent={<ProfileHeaderComponent />}
                 ListFooterComponent={productsBySellerId.length === 0 ? $renderEmptyOrdersState : null}
                 stickyHeaderIndices={[0]}
-                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 numColumns={2}
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
@@ -227,29 +230,17 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
     },
     ProductsList:{
-        backgroundColor: '#FFFFFF',
-    },
-    ProductCard:{
-        width:'45%',
-        alignItems:'center',
-        backgroundColor:'#fff',
-        marginTop: 15,
-        margin: 10,
-        borderRadius:10,
-        overflow:'hidden',
-        padding: 5
+        backgroundColor: '#fff',
     },
     storeSymbol: {
         width:Dimensions.get('window').width/14, 
-        //borderBottomLeftRadius:10,
-        //borderBottomRightRadius:10,
     },
     SellerInfo: {
         fontFamily: 'Cairo-Regular',
         color:'#fff',
-        fontSize:17,
+        fontSize:15,
         letterSpacing:1,
-        marginRight:10,
+        marginRight:5,
         textAlign:'center'
     }, 
     TextBanner: {
@@ -260,19 +251,21 @@ const styles = StyleSheet.create({
         textAlign:'right',
         width:'180%',
     },
-    linearGradient:{
-        flex:1,
-        flexDirection:'column', 
-        paddingTop:15, 
-        marginBottom:8, 
-        backgroundColor: '#2C4770'
+    linearGradient:{ 
+        alignItems:'center',
+        backgroundColor: '#2C4770',
+        paddingTop: 20,
+        //paddingBottom:20,
+        marginBottom:4,
+        borderBottomLeftRadius:30,
+        borderBottomRightRadius:30,
     },
     linearGradientBanner:{
-        flex:1,
         backgroundColor: '#2C4770',
         overflow:'hidden',
         alignItems:'center',
-        padding: 3
+        padding: 4,
+        marginTop:2
     }
 })
 
