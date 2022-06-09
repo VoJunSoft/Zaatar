@@ -186,7 +186,7 @@ const ProfileStore = (props) => {
                 keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard view='Default' productInfo={item} key={index}/>
+                    <ProductCard view='BodyAltraView' productInfo={item} key={index}/>
                 )}/>
         }
         <Overlay isVisible={profileFormVisibility} 

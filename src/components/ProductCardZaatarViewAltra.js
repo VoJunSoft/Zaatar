@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
     },
     img: {
       height:130,
-      width:'100%',
-      //borderRadius:200,
-      marginTop:-.2
+      marginLeft:1,
+      marginRight:1,
+      marginTop:-.2,
     }
 })

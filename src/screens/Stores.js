@@ -63,9 +63,9 @@ export default function Stores(props) {
                 {countries.map((item, index)=>[ 
                     <Buttons.ButtonDefault
                         key={index}
-                        titleRight={`${Flags[item]} ${filterStoresBaseOnSearch(stores, item, '').length}`} 
+                        titleRight={`${Flags[item]} (${filterStoresBaseOnSearch(stores, item, '').length})`} 
                         horizontal={true}
-                        textStyle={{fontSize: 15, color:'#2C4770'}}
+                        textStyle={{fontSize: 17, color:'#2C4770', fontFamily: 'Marlboro'}}
                         containerStyle={{
                             paddingLeft : 20, 
                             paddingRight: 20, 

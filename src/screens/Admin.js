@@ -19,7 +19,7 @@ const Admin = () => {
             setProducts([])
                 querySnapshot.forEach(documentSnapshot => {
                     setProducts((prevState) => {
-                            return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
+                            return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                         })
                 })
                 setIsLoading(false)
@@ -54,10 +54,10 @@ const Admin = () => {
                 data={products}
                 ListFooterComponent={products.length === 0 ? $renderEmptyOrdersState : null}
                 showsVerticalScrollIndicator={false}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.productId}
                 style={styles.ProductsList}
                 renderItem={ ({item, index}) => (
-                    <ProductCard productInfo={item} key={index} view='AdminView' deleteButtonVisibility={true} />
+                    <ProductCard productInfo={item} view='AdminView' deleteButtonVisibility={true} />
                 )}/>
         )
     }

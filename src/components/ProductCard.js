@@ -174,7 +174,7 @@ export default function ProductCard(props) {
                     borderRadius:0,
                     backgroundColor:'rgba(255,255,255,0.95)',
                 }}>
-            <EditProductForm userInfo={productInfo.seller} productInfo={productInfo} setProductFormVisibility={setProductFormVisibility} EditProduct={true}/>
+            <EditProductForm productInfo={productInfo} setProductFormVisibility={setProductFormVisibility} EditProduct={true}/>
         </Overlay>
         </>
     )

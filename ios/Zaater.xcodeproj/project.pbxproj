@@ -78,6 +78,24 @@
 		718E54ECE5E6480296D34023 /* Lalezar-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3C7A96F18F94D7E8F21AEBF /* Lalezar-Regular.ttf */; };
 		E934A8EA7F8346D58704E96B /* NotoNastaliqUrdu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC44732AFD924FDA97510711 /* NotoNastaliqUrdu-Bold.ttf */; };
 		04240004EDC54B17829A2608 /* NotoNastaliqUrdu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25987FDF6710428BB1B7F7E1 /* NotoNastaliqUrdu-Regular.ttf */; };
+		84B9B455ED974675A4B62DF2 /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACD31CAA4CCA43A38D78B1F4 /* Almarai-Bold.ttf */; };
+		82F8F3DCF9614EE7925FFC92 /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2BCB607FBBFB42ED9615073F /* Almarai-ExtraBold.ttf */; };
+		C75B282C179846DC99228CBC /* Almarai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49ED38C1C29E412B9D976FD5 /* Almarai-Light.ttf */; };
+		28747F44890D4BE09A378341 /* Almarai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63E03748416F4069A49B67F2 /* Almarai-Regular.ttf */; };
+		A629E2A3966D404E81EE3D51 /* Amiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 959A582C37184ED99FF498BD /* Amiri-Bold.ttf */; };
+		7EB000C7220E4FA0868EF42E /* Amiri-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB14853D517043579B5A3CE6 /* Amiri-BoldItalic.ttf */; };
+		C38D24D3B71C41A5AA4B4105 /* Amiri-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33C30F2CE60C400F9EE260E8 /* Amiri-Italic.ttf */; };
+		92160F5153014CD0A804101B /* Amiri-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB8F6EDCD97D469DB86F7F9C /* Amiri-Regular.ttf */; };
+		F4722D32981C46C5AAC2BFE9 /* ArefRuqaa-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F66BF26FE9E48F09F154A06 /* ArefRuqaa-Bold.ttf */; };
+		A9302FCA516A43199CC4ECC3 /* ArefRuqaa-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 258FB0D157374459ACC36552 /* ArefRuqaa-Regular.ttf */; };
+		BAFD2697B2864AC296D849BD /* Cairo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C76097C01F8C4ED0A5685733 /* Cairo-Bold.ttf */; };
+		771CDADDED954E0B80BE30C5 /* Cairo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D3AEE1BC77A4E27BF5513F9 /* Cairo-Regular.ttf */; };
+		4AF89293CB444C46A85DD097 /* Noto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5794CA29575C4AF8A6A8A536 /* Noto-Bold.ttf */; };
+		362CB317E0F547C28DB84F7A /* Noto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1B579BC66CB349359AD04B30 /* Noto-Regular.ttf */; };
+		B8EC9FE722B44A5A9D5A2C9A /* NotoKufiArabic-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33FEAE9DE24041A3881318F7 /* NotoKufiArabic-Regular.ttf */; };
+		55966D3E588A42F0BBA3DB45 /* NotoKufiArabic-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5235217FA244A8AB0EED603 /* NotoKufiArabic-SemiBold.ttf */; };
+		C488E12BC75042159B918D50 /* NotoNastaliqUrdu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B84F57E9C6044118A44C1380 /* NotoNastaliqUrdu-Bold.ttf */; };
+		DE9AB27CE7E14192A26EE0D7 /* NotoNastaliqUrdu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E480CAE8A04400BBD088E74 /* NotoNastaliqUrdu-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +186,24 @@
 		E3C7A96F18F94D7E8F21AEBF /* Lalezar-Regular.ttf */ = {isa = PBXFileReference; name = "Lalezar-Regular.ttf"; path = "../src/assets/fonts/Lalezar-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		AC44732AFD924FDA97510711 /* NotoNastaliqUrdu-Bold.ttf */ = {isa = PBXFileReference; name = "NotoNastaliqUrdu-Bold.ttf"; path = "../src/assets/fonts/NotoNastaliqUrdu-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		25987FDF6710428BB1B7F7E1 /* NotoNastaliqUrdu-Regular.ttf */ = {isa = PBXFileReference; name = "NotoNastaliqUrdu-Regular.ttf"; path = "../src/assets/fonts/NotoNastaliqUrdu-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		ACD31CAA4CCA43A38D78B1F4 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/AR/Almarai-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2BCB607FBBFB42ED9615073F /* Almarai-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Almarai-ExtraBold.ttf"; path = "../src/assets/fonts/AR/Almarai-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		49ED38C1C29E412B9D976FD5 /* Almarai-Light.ttf */ = {isa = PBXFileReference; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/AR/Almarai-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		63E03748416F4069A49B67F2 /* Almarai-Regular.ttf */ = {isa = PBXFileReference; name = "Almarai-Regular.ttf"; path = "../src/assets/fonts/AR/Almarai-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		959A582C37184ED99FF498BD /* Amiri-Bold.ttf */ = {isa = PBXFileReference; name = "Amiri-Bold.ttf"; path = "../src/assets/fonts/AR/Amiri-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BB14853D517043579B5A3CE6 /* Amiri-BoldItalic.ttf */ = {isa = PBXFileReference; name = "Amiri-BoldItalic.ttf"; path = "../src/assets/fonts/AR/Amiri-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		33C30F2CE60C400F9EE260E8 /* Amiri-Italic.ttf */ = {isa = PBXFileReference; name = "Amiri-Italic.ttf"; path = "../src/assets/fonts/AR/Amiri-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FB8F6EDCD97D469DB86F7F9C /* Amiri-Regular.ttf */ = {isa = PBXFileReference; name = "Amiri-Regular.ttf"; path = "../src/assets/fonts/AR/Amiri-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0F66BF26FE9E48F09F154A06 /* ArefRuqaa-Bold.ttf */ = {isa = PBXFileReference; name = "ArefRuqaa-Bold.ttf"; path = "../src/assets/fonts/AR/ArefRuqaa-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		258FB0D157374459ACC36552 /* ArefRuqaa-Regular.ttf */ = {isa = PBXFileReference; name = "ArefRuqaa-Regular.ttf"; path = "../src/assets/fonts/AR/ArefRuqaa-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C76097C01F8C4ED0A5685733 /* Cairo-Bold.ttf */ = {isa = PBXFileReference; name = "Cairo-Bold.ttf"; path = "../src/assets/fonts/AR/Cairo-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7D3AEE1BC77A4E27BF5513F9 /* Cairo-Regular.ttf */ = {isa = PBXFileReference; name = "Cairo-Regular.ttf"; path = "../src/assets/fonts/AR/Cairo-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5794CA29575C4AF8A6A8A536 /* Noto-Bold.ttf */ = {isa = PBXFileReference; name = "Noto-Bold.ttf"; path = "../src/assets/fonts/AR/Noto-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1B579BC66CB349359AD04B30 /* Noto-Regular.ttf */ = {isa = PBXFileReference; name = "Noto-Regular.ttf"; path = "../src/assets/fonts/AR/Noto-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		33FEAE9DE24041A3881318F7 /* NotoKufiArabic-Regular.ttf */ = {isa = PBXFileReference; name = "NotoKufiArabic-Regular.ttf"; path = "../src/assets/fonts/AR/NotoKufiArabic-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E5235217FA244A8AB0EED603 /* NotoKufiArabic-SemiBold.ttf */ = {isa = PBXFileReference; name = "NotoKufiArabic-SemiBold.ttf"; path = "../src/assets/fonts/AR/NotoKufiArabic-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B84F57E9C6044118A44C1380 /* NotoNastaliqUrdu-Bold.ttf */ = {isa = PBXFileReference; name = "NotoNastaliqUrdu-Bold.ttf"; path = "../src/assets/fonts/AR/NotoNastaliqUrdu-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0E480CAE8A04400BBD088E74 /* NotoNastaliqUrdu-Regular.ttf */ = {isa = PBXFileReference; name = "NotoNastaliqUrdu-Regular.ttf"; path = "../src/assets/fonts/AR/NotoNastaliqUrdu-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -326,6 +362,24 @@
 				E3C7A96F18F94D7E8F21AEBF /* Lalezar-Regular.ttf */,
 				AC44732AFD924FDA97510711 /* NotoNastaliqUrdu-Bold.ttf */,
 				25987FDF6710428BB1B7F7E1 /* NotoNastaliqUrdu-Regular.ttf */,
+				ACD31CAA4CCA43A38D78B1F4 /* Almarai-Bold.ttf */,
+				2BCB607FBBFB42ED9615073F /* Almarai-ExtraBold.ttf */,
+				49ED38C1C29E412B9D976FD5 /* Almarai-Light.ttf */,
+				63E03748416F4069A49B67F2 /* Almarai-Regular.ttf */,
+				959A582C37184ED99FF498BD /* Amiri-Bold.ttf */,
+				BB14853D517043579B5A3CE6 /* Amiri-BoldItalic.ttf */,
+				33C30F2CE60C400F9EE260E8 /* Amiri-Italic.ttf */,
+				FB8F6EDCD97D469DB86F7F9C /* Amiri-Regular.ttf */,
+				0F66BF26FE9E48F09F154A06 /* ArefRuqaa-Bold.ttf */,
+				258FB0D157374459ACC36552 /* ArefRuqaa-Regular.ttf */,
+				C76097C01F8C4ED0A5685733 /* Cairo-Bold.ttf */,
+				7D3AEE1BC77A4E27BF5513F9 /* Cairo-Regular.ttf */,
+				5794CA29575C4AF8A6A8A536 /* Noto-Bold.ttf */,
+				1B579BC66CB349359AD04B30 /* Noto-Regular.ttf */,
+				33FEAE9DE24041A3881318F7 /* NotoKufiArabic-Regular.ttf */,
+				E5235217FA244A8AB0EED603 /* NotoKufiArabic-SemiBold.ttf */,
+				B84F57E9C6044118A44C1380 /* NotoNastaliqUrdu-Bold.ttf */,
+				0E480CAE8A04400BBD088E74 /* NotoNastaliqUrdu-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -487,6 +541,24 @@
 				718E54ECE5E6480296D34023 /* Lalezar-Regular.ttf in Resources */,
 				E934A8EA7F8346D58704E96B /* NotoNastaliqUrdu-Bold.ttf in Resources */,
 				04240004EDC54B17829A2608 /* NotoNastaliqUrdu-Regular.ttf in Resources */,
+				84B9B455ED974675A4B62DF2 /* Almarai-Bold.ttf in Resources */,
+				82F8F3DCF9614EE7925FFC92 /* Almarai-ExtraBold.ttf in Resources */,
+				C75B282C179846DC99228CBC /* Almarai-Light.ttf in Resources */,
+				28747F44890D4BE09A378341 /* Almarai-Regular.ttf in Resources */,
+				A629E2A3966D404E81EE3D51 /* Amiri-Bold.ttf in Resources */,
+				7EB000C7220E4FA0868EF42E /* Amiri-BoldItalic.ttf in Resources */,
+				C38D24D3B71C41A5AA4B4105 /* Amiri-Italic.ttf in Resources */,
+				92160F5153014CD0A804101B /* Amiri-Regular.ttf in Resources */,
+				F4722D32981C46C5AAC2BFE9 /* ArefRuqaa-Bold.ttf in Resources */,
+				A9302FCA516A43199CC4ECC3 /* ArefRuqaa-Regular.ttf in Resources */,
+				BAFD2697B2864AC296D849BD /* Cairo-Bold.ttf in Resources */,
+				771CDADDED954E0B80BE30C5 /* Cairo-Regular.ttf in Resources */,
+				4AF89293CB444C46A85DD097 /* Noto-Bold.ttf in Resources */,
+				362CB317E0F547C28DB84F7A /* Noto-Regular.ttf in Resources */,
+				B8EC9FE722B44A5A9D5A2C9A /* NotoKufiArabic-Regular.ttf in Resources */,
+				55966D3E588A42F0BBA3DB45 /* NotoKufiArabic-SemiBold.ttf in Resources */,
+				C488E12BC75042159B918D50 /* NotoNastaliqUrdu-Bold.ttf in Resources */,
+				DE9AB27CE7E14192A26EE0D7 /* NotoNastaliqUrdu-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

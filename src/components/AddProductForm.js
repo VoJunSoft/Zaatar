@@ -26,7 +26,7 @@ import * as Animatable from 'react-native-animatable'
 
 export default function AddProductForm(props) {
   //props.userInfo
-  //HINT for edit purposes call AddProductForm from productCard and pass to it productInfo/Item
+  //HINT for edit purposes call EditProductForm from productCard and pass to it productInfo
   const [productInfo, setProductInfo] = useState(props.EditProduct ? 
     props.productInfo
     :  
@@ -90,7 +90,6 @@ export default function AddProductForm(props) {
   }
 
   const handleSubmit = () => {
-    //TODO handle if statements in such away it return the exact missing information
     setErrMsg('')
     setSuccessMsg('')
     if(productInfo.product_name.length >= 4 
@@ -151,6 +150,8 @@ export default function AddProductForm(props) {
             })
             .catch((e)=>{
               setErrMsg("الرجاء معاودة المحاولة في وقت لاحق")
+              //hide indicator (loading/editing msg)
+              setVisible(false)
           })
           return () => subscriber
     }else{
@@ -233,10 +234,12 @@ export default function AddProductForm(props) {
                       onValueChange={(itemValue, itemIndex) => setProductInfo({...productInfo, category:itemValue})}>
                         <Picker.Item style={{fontSize:15}} label="اختر الفئة" value="" />
                         {
-                            SearchCategories.map((item, index)=>[ 
-                                    <Picker.Item label={item} 
-                                                  value={item} 
-                                                  key={index} />
+                            SearchCategories.map((item, index)=>[
+                                item !== "الكل" ?
+                                      <Picker.Item label={item} 
+                                                    value={item} 
+                                                    key={index} />
+                                : null
                             ])
                         }
                   </Picker>

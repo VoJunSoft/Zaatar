@@ -18,7 +18,7 @@ import Buttons from '../elements/Button'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome5'
 import * as Animatable from 'react-native-animatable'
 import LinearProgress from 'react-native-elements/dist/linearProgress/LinearProgress'
-//import * as RNLocalize from "react-native-localize"
+import * as RNLocalize from "react-native-localize"
 //import UserData from '../scripts/UserData'
 
 export default function Zaatar(props) {
@@ -33,26 +33,30 @@ export default function Zaatar(props) {
     const [headerCategory, setHeaderCategory] = useState('')
 
     //get userInfo from navigation
+    //TODO delay prevents data to be loaded in time so the values receieved here are the initial object data from APP.js
     const [userInfo, setUserInfo] = useState(props.route.params)
-    const [isLoading, setIsLoading] = useState(true)
-    //state for unique locations (cities)
+    const [selectedCountry, setSelectedCountry] = useState('Global')
+    const [countryFlag, setCountryFlag] = useState(RNLocalize.getCountry())
+    const [selectedCity, setSelectedCity] = useState('الكل')
+    const [selectedCountryIndex, setIndex] = useState(0)
+
+    //state for unique locations (countries and cities)
     const [locations, setLocation] = useState([{country:'Global', 
                                                 flag: 'GLB', 
                                                 cities:[]
                                             }])
-    const [selectedCountry, setSelectedCountry] = useState(userInfo.location.country)
-    const [selectedCity, setSelectedCity] = useState('الكل')
-    const [selectedCountryIndex, setIndex] = useState(0)
+
     const [countriesListVisibility, setCountriesListVisibility] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
     
     useEffect(() => {
         console.log('params ' , props.route.params)
         //TODO: get user data: country 
-
+        console.log('RNLocalize ' , RNLocalize.getCountry())
         //fill up products
         GetProductsByDate()
         //get category for header flatlist products randomly 
-        setHeaderCategory(SearchCategories[Math.floor(Math.random() * (SearchCategories.length -2) + 1)])
+        setHeaderCategory(SearchCategories[Math.floor(Math.random() * (SearchCategories.length - 1)) + 1])
     },[])
 
     const GetProductsByDate = () => {
@@ -69,6 +73,7 @@ export default function Zaatar(props) {
                         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                     })
                     
+                    //fill out locations state with available countries and their cities (as well as flag 2-alpha)
                     indexCountry = locations.findIndex(object => object.country === documentSnapshot.data().seller.location.country)
                     indexCity = indexCountry === -1 ? -1 : locations[indexCountry].cities.indexOf(documentSnapshot.data().seller.location.city)
                     if(indexCountry === -1)
@@ -77,13 +82,33 @@ export default function Zaatar(props) {
                         locations[indexCountry].cities.push(documentSnapshot.data().seller.location.city)
 
                 })
-                console.log('locations : ', locations)
-                //if selected country (passed from APP.js) does not exist setSelectedCountryIndex to zero (Global) else get the index of the country
-                setIndex(locations.findIndex(object => object.country === selectedCountry) === -1 ? 0 : locations.findIndex(object => object.country === selectedCountry))
-                setSelectedCountry(locations.findIndex(object => object.country === selectedCountry) === -1 ? 'Global' : userInfo.location.country)
+
+                //if country's flag : RNLocalize.getCountry() : exists then get the country index and name from locations
+                //if it does not then take Global as country name
+                //the following line of code (commented) retrieve the entire object {county, flag, cities:[]}
+                //NOTE userCountryCities = locations.find(object => object.flag === countryFlag) === undefined ? locations[0] : locations.find(object => object.flag === countryFlag)
+                //so it can replace the following code and for GoGlobal we can use it to reset userCountryCities objct
+                setIndex(locations.findIndex(object => object.flag === countryFlag) === -1 ? 
+                            0 
+                            : 
+                            locations.findIndex(object => object.flag === countryFlag)
+                            )
+                setSelectedCountry(locations.findIndex(object => object.flag === countryFlag) === -1 ? 
+                                    'Global' 
+                                    : 
+                                    //userInfo.location.country
+                                    locations[locations.findIndex(object => object.flag === countryFlag)].country
+                                    )
+
                 setIsLoading(false)
             })
             return() => subscriber()
+    }
+
+    const GoGlobal = (country) => {
+        setSelectedCity('الكل')
+        setSelectedCountry(country)
+        setIndex(locations.findIndex(object => object.country === country))
     }
 
     const $renderEmptyOrdersState = () => {
@@ -142,12 +167,12 @@ export default function Zaatar(props) {
                         key={index}
                         titleRight={Flags[item.country]} 
                         horizontal={true}
-                        textStyle={{fontSize: 15, color: '#2C4770', fontFamily: 'Marlboro'}}
+                        textStyle={{fontSize:15, color:'#2C4770', fontFamily: 'Marlboro'}}
                         containerStyle={{
-                            paddingLeft : item.country === 'Israel' ? 14 : 20, 
-                            paddingRight: item.country === 'Israel' ? 14 : 20,  
+                            paddingLeft:20, 
+                            paddingRight:20,  
                             padding:5,
-                            borderRightWidth: .2,
+                            borderRightWidth:.2,
                             borderLeftWidth:.2,
                             borderColor:"#2C477040",
                             backgroundColor: selectedCountry === item.country ? '#2C477040' : null
@@ -161,14 +186,6 @@ export default function Zaatar(props) {
         )
     }
 
-    const GoGlobal = (country) => {
-        setIsLoading(false)
-        setSelectedCity('الكل')
-        setSelectedCountry(country)
-        setIndex(locations.findIndex(object => object.country === country))
-    }
-
-   
     const HeaderProductsList = () =>{
         return(
             <>
