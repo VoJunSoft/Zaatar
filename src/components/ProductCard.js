@@ -45,6 +45,9 @@ export default function ProductCard(props) {
                     //error
                 })
         return() => subscriber
+
+        // global.sellerState = productInfo.seller
+        // setFullProductVisibility(true)
     }
 
     const DeleteProduct = (id) => {
@@ -65,7 +68,7 @@ export default function ProductCard(props) {
                                         .doc(id)
                                         .delete()
                             
-                            return () => sub();
+                            return () => sub
                             }
             }
             ]

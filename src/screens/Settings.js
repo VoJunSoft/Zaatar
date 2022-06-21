@@ -63,7 +63,7 @@ const Settings = ({navigation, route}) => {
                         .then((querySnapshot)=>{
                             querySnapshot.forEach((doc)=>{
                                 // For each doc, add a delete operation to the batch
-                                doc.delete()
+                                doc.data().delete()
                             })
                         })
                         .catch((e)=>{
@@ -154,6 +154,7 @@ const Settings = ({navigation, route}) => {
                         inputStyle={{fontSize:16, textAlign:'center'}}
                         rightIcon={{ type: 'font-awesome', name: 'envelope' }}
                         labelStyle={{color:'#171717', textAlign:'right'}}
+                        autoCompleteType={true}
                         onChangeText={value => setCreditsInput({...creditsInput, email: value })}/>
                     <Text style={{paddingLeft:20, marginTop:-25, color: $VerifyEmail(creditsInput.email)  ? '#119935' : '#AF0F02'}}>{creditsInput.email.length}/30</Text>
 
@@ -166,6 +167,7 @@ const Settings = ({navigation, route}) => {
                         inputStyle={{fontSize:16, textAlign:'center'}}
                         rightIcon={{ type: 'font-awesome', name: 'key' }}
                         labelStyle={{color:'#171717', textAlign:'right'}}
+                        autoCompleteType={true}
                         onChangeText={value => setCreditsInput({...creditsInput, password: value })}/> 
                     <Text style={{paddingLeft:20, marginTop:-25, color: creditsInput.password.length < 8  ? '#AF0F02': '#119935'}}>{creditsInput.password.length}/20</Text>
 

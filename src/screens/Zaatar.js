@@ -34,19 +34,20 @@ export default function Zaatar(props) {
 
     //get userInfo from navigation
     //TODO delay prevents data to be loaded in time so the values receieved here are the initial object data from APP.js
-    const [userInfo, setUserInfo] = useState(props.route.params)
+    //const [userInfo, setUserInfo] = useState(props.route.params)
     const [selectedCountry, setSelectedCountry] = useState('Global')
     const [countryFlag, setCountryFlag] = useState(RNLocalize.getCountry())
     const [selectedCity, setSelectedCity] = useState('الكل')
     const [selectedCountryIndex, setIndex] = useState(0)
 
     //state for unique locations (countries and cities)
+    //when products are loading then products' locations will be added to locations
     const [locations, setLocation] = useState([{country:'Global', 
                                                 flag: 'GLB', 
                                                 cities:[]
                                             }])
 
-    const [countriesListVisibility, setCountriesListVisibility] = useState(true)
+    const [countriesListVisibility, setCountriesListVisibility] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     
     useEffect(() => {

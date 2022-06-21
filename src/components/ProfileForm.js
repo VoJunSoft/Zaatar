@@ -3,10 +3,7 @@ import {
     View, 
     Text, 
     StyleSheet,
-    Dimensions,
     ScrollView,
-    Alert,
-    Keyboard,
     TouchableOpacity,
     Platform,
     ActivityIndicator,
@@ -47,6 +44,7 @@ export default function ProfileForm(props) {
     //Edit user profile information
     const storeData = (value) => {
         try {
+            //update async storage userInfo
             AsyncStorage.mergeItem('userInfoZaatar', JSON.stringify(value))
             .then(()=>{
                 //NOTE user id is also stored as snapshot in users!
@@ -56,14 +54,36 @@ export default function ProfileForm(props) {
                         props.setUserInfo(value)
                         //Hide form
                         //props.setProfileFormVisibility(false)
-                        setIsloading(false)
-                        setSuccessMsg('تم حفظ المعلومات')
-                        //remove keyboard
-                        //Keyboard.dismiss()
                     })
+            })
+            .then(()=>{
+                //update userInfo in Products
+                //updateUserInfoInProducts(value)
+                setIsloading(false)
+                setSuccessMsg('تم حفظ المعلومات')
             })
         } catch (e) {
             //err storing data
+        }
+    }
+
+    const updateUserInfoInProducts = (data) =>{
+        try{
+            const sub = firestore().collection('products')
+            //delete products with seller.id
+            sub.where('seller.id','==',data.id).get()
+            .then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+                    // For each doc, update
+                    sub.doc(doc.id).update({...doc.data(), seller: data})
+                })
+            })
+            .catch((e)=>{
+                console.log('update products', e)
+            })
+        }catch(e){
+            //setError msg
+            setErrMsg('الرجاء معاودة المحاولة في وقت لاحق')
         }
     }
 
@@ -100,7 +120,7 @@ export default function ProfileForm(props) {
         try{    
             if(userInfo.name.length >=4 && pass.length >=7
                 && userInfo.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/) 
-                && userInfo.phone.match(/\d/g)
+                && $VerifyPhone(userInfo.phone)
                 && userInfo.location.city!=='' ){
                 
                 setIsloading(true)
@@ -298,8 +318,8 @@ export default function ProfileForm(props) {
              
                     <View style={styles.flexInput}>
                         <Badge
-                            status={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "success" : "error"}
-                            value={$VerifyPhone(userInfo.phone) && userInfo.phone.length === 10 ? "✓" : "✘"}
+                            status={$VerifyPhone(userInfo.phone) && userInfo.phone.length >= 8 ? "success" : "error"}
+                            value={$VerifyPhone(userInfo.phone) && userInfo.phone.length >= 8 ? "✓" : "✘"}
                             containerStyle={{ position: 'absolute', bottom: 5, left: 20}}
                             textStyle={{fontSize:9}} />
                     </View>
