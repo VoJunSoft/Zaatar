@@ -1,101 +1,90 @@
 import React, {useState, useEffect} from 'react'
 import { View, Text, StyleSheet, Image, FlatList, Dimensions, ActivityIndicator, ImageBackground } from 'react-native'
-import { Avatar } from 'react-native-elements'
-import SearchBar from '../components/SearchBar'
-import Buttons from '../elements/Button'
-import { handleDate } from '../scripts/Time'
-import {filterWorkshopsBaseOnSearch} from '../scripts/Search'
-import DropShadow from "react-native-drop-shadow"
-import firestore from '@react-native-firebase/firestore'
-//import {GetRecordsFromDBasc} from '../firebase/Firestore'
-//import * as RNLocalize from "react-native-localize"
+//import SearchBar from '../components/SearchBar'
+//import {filterWorkshopsBaseOnSearch} from '../scripts/Search'
+//import DropShadow from "react-native-drop-shadow"
+//import Video from "react-native-video"
+import * as RNLocalize from "react-native-localize"
 
 export default function Workshops(props) {
-    const [workshops, setWorkshops] = useState([])
     const [isLoading, setIsLoading] = useState(true) 
-    const [userMsg, setUserMsg] = useState('')
     const [searchInput, setSearchInput] = useState("")
+
+    const [playerRef, setPlayerRef] = useState(null)
 
     //WorkShops :  object fields: id, title, date_posted, from, to, location, phone, image, email, seller:{id, email, location,name,phone,picture}
     //TODO : Call this method from external firestore file
     useEffect(()=>{
-        //fillUpStoresList()
+        this.country = RNLocalize.getCountry() ? RNLocalize.getCountry() : 'IL'
+        getTravelCamera()
+        return () => {
+            if (playerRef) playerRef.stop();
+          };
     },[])
-    const fillUpStoresList = () => {
-        const subscriber = firestore()
-            .collection('workshops').orderBy('date_listed', 'asc').onSnapshot(querySnapshot => {
-                setWorkshops([])
-                querySnapshot.forEach(documentSnapshot => {
-                    setWorkshops((prevState) => {
-                            return [{...documentSnapshot.data(), id: documentSnapshot.id},  ...prevState]
-                        })
-                })
-                setIsLoading(false)
-            })
-            return() => subscriber
-    }
 
+    const [travelCameraContents, setCamConents] = useState([])
+    const options = {
+        method: 'GET',
+        headers: {
+            "x-windy-key": "II6QdJxbMKmlHLsDtGYSSpcB1HFDNj2k"
+        }
+    }
+    const getTravelCamera = () => {
+        fetch('https://api.windy.com/api/webcams/v2/list/country='+ this.country +'?show=webcams:image,player,url', options)
+        .then(response => response.json())
+        .then(response => {
+            console.log('Player : ', response.result.webcams)
+            setCamConents(response.result.webcams)
+        })
+        .then(()=> {
+            setIsLoading(false)
+        })
+        .catch(err => {
+            setIsLoading(false)
+        })
+
+    }
 
     const $renderEmptyOrdersState = () => { 
         return(
-                <>
-                    <Image style={styles.img} source={require('../assets/gallary/workshops.png')}/>
-                    <Text style={styles.loading}>لا توجد ورش عمل متاحة</Text>
-                    <Text style={styles.tempStyle}>{userMsg}</Text>
-                </>
+             <ActivityIndicator color='#2C4770' size={35} style={styles.loading}/>
         )
     }
 
     const WorkShopCard = (props) => {
         return(
-            <DropShadow style={styles.dropShadow}>
-                <View style={styles.workshopBlock}>
-                    <ImageBackground style={styles.imgAlpha} source={{uri: props.item.image}}>
-                    <View style={styles.workshopHeader}>
-                        <Text style={styles.title}>{handleDate(props.item.date_listed.seconds)}</Text>
-                        <Text style={styles.title}>{props.item.seller.name}</Text>
-                        <Avatar
-                            size={50}
-                            rounded
-                            source={props.item.seller.picture ? {uri: props.item.seller.picture} : require('../assets/gallary/p1.png')}
-                            icon={{ name: 'user', type: 'font-awesome', color: '#2C4770' }}
-                            containerStyle={{backgroundColor:'#fff', margin: 3}}/>
-                    </View>
-                    </ImageBackground>
-                    {userMsg !== '' ?
-                        <Text style={[styles.tempStyle,{backgroundColor:'rgba(255,255,255,0.5)'}]}>{userMsg}</Text>
-                        : 
-                        null
-                    }
-                </View>
-            </DropShadow>
+          <View style={{marginBottom: 15}}>
+            {/* <Video
+                style={{width:'100%', height: 220, backgroundColor:'gray'}}
+                source={{ uri:  props.camera.player.day.emded}}
+                //poster={props.camera.image.current.preview}
+                resizeMode="contain"
+                controls={true}
+                paused={true}
+                onBuffer={this.onBuffer}   // Callback when remote video is buffering
+                onError={this.videoError}  // Callback when video cannot be loaded
+                ref={(ref) => {
+                    this.player = ref
+                    }}
+             /> */}
+             <Image source={{uri : props.camera.image.current.preview}} style={{width:'100%', height: 220}}/>
+            <Text style={styles.text}> {props.camera.title} </Text>
+          </View>
         )
     }
 
     return (
-        <>
+        !isLoading ? 
             <FlatList 
-                data={filterWorkshopsBaseOnSearch(workshops, searchInput)}
-                ListFooterComponent={filterWorkshopsBaseOnSearch(workshops, searchInput).length === 0 ? $renderEmptyOrdersState : null}
+                data={travelCameraContents}
+                ListFooterComponent={travelCameraContents.length === 0 ? $renderEmptyOrdersState : null}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={item => item.id}
                 style={styles.StoreList}
                 renderItem={ ({item, index}) => (
-                    <WorkShopCard item={item} />
+                    <WorkShopCard camera={item} />
                 )}/>
-
-            <View style={{flexDirection:'row', alignItems:'baseline', backgroundColor: '#FFFFFF'}}>
-                <View style={{width:'85%'}}>
-                    <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} searchBarVisibility={true} hideSearchIcon={true}/>
-                </View>
-                <Buttons.ButtonWithShadow 
-                    iconName='add' 
-                    iconSize={25} 
-                    onPress={()=>setUserMsg('إضافة ورشة عمل ستكون متاحة قريبا')} 
-                    containerStyle={styles.icon}/>
-            </View>
-        </>
-       
+       : <ActivityIndicator color='#2C4770' size={35} style={styles.loading}/>
     )
 }
 
@@ -112,84 +101,16 @@ const styles= StyleSheet.create({
         marginTop:100,
         marginBottom:5
     },
-    card:{
-        marginTop:15,
-        flexDirection:'row',
-        //borderRadius:8,
-        //overflow:'hidden',
-        alignSelf:'center',
-    },
-    headerCard:{
-        width:'20%',
-        backgroundColor:'#BBED5E', 
-        alignItems:'center',
-        padding: 5,
-        borderLeftWidth:0.2
-    },
-    bodyCard:{
-        width:'70%',
-        justifyContent:'center',
-        backgroundColor:'rgba(0,0,0,0.2)', 
-    },
     text:{
         color:'#2C4770', 
         marginRight: 5,
-        fontFamily:'Cairo-Regular',
-    },
-    textInfo:{
-        color:'#2C4770', 
-        margin: 5,
-        fontFamily:'Cairo-Regular',
-        textAlign:'center'
+        letterSpacing: 1,
     },
     img:{
-        width:'90%',
-        height:Dimensions.get('window').height/1.5,
+        width:'100%',
+        height:220,
         alignSelf:'center',
         resizeMode:'contain',
-    },
-    imgBlock:{
-        alignSelf:'center',
-        width:'100%',
-        borderBottomLeftRadius:10,
-        borderBottomRightRadius:10,
-        overflow:'hidden'
-    },
-    icon:{
-        backgroundColor:'#2C4970',
-        borderRadius: 50,
-        padding:2
-    },
-    tempStyle: {
-        color:'red', 
-        fontFamily:'Cairo-Bold', 
-        fontSize: 12,
-        alignSelf:'center',
-    },
-    workshopBlock:{
-        //flex:1,
-        width:'100%',
-        padding: 12,
-        //backgroundColor:'yellow'
-    },
-    workshopHeader:{
-        width:'100%',
-        flexDirection:'row',
-        justifyContent:'space-between',
-        backgroundColor:'#2C4970',
-        alignItems:'center',
-        padding: 3
-    },
-    imgAlpha:{
-        width:'100%',
-        height:Dimensions.get('window').height - 140,
-        borderRadius:10,
-        overflow:'hidden'
-    },
-    title:{
-        color:'#fff', 
-        fontFamily:'Cairo-Regular',
-        fontSize:15
     },
     dropShadow:{
         shadowColor: '#323232',

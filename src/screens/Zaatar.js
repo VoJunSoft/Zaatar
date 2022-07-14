@@ -35,17 +35,15 @@ export default function Zaatar(props) {
     //get userInfo from navigation
     //TODO delay prevents data to be loaded in time so the values receieved here are the initial object data from APP.js
     //const [userInfo, setUserInfo] = useState(props.route.params)
+    //TODO: const [userLocation, setUserLocation] = useState({country:''Global', flag:RNLocalize.getCountry(), city: 'الكل', countryIndexInLocations: 0})
     const [selectedCountry, setSelectedCountry] = useState('Global')
+    const [selectedCountryIndex, setIndex] = useState(0)
     const [countryFlag, setCountryFlag] = useState(RNLocalize.getCountry())
     const [selectedCity, setSelectedCity] = useState('الكل')
-    const [selectedCountryIndex, setIndex] = useState(0)
 
     //state for unique locations (countries and cities)
     //when products are loading then products' locations will be added to locations
-    const [locations, setLocation] = useState([{country:'Global', 
-                                                flag: 'GLB', 
-                                                cities:[]
-                                            }])
+    const [locations, setLocation] = useState([{country:'Global',flag: 'GLB',cities:[]}])
 
     const [countriesListVisibility, setCountriesListVisibility] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -61,8 +59,6 @@ export default function Zaatar(props) {
     },[])
 
     const GetProductsByDate = () => {
-        let indexCountry
-        let indexCity
         setIsLoading(true)
         const subscriber = firestore()
             .collection('products')
@@ -73,37 +69,46 @@ export default function Zaatar(props) {
                     setProducts((prevState) => {
                         return [{...documentSnapshot.data(), productId: documentSnapshot.id},  ...prevState]
                     })
-                    
-                    //fill out locations state with available countries and their cities (as well as flag 2-alpha)
-                    indexCountry = locations.findIndex(object => object.country === documentSnapshot.data().seller.location.country)
-                    indexCity = indexCountry === -1 ? -1 : locations[indexCountry].cities.indexOf(documentSnapshot.data().seller.location.city)
-                    if(indexCountry === -1)
-                        locations.push({country: documentSnapshot.data().seller.location.country, flag : documentSnapshot.data().seller.location.flag, cities: ['الكل', documentSnapshot.data().seller.location.city]})
-                    else if (indexCity === -1)
-                        locations[indexCountry].cities.push(documentSnapshot.data().seller.location.city)
-
+                    AddProductsLocation(documentSnapshot.data().seller.location)
                 })
-
-                //if country's flag : RNLocalize.getCountry() : exists then get the country index and name from locations
-                //if it does not then take Global as country name
-                //the following line of code (commented) retrieve the entire object {county, flag, cities:[]}
-                //NOTE userCountryCities = locations.find(object => object.flag === countryFlag) === undefined ? locations[0] : locations.find(object => object.flag === countryFlag)
-                //so it can replace the following code and for GoGlobal we can use it to reset userCountryCities objct
-                setIndex(locations.findIndex(object => object.flag === countryFlag) === -1 ? 
-                            0 
-                            : 
-                            locations.findIndex(object => object.flag === countryFlag)
-                            )
-                setSelectedCountry(locations.findIndex(object => object.flag === countryFlag) === -1 ? 
-                                    'Global' 
-                                    : 
-                                    //userInfo.location.country
-                                    locations[locations.findIndex(object => object.flag === countryFlag)].country
-                                    )
-
+                ChooseUserLocation()
                 setIsLoading(false)
             })
             return() => subscriber()
+    }
+
+    const AddProductsLocation = (data) =>{
+        //Add Products Location (country and city) if either does not exist
+        //TODO: more effecient location loading strategy 
+        //HINT: load avaliable location from JSON
+        let indexCountry
+        let indexCity
+         //fill out locations state with available countries and their cities (as well as flag 2-alpha)
+         indexCountry = locations.findIndex(object => object.country === data.country)
+         indexCity = indexCountry === -1 ? -1 : locations[indexCountry].cities.indexOf(data.city)
+         if(indexCountry === -1)
+             locations.push({country: data.country, flag : data.flag, cities: ['الكل', data.city]})
+         else if (indexCity === -1)
+             locations[indexCountry].cities.push(data.city)
+    }
+
+    const ChooseUserLocation = () => {
+        //if country's flag : RNLocalize.getCountry() : exists then get the country index and name from locations
+        //if it does not then take Global as country name
+        //the following line of code (commented) retrieve the entire object {county, flag, cities:[]}
+        //NOTE userCountryCities = locations.find(object => object.flag === countryFlag) === undefined ? locations[0] : locations.find(object => object.flag === countryFlag)
+        //so it can replace the following code and for GoGlobal we can use it to reset userCountryCities objct
+        setIndex(locations.findIndex(object => object.flag === countryFlag) === -1 ? 
+                    0 
+                    : 
+                    locations.findIndex(object => object.flag === countryFlag)
+                    )
+        setSelectedCountry(locations.findIndex(object => object.flag === countryFlag) === -1 ? 
+                            'Global' 
+                            : 
+                            //userInfo.location.country
+                            locations[locations.findIndex(object => object.flag === countryFlag)].country
+                            )
     }
 
     const GoGlobal = (country) => {

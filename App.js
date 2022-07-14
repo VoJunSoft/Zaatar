@@ -204,8 +204,8 @@ const App = ({useNavigation}) => {
               name="WorkShops"
               component={WorkShops}
               options={{
-                title:'ورش عمل',
-                drawerLabel: ()=><MenuItem icon='speakers' title='ورش عمل'/>
+                title:'بث حي',
+                drawerLabel: ()=><MenuItem icon='video' title='بث حي'/>
           }}/>
           <Drawer.Screen
               name="Settings"
@@ -253,8 +253,8 @@ const App = ({useNavigation}) => {
               name="WorkShops"
               component={WorkShops}
               options={{
-                title:'ورش عمل',
-                drawerLabel: ()=><MenuItem icon='speakers' title='ورش عمل'/>
+                title:'بث حي',
+                drawerLabel: ()=><MenuItem icon='video' title='بث حي'/>
           }}/>
           <Drawer.Screen
             name="Settings"

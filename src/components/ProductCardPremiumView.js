@@ -25,7 +25,6 @@ return (
             <Text style={[styles.body]}>{props.productInfo.currency}{props.productInfo.price}</Text>
             <FastImage  style={styles.img} 
                         source={{uri: props.productInfo.photos[0]}} 
-                        defaultSource={require('../assets/gallary/Zaatar.png')}
                         resizeMode={FastImage.resizeMode.cover}
                         />
         </View> 
